@@ -42,6 +42,10 @@ python -m http.server 8000
 
 Depois acesse `http://localhost:8000`.
 
+### Acesso Web
+
+A página está disponível pelo link: `https://jluckmay.github.io/`
+
 ### Estrutura
 
 ```text
@@ -100,6 +104,10 @@ python -m http.server 8000
 ```
 
 Then visit `http://localhost:8000`.
+
+### Web Access
+
+This page can be accessed by the following link: `https://jluckmay.github.io/`
 
 ### Structure
 
