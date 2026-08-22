@@ -1,127 +1,2573 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>João Lucas Mayrinck D'Oliveira</title>
-  
-  <!-- Fontes do perfil do Pablo (Inter e Roboto Mono) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-  
-  <!-- FontAwesome para os ícones -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-  <!-- Tailwind CSS para o layout -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['Roboto Mono', 'monospace'],
-          },
-          colors: {
-            brand: '#940c13', // Cor vermelho do botão ativo no menu
-          }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Portfólio profissional de João Lucas Mayrinck D'Oliveira, mestrando em Ciência da Computação na UFMG."
+    />
+    <meta name="theme-color" content="#050505" />
+    <title>🔴 whoiam | João Lucas</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23050505'/%3E%3Ctext x='12' y='48' font-family='monospace' font-size='52' font-weight='700' fill='%23ffd21c'%3E%26gt;%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- Set theme before paint to avoid a light/dark flash during page load. -->
+    <script>
+      document.documentElement.dataset.theme =
+        localStorage.getItem("theme") ||
+        (matchMedia("(prefers-color-scheme:dark)").matches ? "dark" : "light");
+    </script>
+    <style>
+      /* Design tokens and global defaults */
+      :root {
+        --black: #050505;
+        --white: #f7f5f0;
+        --red: #a30f18;
+        --red2: #d51e2b;
+        --yellow: #ffd21c;
+        --muted: #aaa;
+        --line: #ffffff24;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 2rem;
+      }
+      body {
+        margin: 0;
+        background: var(--black);
+        color: var(--white);
+        font-family: Inter, sans-serif;
+        line-height: 1.65;
+      }
+      a {
+        color: inherit;
+      }
+      button,
+      a {
+        -webkit-tap-highlight-color: transparent;
+      }
+      .skip {
+        position: fixed;
+        left: 1rem;
+        top: -5rem;
+        z-index: 200;
+        background: var(--yellow);
+        color: #000;
+        padding: 0.7rem 1rem;
+        font-weight: 700;
+      }
+      .skip:focus {
+        top: 1rem;
+      }
+      /* Live map is enlarged and clipped so provider chrome stays outside viewport. */
+      .cyber-bg {
+        position: fixed;
+        inset: 0;
+        z-index: -3;
+        overflow: hidden;
+        background: radial-gradient(
+          circle at 70% 45%,
+          #31050a,
+          #080808 40%,
+          #000 70%
+        );
+      }
+      .cyber-bg iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        opacity: 0.47;
+        filter: grayscale(1) contrast(1.45) sepia(0.2);
+        pointer-events: none;
+      }
+      .cyber-bg:after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(90deg, #000000f5, #000b 42%, #0006 72%, #000c),
+          linear-gradient(0deg, #050505, transparent 24%);
+      }
+      /* Persistent navigation and utility controls */
+      .side-nav {
+        position: fixed;
+        left: clamp(1rem, 2vw, 2rem);
+        top: 50%;
+        translate: 0 -50%;
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      .nav-link {
+        width: 3.15rem;
+        height: 3.15rem;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        color: #aaa;
+        background: #080808;
+        border: 1px solid var(--line);
+        text-decoration: none;
+        box-shadow: 0 8px 25px #0008;
+        transition: 0.25s;
+        position: relative;
+      }
+      .nav-link span {
+        position: absolute;
+        left: 4rem;
+        background: #000;
+        color: #fff;
+        padding: 0.35rem 0.7rem;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0;
+        translate: -0.5rem;
+        pointer-events: none;
+        transition: 0.2s;
+        white-space: nowrap;
+        border-left: 2px solid var(--yellow);
+      }
+      .nav-link:hover,
+      .nav-link.active {
+        color: #000;
+        background: var(--red2);
+        border-color: var(--red2);
+        transform: scale(1.08);
+      }
+      .nav-link:hover {
+        background: var(--yellow);
+      }
+      .nav-link:hover span,
+      .nav-link:focus-visible span {
+        opacity: 1;
+        translate: 0;
+      }
+      .wrap {
+        width: min(1120px, calc(100% - 10rem));
+        margin: auto;
+      }
+      section {
+        min-height: 70vh;
+        padding: 7rem 0;
+        position: relative;
+      }
+      .hero {
+        min-height: 100svh;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+      }
+      .eyebrow {
+        font:
+          500 0.76rem "Roboto Mono",
+          monospace;
+        color: var(--yellow);
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        margin: 0 0 1.2rem;
+      }
+      .hero h1 {
+        max-width: 800px;
+        font-size: clamp(3.2rem, 7vw, 6.7rem);
+        line-height: 0.91;
+        letter-spacing: -0.065em;
+        margin: 0;
+        text-shadow: 0 4px 40px #000;
+      }
+      .hero h1 em {
+        color: var(--red2);
+        font-style: normal;
+      }
+      .role {
+        min-height: 3rem;
+        margin: 1.6rem 0 2.2rem;
+        font-size: clamp(1.25rem, 2.6vw, 2rem);
+        font-weight: 300;
+      }
+      #typed {
+        font-family: "Roboto Mono", monospace;
+        border-right: 2px solid var(--yellow);
+        padding-right: 0.12em;
+        animation: blink 0.8s step-end infinite;
+      }
+      @keyframes blink {
+        50% {
+          border-color: transparent;
         }
       }
-    }
-  </script>
-  <style>
-    /* Sombra de texto suave para garantir leitura sobre o background */
-    .text-glow {
-      text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 10px rgba(255, 255, 255, 0.5);
-    }
-    .typing-cursor::after {
-      content: '|';
-      animation: blink 1s step-end infinite;
-      font-weight: 300;
-    }
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
-    }
-  </style>
-</head>
-<body class="bg-gray-900 overflow-hidden font-sans">
-
-  <!-- Background Image com overlay -->
-  <div class="fixed inset-0 z-0">
-    <!-- Imagem placeholder representando o globo/rede tecnológica -->
-    <img src="https://images.unsplash.com/photo-1684610527413-66eec7828690?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?q=80&w=2072&auto=format&fit=crop" 
-         alt="Background" 
-         class="w-full h-full object-cover opacity-60">
-    <div class="absolute inset-0 bg-white/20 backdrop-blur-[2px]"></div>
-  </div>
-
-  <!-- Menu Lateral Esquerdo (Sidebar) -->
-  <nav class="fixed left-6 top-1/2 transform -translate-y-1/2 flex flex-col gap-4 z-50">
-    <a href="#home" class="w-14 h-14 rounded-full bg-brand text-black flex items-center justify-center shadow-lg transition-transform hover:scale-110">
-      <i class="fas fa-home text-xl"></i>
-    </a>
-    <a href="#about" class="w-14 h-14 rounded-full bg-black text-gray-600 flex items-center justify-center shadow-lg transition-transform hover:scale-110 hover:text-brand">
-      <i class="far fa-user text-xl"></i>
-    </a>
-    <a href="#resume" class="w-14 h-14 rounded-full bg-black text-gray-600 flex items-center justify-center shadow-lg transition-transform hover:scale-110 hover:text-brand">
-      <i class="far fa-file-alt text-xl"></i>
-    </a>
-    <a href="#projects" class="w-14 h-14 rounded-full bg-black text-gray-600 flex items-center justify-center shadow-lg transition-transform hover:scale-110 hover:text-brand">
-      <i class="fas fa-book-open text-xl"></i>
-    </a>
-    <a href="#contact" class="w-14 h-14 rounded-full bg-black text-gray-600 flex items-center justify-center shadow-lg transition-transform hover:scale-110 hover:text-brand">
-      <i class="far fa-envelope text-xl"></i>
-    </a>
-  </nav>
-
-  <!-- Círculo de Perfil à Direita (Cortado) -->
-  <div class="fixed right-1/4 top-1/2 transform -translate-y-1/2 translate-x-1/3 md:translate-x-1/4 z-10 hidden md:block">
-    <div class="w-[500px] h-[500px] lg:w-[700px] lg:h-[700px] rounded-full border-[12px] border-white/20 overflow-hidden shadow-2xl">
-      <!-- Imagem de perfil representando o João Lucas -->
-      <img src="https://avatars.githubusercontent.com/u/55472486?v=4?q=80&w=1000&auto=format&fit=crop" 
-           alt="João Lucas Mayrinck D'Oliveira" 
-           class="w-full h-full object-cover">
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+      .button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.82rem 1.2rem;
+        text-decoration: none;
+        border: 1px solid var(--red2);
+        background: var(--red);
+        font-weight: 700;
+        font-size: 0.82rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        transition: 0.2s;
+      }
+      .button.ghost {
+        background: #080808aa;
+        border-color: #777;
+      }
+      .button:hover {
+        background: var(--yellow);
+        color: #000;
+        border-color: var(--yellow);
+        transform: translateY(-2px);
+      }
+      .hero-meta {
+        position: absolute;
+        right: 0;
+        bottom: 2rem;
+        font:
+          400 0.68rem "Roboto Mono",
+          monospace;
+        color: #aaa;
+        text-align: right;
+        letter-spacing: 0.08em;
+      }
+      .hero-meta b {
+        color: var(--yellow);
+      }
+      /* Shared section surfaces and headings */
+      .light {
+        background: var(--white);
+        color: #101010;
+      }
+      .dark {
+        background: #050505ee;
+      }
+      .section-head {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 2rem;
+        margin-bottom: 3.5rem;
+        border-bottom: 1px solid currentColor;
+        padding-bottom: 1.2rem;
+      }
+      .section-head h2 {
+        margin: 0;
+        font-size: clamp(2.2rem, 5vw, 4.6rem);
+        line-height: 1;
+        letter-spacing: -0.055em;
+      }
+      .section-head small {
+        font:
+          500 0.7rem "Roboto Mono",
+          monospace;
+        letter-spacing: 0.15em;
+        color: var(--red2);
+      }
+      .lead {
+        max-width: 820px;
+        font-size: clamp(1.12rem, 2vw, 1.45rem);
+        line-height: 1.65;
+        margin: 0 0 4rem;
+      }
+      .lead strong {
+        color: var(--red);
+      }
+      .about-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 5rem;
+      }
+      .portrait {
+        position: relative;
+        min-height: 490px;
+        background: #111;
+        overflow: hidden;
+      }
+      .portrait img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: grayscale(1) contrast(1.08);
+        position: absolute;
+      }
+      .portrait:after {
+        content: "";
+        position: absolute;
+        inset: auto 0 0;
+        height: 45%;
+        background: linear-gradient(transparent, #a30f18cc);
+        mix-blend-mode: multiply;
+      }
+      .facts {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1px;
+        background: #bbb;
+        border: 1px solid #bbb;
+        margin-top: 2rem;
+      }
+      .fact {
+        background: var(--white);
+        padding: 1.4rem;
+      }
+      .fact b {
+        display: block;
+        font-size: 1.9rem;
+        color: var(--red);
+        line-height: 1;
+      }
+      .fact span {
+        font:
+          500 0.65rem "Roboto Mono",
+          monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.55rem;
+        margin-top: 1.4rem;
+      }
+      .tag {
+        border: 1px solid #777;
+        padding: 0.35rem 0.65rem;
+        font:
+          500 0.7rem "Roboto Mono",
+          monospace;
+      }
+      .tag:hover {
+        background: var(--yellow);
+        border-color: var(--yellow);
+      }
+      /* Academic timeline and research interests */
+      .timeline {
+        position: relative;
+        max-width: 900px;
+        margin: auto;
+      }
+      .timeline:before {
+        content: "";
+        position: absolute;
+        left: 8.5rem;
+        inset-block: 0;
+        width: 1px;
+        background: linear-gradient(var(--yellow), var(--red));
+      }
+      .event {
+        display: grid;
+        grid-template-columns: 7rem 1fr;
+        gap: 3rem;
+        padding: 0 0 3.5rem;
+      }
+      .event time {
+        font:
+          500 0.8rem "Roboto Mono",
+          monospace;
+        color: var(--yellow);
+        text-align: right;
+      }
+      .event-content {
+        position: relative;
+      }
+      .event-content:before {
+        content: "";
+        position: absolute;
+        left: -3.35rem;
+        top: 0.2rem;
+        width: 0.65rem;
+        height: 0.65rem;
+        border-radius: 50%;
+        background: var(--red2);
+        box-shadow:
+          0 0 0 6px #050505,
+          0 0 0 7px var(--red2);
+      }
+      .event h3 {
+        margin: 0 0 0.4rem;
+        font-size: 1.35rem;
+      }
+      .event p {
+        margin: 0.2rem 0;
+        color: #aaa;
+      }
+      .event strong {
+        color: #fff;
+      }
+      .research-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+      }
+      .research-item {
+        border-top: 3px solid var(--red);
+        padding: 1.5rem 1rem;
+        background: #0e0e0e;
+      }
+      .research-item i {
+        font-size: 1.5rem;
+        color: var(--yellow);
+      }
+      .research-item h3 {
+        font-size: 1rem;
+        margin: 1.4rem 0 0.7rem;
+      }
+      .research-item p {
+        color: #999;
+        font-size: 0.82rem;
+        margin: 0;
+      }
+      /* Project and publication collections */
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+      }
+      .card {
+        min-height: 290px;
+        border: 1px solid #d0cdc6;
+        padding: 1.6rem;
+        display: flex;
+        flex-direction: column;
+        transition: 0.25s;
+        background: #fff;
+      }
+      .card:hover {
+        transform: translateY(-6px);
+        border-color: var(--red);
+        box-shadow: 8px 8px 0 var(--yellow);
+      }
+      .card .num {
+        font:
+          500 0.72rem "Roboto Mono",
+          monospace;
+        color: var(--red);
+      }
+      .card h3 {
+        font-size: 1.35rem;
+        line-height: 1.2;
+        margin: auto 0 0.8rem;
+      }
+      .card p {
+        font-size: 0.9rem;
+        color: #555;
+        margin: 0 0 1rem;
+      }
+      .card a {
+        font:
+          700 0.72rem "Roboto Mono",
+          monospace;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: var(--red);
+      }
+      .card a:hover,
+      .publication a:hover {
+        color: #000;
+        background: var(--yellow);
+        width: max-content;
+      }
+      .pub-list {
+        counter-reset: pub;
+      }
+      .publication {
+        counter-increment: pub;
+        display: grid;
+        grid-template-columns: 4rem 1fr auto;
+        gap: 1.5rem;
+        border-top: 1px solid #bbb;
+        padding: 1.7rem 0;
+        align-items: start;
+      }
+      .publication:before {
+        content: counter(pub, decimal-leading-zero);
+        font:
+          500 1rem "Roboto Mono",
+          monospace;
+        color: var(--red);
+      }
+      .publication h3 {
+        font-size: 1.08rem;
+        margin: 0 0 0.5rem;
+        line-height: 1.4;
+      }
+      .publication p {
+        margin: 0;
+        color: #666;
+        font-size: 0.82rem;
+      }
+      .publication a {
+        color: var(--red);
+        text-decoration: none;
+        font:
+          700 0.72rem "Roboto Mono",
+          monospace;
+        white-space: nowrap;
+      }
+      .award {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background: var(--red);
+        color: #fff;
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+      .award i {
+        font-size: 2rem;
+        color: var(--yellow);
+      }
+      /* Contact and footer */
+      .contact-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5rem;
+      }
+      .contact-links {
+        display: grid;
+        gap: 0.7rem;
+      }
+      .contact-link {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        text-decoration: none;
+        padding: 1rem;
+        border: 1px solid #333;
+        background: #0b0b0b;
+        transition: 0.2s;
+      }
+      .contact-link i {
+        width: 1.5rem;
+        color: var(--red2);
+        text-align: center;
+      }
+      .contact-link span {
+        color: #999;
+        font-size: 0.78rem;
+      }
+      .contact-link strong {
+        display: block;
+        color: #fff;
+      }
+      .contact-link:hover {
+        border-color: var(--yellow);
+        translate: 0.4rem;
+      }
+      .contact-link:hover i {
+        color: var(--yellow);
+      }
+      footer {
+        border-top: 1px solid #333;
+        padding: 1.6rem 0;
+        color: #777;
+        font:
+          400 0.68rem "Roboto Mono",
+          monospace;
+      }
+      footer .wrap {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+      :focus-visible {
+        outline: 3px solid var(--yellow);
+        outline-offset: 3px;
+      }
+      /* Base tablet and mobile layout */
+      @media (max-width: 850px) {
+        .wrap {
+          width: min(100% - 2.5rem, 680px);
+        }
+        .side-nav {
+          inset: auto 50% 1rem auto;
+          translate: 50% 0;
+          flex-direction: row;
+          padding: 0.45rem;
+          border-radius: 2rem;
+          background: #050505e8;
+          backdrop-filter: blur(10px);
+        }
+        .nav-link {
+          width: 2.7rem;
+          height: 2.7rem;
+        }
+        .nav-link span {
+          display: none;
+        }
+        section {
+          padding: 5rem 0;
+        }
+        .about-grid,
+        .contact-grid {
+          grid-template-columns: 1fr;
+          gap: 2.5rem;
+        }
+        .portrait {
+          min-height: 430px;
+        }
+        .cards {
+          grid-template-columns: 1fr 1fr;
+        }
+        .research-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .hero-meta {
+          display: none;
+        }
+      }
+      @media (max-width: 560px) {
+        .side-nav {
+          left: 50%;
+          right: auto;
+          translate: -50% 0;
+          gap: 0.4rem;
+        }
+        .hero h1 {
+          font-size: clamp(2.9rem, 16vw, 4.2rem);
+        }
+        .actions {
+          display: grid;
+        }
+        .button {
+          justify-content: center;
+        }
+        .section-head {
+          align-items: start;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        .cards,
+        .research-grid {
+          grid-template-columns: 1fr;
+        }
+        .timeline:before {
+          left: 0.3rem;
+        }
+        .event {
+          grid-template-columns: 1fr;
+          gap: 0.7rem;
+          padding-left: 2rem;
+        }
+        .event time {
+          text-align: left;
+        }
+        .event-content:before {
+          left: -2rem;
+        }
+        .publication {
+          grid-template-columns: 2.4rem 1fr;
+        }
+        .publication a {
+          grid-column: 2;
+        }
+        footer {
+          padding-bottom: 6rem;
+        }
+        footer .wrap {
+          flex-direction: column;
+        }
+      }
+      :root {
+        --terminal:
+          "JetBrains Mono", "Liberation Mono", "DejaVu Sans Mono", monospace;
+      }
+      .cyber-bg iframe {
+        position: absolute;
+        left: -15%;
+        top: -90px;
+        width: 130%;
+        height: calc(100% + 180px);
+        opacity: 0.58;
+        filter: grayscale(1) contrast(1.5) sepia(0.2);
+        transform: scale(1.22);
+      }
+      .cyber-bg:after {
+        background:
+          linear-gradient(90deg, #000000ef, #0009 40%, #0003 74%, #000a),
+          linear-gradient(0deg, #050505, transparent 18%);
+      }
+      .utility {
+        position: fixed;
+        right: 1rem;
+        top: 1rem;
+        z-index: 120;
+        display: flex;
+        gap: 0.5rem;
+        transition:
+          opacity 0.28s,
+          transform 0.28s;
+      }
+      .utility button {
+        min-width: 2.75rem;
+        height: 2.75rem;
+        border: 1px solid #ffffff3d;
+        background: #080808df;
+        color: #fff;
+        font: 700 0.8rem var(--terminal);
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+        transition: 0.2s;
+      }
+      .utility button:hover {
+        background: var(--yellow);
+        border-color: var(--yellow);
+        color: #000;
+      }
+      .eyebrow,
+      #typed,
+      .section-head h2,
+      .section-head small,
+      .subhead,
+      .event time,
+      footer {
+        font-family: var(--terminal);
+      }
+      .section-head h2 {
+        font-weight: 700;
+        font-size: clamp(1.8rem, 4vw, 3.2rem);
+        letter-spacing: -0.04em;
+        text-transform: lowercase;
+      }
+      .section-head h2:before {
+        content: "~/ ";
+        color: var(--red2);
+      }
+      #projetos .section-head h2:before {
+        content: "./ ";
+        color: var(--yellow);
+      }
+      .hero h1 {
+        font-family: var(--terminal);
+        font-weight: 700;
+        letter-spacing: -0.065em;
+      }
+      .hero h1 em {
+        color: var(--red2);
+      }
+      .hero h1 .first-name {
+        color: #fff;
+      }
+      .hero h1 .middle-name {
+        color: var(--red2);
+      }
+      .hero h1 .surname {
+        color: #fff;
+      }
+      .typed-white {
+        color: #fff;
+      }
+      .typed-red {
+        color: var(--red2);
+      }
+      .typed-yellow {
+        color: var(--yellow);
+      }
+      .portrait img {
+        filter: none;
+      }
+      .portrait:after {
+        display: none;
+      }
+      .hero-socials {
+        display: flex;
+        gap: 0.7rem;
+        margin-top: 1.5rem;
+      }
+      .hero-socials a {
+        width: 2.6rem;
+        height: 2.6rem;
+        display: grid;
+        place-items: center;
+        border: 1px solid #ffffff4d;
+        border-radius: 50%;
+        text-decoration: none;
+        color: #ddd;
+        transition: 0.2s;
+      }
+      .hero-socials a:hover {
+        background: var(--yellow);
+        border-color: var(--yellow);
+        color: #000;
+        transform: translateY(-3px);
+      }
+      .side-nav {
+        transition:
+          opacity 0.28s,
+          transform 0.28s;
+      }
+      .side-nav.ui-hidden {
+        opacity: 0.08;
+        transform: translateX(calc(-100% - 2rem));
+        pointer-events: none;
+      }
+      .utility.ui-hidden {
+        opacity: 0.08;
+        transform: translateY(calc(-100% - 2rem));
+        pointer-events: none;
+      }
+      .side-nav:hover,
+      .side-nav:focus-within,
+      .utility:hover,
+      .utility:focus-within {
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+      }
+      .event time {
+        position: relative;
+      }
+      .event time:after {
+        content: "";
+        position: absolute;
+        right: -1.85rem;
+        top: 1.7rem;
+        width: 0.65rem;
+        height: 0.65rem;
+        border-radius: 50%;
+        background: var(--red2);
+        box-shadow:
+          0 0 0 6px #050505,
+          0 0 0 7px var(--red2);
+      }
+      .event-content:before {
+        display: none;
+      }
+      html[data-theme="light"] .dark .event time:after {
+        box-shadow:
+          0 0 0 6px #eeeae2,
+          0 0 0 7px var(--red2);
+      }
+      .subhead {
+        font-size: 0.8rem;
+        letter-spacing: 0.16em;
+        color: var(--yellow);
+        text-transform: uppercase;
+        margin: 0 0 2rem;
+      }
+      .timeline {
+        margin: 0 0 4rem;
+      }
+      .experience-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 4rem;
+      }
+      .experience {
+        padding: 1.25rem;
+        border: 1px solid #333;
+        background: #0d0d0d;
+      }
+      .experience time {
+        font: 700 0.8rem var(--terminal);
+        color: var(--yellow);
+      }
+      .experience h3 {
+        margin: 0.55rem 0;
+        font-size: 1rem;
+      }
+      .experience p {
+        margin: 0;
+        color: #999;
+        font-size: 0.84rem;
+      }
+      .project-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+      .sr-only {
+        position: absolute !important;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+      .extra-item[hidden] {
+        display: none;
+      }
+      .expand-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+        margin: 1.25rem auto;
+        padding: 0.35rem 0.2rem;
+        border: 0;
+        border-bottom: 1px solid transparent;
+        background: transparent;
+        color: var(--red2);
+        font: 700 0.72rem var(--terminal);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .expand-toggle:hover {
+        border-bottom-color: var(--yellow);
+        color: #111;
+      }
+      .dark .expand-toggle:hover,
+      html[data-theme="dark"] .expand-toggle:hover {
+        color: var(--yellow);
+      }
+      .expand-toggle i {
+        font-size: 0.65rem;
+        transition: transform 0.25s;
+      }
+      .expand-toggle[aria-expanded="true"] i {
+        transform: rotate(180deg);
+      }
+      .collapse-at-end[hidden] {
+        display: none;
+      }
+      /* Theme-specific surface colors */
+      html[data-theme="dark"] .light {
+        background: #111;
+        color: #f5f3ed;
+      }
+      html[data-theme="dark"] .card,
+      html[data-theme="dark"] .fact {
+        background: #181818;
+        color: #fff;
+      }
+      html[data-theme="dark"] .card p,
+      html[data-theme="dark"] .publication p {
+        color: #bbb;
+      }
+      html[data-theme="light"] .dark {
+        background: #eeeae2;
+        color: #111;
+      }
+      html[data-theme="light"] .dark .event p,
+      html[data-theme="light"] .dark .research-item p,
+      html[data-theme="light"] .dark .experience p {
+        color: #555;
+      }
+      html[data-theme="light"] .dark .event strong {
+        color: #111;
+      }
+      html[data-theme="light"] .dark .event-content:before {
+        box-shadow:
+          0 0 0 6px #eeeae2,
+          0 0 0 7px var(--red2);
+      }
+      html[data-theme="light"] .dark .research-item,
+      html[data-theme="light"] .dark .experience {
+        background: #fff;
+        color: #111;
+        border-color: #ccc;
+      }
+      html[data-theme="light"] #contato .contact-link {
+        background: #fff;
+        border-color: #ccc;
+      }
+      html[data-theme="light"] #contato .contact-link strong {
+        color: #111;
+      }
+      /* Final responsive adjustments for enhanced components */
+      @media (max-width: 850px) {
+        .experience-list {
+          grid-template-columns: 1fr 1fr;
+        }
+        .cyber-bg iframe {
+          left: -35%;
+          width: 170%;
+          transform: scale(1.28);
+        }
+        .side-nav.ui-hidden {
+          transform: translateY(calc(100% + 2rem));
+        }
+      }
+      @media (max-width: 560px) {
+        .wrap {
+          width: calc(100% - 2rem);
+        }
+        .utility {
+          right: 0.65rem;
+          top: 0.65rem;
+        }
+        .side-nav {
+          gap: 0.28rem;
+          max-width: calc(100% - 1rem);
+        }
+        .side-nav.ui-hidden {
+          transform: translateY(calc(100% + 2rem));
+        }
+        .nav-link {
+          width: 2.55rem;
+          height: 2.55rem;
+        }
+        .hero {
+          padding-top: 6rem;
+        }
+        .hero h1 {
+          font-size: clamp(2.4rem, 13.5vw, 3.8rem);
+          overflow-wrap: anywhere;
+        }
+        .experience-list {
+          grid-template-columns: 1fr;
+        }
+        .portrait {
+          min-height: 360px;
+        }
+        .publication {
+          grid-template-columns: 2rem 1fr;
+          gap: 0.7rem;
+        }
+        .award {
+          align-items: flex-start;
+        }
+        .cyber-bg iframe {
+          left: -60%;
+          width: 220%;
+        }
+        .event time:after {
+          left: -2rem;
+          right: auto;
+          top: 1.7rem;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        *,
+        *:before,
+        *:after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+    <!-- Decorative live data layer; hidden from assistive technology. -->
+    <div class="cyber-bg" aria-hidden="true">
+      <iframe
+        src="https://cybermap.kaspersky.com/pt/widget/dynamic/dark"
+        title="Mapa mundial de ciberameaças em tempo real"
+        tabindex="-1"
+      ></iframe>
     </div>
-  </div>
-
-  <!-- Conteúdo Central -->
-  <main class="relative z-20 h-screen flex flex-col justify-center ml-32 md:ml-48 lg:ml-64 max-w-3xl">
-    <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold text-black tracking-tight text-glow mb-4">
-      João Lucas<br>Mayrinck D'Oliveira
-    </h1>
-    
-    <h2 class="text-3xl md:text-4xl text-black font-light mb-8 flex items-center gap-3 text-glow">
-      I'm <span class="font-mono text-gray-800 tracking-tight typing-cursor">MSc Student;</span>
-    </h2>
-
-    <!-- Ícones Sociais (Lattes, ORCID, GitHub, etc) -->
-    <div class="flex gap-6 text-2xl text-white/60">
-      <a href="http://lattes.cnpq.br/7395864900833083" target="_blank" class="hover:text-brand transition-colors" title="Lattes">
-        <i class="fas fa-graduation-cap"></i>
-      </a>
-      <a href="https://orcid.org/0009-0001-0178-4877" target="_blank" class="hover:text-brand transition-colors" title="ORCID">
-        <i class="fab fa-orcid"></i>
-      </a>
-      <a href="https://github.com/Jluckmay" class="hover:text-brand transition-colors" title="GitHub">
-        <i class="fab fa-github"></i>
-      </a>
-      <a href="https://linkedin.com/in/jluckmay" class="hover:text-brand transition-colors" title="LinkedIn">
-        <i class="fab fa-linkedin-in"></i>
-      </a>
-      <a href="mailto:joao-d@ufmg.br" class="hover:text-brand transition-colors" title="Email">
-        <i class="fas fa-envelope"></i>
-      </a>
+    <!-- User preferences remain independent from page navigation. -->
+    <div class="utility" aria-label="Preferências da página">
+      <button
+        id="language-toggle"
+        type="button"
+        aria-label="Mudar idioma"
+        aria-pressed="false"
+      >
+        EN
+      </button>
+      <button id="theme-toggle" type="button" aria-label="Alternar tema">
+        <i class="fa-solid fa-moon" aria-hidden="true"></i
+        ><span class="sr-only">Alternar tema claro ou escuro</span>
+      </button>
     </div>
-  </main>
-
-</body>
-</html>-colors" title="Email">
-        <i class="fas fa-envelope"></i>
-      </a>
-    </div>
-  </main>
-
-</body>
+    <!-- Section navigation becomes contextual while scrolling. -->
+    <nav class="side-nav" aria-label="Navegação principal">
+      <a class="nav-link active" href="#inicio" aria-label="Início"
+        ><i class="fa-solid fa-house"></i><span>Início</span></a
+      >
+      <a class="nav-link" href="#sobre" aria-label="Sobre"
+        ><i class="fa-regular fa-user"></i><span>Sobre</span></a
+      >
+      <a class="nav-link" href="#trajetoria" aria-label="Trajetória"
+        ><i class="fa-solid fa-route"></i><span>Trajetória</span></a
+      >
+      <a class="nav-link" href="#projetos" aria-label="Projetos"
+        ><i class="fa-solid fa-code"></i><span>Projetos</span></a
+      >
+      <a class="nav-link" href="#publicacoes" aria-label="Publicações"
+        ><i class="fa-solid fa-book-open"></i><span>Publicações</span></a
+      >
+      <a class="nav-link" href="#contato" aria-label="Contato"
+        ><i class="fa-regular fa-envelope"></i><span>Contato</span></a
+      >
+    </nav>
+    <main id="conteudo">
+      <!-- Hero -->
+      <section class="hero" id="inicio">
+        <div class="wrap">
+          <p class="eyebrow">Mestrando · DCC/UFMG · Belo Horizonte</p>
+          <h1>
+            <span class="first-name">João</span>
+            <span class="middle-name">Lucas</span><br /><em>Mayrinck</em>
+            <span class="surname">D'Oliveira</span>
+          </h1>
+          <p class="role">
+            <span id="typed" aria-hidden="true">I'm a MSc Studant!</span
+            ><span id="sr-role" class="sr-only" aria-live="polite"
+              >I'm a MSc Studant!</span
+            >
+          </p>
+          <div class="actions">
+            <a class="button" href="#projetos"
+              >Explorar trabalhos
+              <i class="fa-solid fa-arrow-down" aria-hidden="true"></i
+            ></a>
+          </div>
+          <div
+            class="hero-socials"
+            aria-label="Redes sociais e perfis acadêmicos"
+          >
+            <a
+              href="https://github.com/Jluckmay"
+              target="_blank"
+              rel="noopener"
+              aria-label="GitHub"
+              ><i class="fa-brands fa-github" aria-hidden="true"></i></a
+            ><a
+              href="https://www.linkedin.com/in/jluckmay/"
+              target="_blank"
+              rel="noopener"
+              aria-label="LinkedIn"
+              ><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a
+            ><a
+              href="https://orcid.org/0009-0001-0178-4877"
+              target="_blank"
+              rel="noopener"
+              aria-label="ORCID"
+              ><i class="fa-brands fa-orcid" aria-hidden="true"></i></a
+            ><a
+              href="http://lattes.cnpq.br/7395864900833083"
+              target="_blank"
+              rel="noopener"
+              aria-label="Currículo Lattes"
+              ><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i></a
+            ><a href="mailto:lucas.mayrinck@dcc.ufmg.br" aria-label="Email"
+              ><i class="fa-solid fa-envelope" aria-hidden="true"></i
+            ></a>
+          </div>
+        </div>
+      </section>
+      <!-- Profile summary -->
+      <section class="light" id="sobre">
+        <div class="wrap">
+          <header class="section-head">
+            <h2>Sobre mim.</h2>
+            <small>01 / PERFIL</small>
+          </header>
+          <p class="lead">
+            Pesquisador e desenvolvedor que conecta
+            <strong>computação, educação e impacto social</strong>. Bacharel em
+            Sistemas de Informação pela UFV e mestrando em Ciência da Computação
+            no DCC/UFMG.
+          </p>
+          <div class="about-grid">
+            <div class="portrait">
+              <img
+                src="https://avatars.githubusercontent.com/u/55472486?v=4"
+                alt="Retrato de João Lucas Mayrinck D'Oliveira"
+              />
+            </div>
+            <div>
+              <p>
+                Minha trajetória passa por desenvolvimento de jogos digitais,
+                gamificação educacional, ensino de programação e projetos de
+                pesquisa e extensão. Trabalhei como tutor, monitor e bolsista,
+                coordenando iniciativas que transformam conteúdos abstratos em
+                experiências interativas.
+              </p>
+              <p>
+                Hoje investigo problemas ligados a redes, segurança e sistemas
+                inteligentes, sem perder foco em Engenharia de Software, UX,
+                Internet das Coisas e educação tecnológica.
+              </p>
+              <div class="facts">
+                <div class="fact"><b>11</b><span>artigos publicados</span></div>
+                <div class="fact"><b>4+</b><span>anos em ensino</span></div>
+                <div class="fact"><b>2</b><span>premiações</span></div>
+                <div class="fact">
+                  <b>2026</b><span>início do mestrado</span>
+                </div>
+              </div>
+              <div class="tags" aria-label="Competências">
+                <span class="tag">Python</span><span class="tag">C / C++</span
+                ><span class="tag">Java</span><span class="tag">Unity 3D</span
+                ><span class="tag">JavaScript</span><span class="tag">SQL</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Education, academic experience and research interests -->
+      <section class="dark" id="trajetoria">
+        <div class="wrap">
+          <header class="section-head">
+            <h2>Trajetória.</h2>
+            <small>02 / FORMAÇÃO</small>
+          </header>
+          <h3 class="subhead">Formação acadêmica</h3>
+          <div class="timeline">
+            <article class="event">
+              <time>2026 — atual</time>
+              <div class="event-content">
+                <h3>Mestrado em Ciência da Computação</h3>
+                <p>
+                  <strong>Universidade Federal de Minas Gerais · DCC</strong>
+                </p>
+                <p>
+                  Formação avançada com interesse em redes sem fio, segurança,
+                  algoritmos e sistemas inteligentes.
+                </p>
+              </div>
+            </article>
+            <article class="event">
+              <time>2019 — 2025</time>
+              <div class="event-content">
+                <h3>Bacharelado em Sistemas de Informação</h3>
+                <p>
+                  <strong
+                    >Universidade Federal de Viçosa · Campus Rio
+                    Paranaíba</strong
+                  >
+                </p>
+                <p>
+                  Formação em desenvolvimento de software, sistemas, dados e
+                  tecnologia aplicada à educação.
+                </p>
+              </div>
+            </article>
+          </div>
+          <h3 class="subhead">Experiência acadêmica</h3>
+          <div class="experience-list">
+            <article class="experience">
+              <time>2025</time>
+              <h3>Monitor de Desenvolvimento de Jogos</h3>
+              <p>
+                Apoio didático na disciplina Introduction to Game Development da
+                UFV.
+              </p>
+            </article>
+            <article class="experience">
+              <time>2023 — 2024</time>
+              <h3>Bolsista de pesquisa · FUNARBEN</h3>
+              <p>
+                Figuras dinâmicas no GeoGebra aplicadas ao ensino de matemática.
+              </p>
+            </article>
+            <article class="experience">
+              <time>2021 — 2022</time>
+              <h3>Monitor de Programação</h3>
+              <p>
+                Acompanhamento de estudantes e apoio ao aprendizado de
+                fundamentos de programação.
+              </p>
+            </article>
+            <article class="experience">
+              <time>2019 — 2020</time>
+              <h3>Tutor de Programação</h3>
+              <p>
+                Atendimento, orientação prática e reforço de conceitos
+                introdutórios.
+              </p>
+            </article>
+          </div>
+          <button
+            class="expand-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="experience-extra"
+            data-target="experience-extra"
+            data-kind="experiencias"
+          >
+            <span>Mostrar todas as experiências</span
+            ><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+          </button>
+          <div class="experience-list" id="experience-extra">
+            <article class="experience extra-item" hidden>
+              <time>2026</time>
+              <h3>Comissão eleitoral · CAPosComp/UFMG</h3>
+              <p>
+                Participação no processo de eleição da representação discente do
+                Centro Acadêmico da Pós-Graduação em Ciência da Computação.
+              </p>
+            </article>
+            <article class="experience extra-item" hidden>
+              <time>2023</time>
+              <h3>Centro Acadêmico de Sistemas de Informação · UFV</h3>
+              <p>
+                Participação na representação estudantil e nas atividades do
+                curso de Sistemas de Informação.
+              </p>
+            </article>
+            <article class="experience extra-item" hidden>
+              <time>2022</time>
+              <h3>Projeto de Introdução à Informática</h3>
+              <p>
+                Aulas em escola pública sobre história da computação, noções de
+                informática, pacote Office, segurança online, copyright e
+                cidadania digital.
+              </p>
+            </article>
+          </div>
+          <button
+            class="expand-toggle collapse-at-end"
+            hidden
+            type="button"
+            aria-expanded="true"
+            aria-controls="experience-extra"
+            data-target="experience-extra"
+            data-kind="experiencias"
+          >
+            <span>Recolher experiências</span
+            ><i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
+          </button>
+          <h3 class="subhead">Interesses de pesquisa</h3>
+          <div class="research-grid">
+            <article class="research-item">
+              <i class="fa-solid fa-shield-halved"></i>
+              <h3>Segurança & Redes</h3>
+              <p>
+                Segurança da informação, detecção, redes sem fio e sistemas
+                conectados.
+              </p>
+            </article>
+            <article class="research-item">
+              <i class="fa-solid fa-microchip"></i>
+              <h3>IoT</h3>
+              <p>
+                Internet das Coisas, sensoriamento e interação entre mundo
+                físico e software.
+              </p>
+            </article>
+            <article class="research-item">
+              <i class="fa-solid fa-gamepad"></i>
+              <h3>Jogos & Educação</h3>
+              <p>
+                Gamificação, usabilidade e ferramentas digitais de apoio à
+                aprendizagem.
+              </p>
+            </article>
+            <article class="research-item">
+              <i class="fa-solid fa-code-branch"></i>
+              <h3>Engenharia & UX</h3>
+              <p>
+                Software confiável, interfaces legíveis e experiências centradas
+                no usuário.
+              </p>
+            </article>
+          </div>
+          <button
+            class="expand-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="interests-extra"
+            data-target="interests-extra"
+            data-kind="interesses"
+          >
+            <span>Mostrar todos os interesses</span
+            ><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+          </button>
+          <div class="research-grid" id="interests-extra">
+            <article class="research-item extra-item" hidden>
+              <i class="fa-solid fa-brain"></i>
+              <h3>Machine Learning</h3>
+              <p>
+                Modelos de aprendizado, avaliação de desempenho e aplicações
+                inteligentes orientadas por dados.
+              </p>
+            </article>
+            <article class="research-item extra-item" hidden>
+              <i class="fa-solid fa-chart-line"></i>
+              <h3>Análise de Dados</h3>
+              <p>
+                Extração, tratamento, visualização e interpretação de dados para
+                apoiar decisões.
+              </p>
+            </article>
+            <article class="research-item extra-item" hidden>
+              <i class="fa-solid fa-diagram-project"></i>
+              <h3>Algoritmos</h3>
+              <p>
+                Otimização, estruturas de dados, complexidade computacional e
+                análise experimental.
+              </p>
+            </article>
+          </div>
+          <button
+            class="expand-toggle collapse-at-end"
+            hidden
+            type="button"
+            aria-expanded="true"
+            aria-controls="interests-extra"
+            data-target="interests-extra"
+            data-kind="interesses"
+          >
+            <span>Recolher interesses</span
+            ><i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
+          </button>
+        </div>
+      </section>
+      <!-- Projects: six highlights followed by an expandable archive. -->
+      <section class="light" id="projetos">
+        <div class="wrap">
+          <header class="section-head">
+            <h2>Projetos.</h2>
+            <small>03 / CÓDIGO & PESQUISA</small>
+          </header>
+          <div class="cards">
+            <article class="card">
+              <span class="num">01 / DESTAQUE</span>
+              <h3>Palavras ao Ar</h3>
+              <p>
+                Jogo digital educacional para descoberta de palavras e apoio à
+                alfabetização. Menção honrosa no SBIE 2024.
+              </p>
+              <a
+                href="https://doi.org/10.5753/sbie.2024.241887"
+                target="_blank"
+                rel="noopener"
+                >Ver publicação +</a
+              >
+            </article>
+            <article class="card">
+              <span class="num">02 / ALGORITMOS</span>
+              <h3>Gale-Shapley Visualizer</h3>
+              <p>
+                Visualização interativa do algoritmo de casamento estável,
+                desenvolvida em TypeScript.
+              </p>
+              <div class="project-links">
+                <a
+                  href="https://jluckmay.github.io/Gale-Shapley-Visualizer/"
+                  target="_blank"
+                  rel="noopener"
+                  >Abrir projeto +</a
+                ><a
+                  href="https://github.com/Jluckmay/Gale-Shapley-Visualizer"
+                  target="_blank"
+                  rel="noopener"
+                  >GitHub +</a
+                >
+              </div>
+            </article>
+            <article class="card">
+              <span class="num">03 / MATEMÁTICA</span>
+              <h3>Collatz Lab</h3>
+              <p>
+                Ambiente computacional para explorar, visualizar e documentar
+                comportamento do problema 3n+1.
+              </p>
+              <div class="project-links">
+                <a
+                  href="https://jluckmay.github.io/Collatz-Lab/"
+                  target="_blank"
+                  rel="noopener"
+                  >Abrir projeto +</a
+                ><a
+                  href="https://github.com/Jluckmay/Collatz-Lab"
+                  target="_blank"
+                  rel="noopener"
+                  >GitHub +</a
+                >
+              </div>
+            </article>
+            <article class="card">
+              <span class="num">04 / IMAGENS</span>
+              <h3>PDI Interativo</h3>
+              <p>
+                Ferramenta de estudo em processamento digital de imagens nos
+                domínios espacial e frequencial.
+              </p>
+              <div class="project-links">
+                <a
+                  href="https://jluckmay.github.io/Processamento-Digital-de-Imagens/"
+                  target="_blank"
+                  rel="noopener"
+                  >Abrir projeto +</a
+                ><a
+                  href="https://github.com/Jluckmay/Processamento-Digital-de-Imagens"
+                  target="_blank"
+                  rel="noopener"
+                  >GitHub +</a
+                >
+              </div>
+            </article>
+            <article class="card">
+              <span class="num">05 / DADOS</span>
+              <h3>Análise de Cancelamentos</h3>
+              <p>
+                Extração, tratamento e análise de dados com Python, Pandas e
+                Plotly, incluindo propostas de intervenção.
+              </p>
+              <div class="project-links">
+                <a
+                  href="https://jluckmay.github.io/analise-dados-jornada-python/"
+                  target="_blank"
+                  rel="noopener"
+                  >Abrir projeto +</a
+                ><a
+                  href="https://github.com/Jluckmay/analise-dados-jornada-python"
+                  target="_blank"
+                  rel="noopener"
+                  >GitHub +</a
+                >
+              </div>
+            </article>
+            <article class="card">
+              <span class="num">06 / SOFTWARE</span>
+              <h3>Document Signer</h3>
+              <p>
+                Projeto em Python voltado à assinatura e manipulação de
+                documentos digitais.
+              </p>
+              <div class="project-links">
+                <a
+                  href="https://jluckmay.github.io/document-signer/"
+                  target="_blank"
+                  rel="noopener"
+                  >Abrir projeto +</a
+                ><a
+                  href="https://github.com/Jluckmay/document-signer"
+                  target="_blank"
+                  rel="noopener"
+                  >GitHub +</a
+                >
+              </div>
+            </article>
+          </div>
+          <button
+            class="expand-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="projects-extra"
+            data-target="projects-extra"
+            data-kind="projetos"
+          >
+            <span>Mostrar todos os projetos</span
+            ><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+          </button>
+          <div class="cards" id="projects-extra">
+            <article class="card extra-item" hidden>
+              <span class="num">07 / EDUCAÇÃO</span>
+              <h3>Oferta PPGCC UFMG</h3>
+              <p>
+                Interface em JavaScript para consulta e organização de ofertas
+                do Programa de Pós-Graduação em Ciência da Computação.
+              </p>
+              <div class="project-links">
+                <a
+                  href="https://jluckmay.github.io/oferta-ppgcc-ufmg/"
+                  target="_blank"
+                  rel="noopener"
+                  >Abrir projeto +</a
+                ><a
+                  href="https://github.com/Jluckmay/oferta-ppgcc-ufmg"
+                  target="_blank"
+                  rel="noopener"
+                  >GitHub +</a
+                >
+              </div>
+            </article>
+            <article class="card extra-item" hidden>
+              <span class="num">08 / WEB</span>
+              <h3>Quadro Branco</h3>
+              <p>
+                Quadro branco interativo desenvolvido para navegador com
+                JavaScript.
+              </p>
+              <div class="project-links">
+                <a
+                  href="https://jluckmay.github.io/Quadro-Branco/"
+                  target="_blank"
+                  rel="noopener"
+                  >Abrir projeto +</a
+                ><a
+                  href="https://github.com/Jluckmay/Quadro-Branco"
+                  target="_blank"
+                  rel="noopener"
+                  >GitHub +</a
+                >
+              </div>
+            </article>
+            <article class="card extra-item" hidden>
+              <span class="num">09 / JOGO</span>
+              <h3>MineMan</h3>
+              <p>Projeto de jogo desenvolvido para a disciplina SIN 141.</p>
+              <div class="project-links">
+                <a
+                  href="https://jluckmay.github.io/MineMan/"
+                  target="_blank"
+                  rel="noopener"
+                  >Abrir projeto +</a
+                ><a
+                  href="https://github.com/Jluckmay/MineMan"
+                  target="_blank"
+                  rel="noopener"
+                  >GitHub +</a
+                >
+              </div>
+            </article>
+            <article class="card extra-item" hidden>
+              <span class="num">10 / WEB</span>
+              <h3>Email Signature</h3>
+              <p>Assinatura de email acadêmica construída em HTML.</p>
+              <div class="project-links">
+                <a
+                  href="https://jluckmay.github.io/email-signature/"
+                  target="_blank"
+                  rel="noopener"
+                  >Abrir projeto +</a
+                ><a
+                  href="https://github.com/Jluckmay/email-signature"
+                  target="_blank"
+                  rel="noopener"
+                  >GitHub +</a
+                >
+              </div>
+            </article>
+            <article class="card extra-item" hidden>
+              <span class="num">11 / TEORIA</span>
+              <h3>Complexity Classes</h3>
+              <p>
+                Material interativo sobre classes de complexidade computacional.
+              </p>
+              <a
+                href="https://github.com/Jluckmay/complexity-classes"
+                target="_blank"
+                rel="noopener"
+                >Ver no GitHub +</a
+              >
+            </article>
+            <article class="card extra-item" hidden>
+              <span class="num">12 / FERRAMENTA</span>
+              <h3>Smart Minifier</h3>
+              <p>
+                Ferramenta web para redução e otimização de conteúdo textual ou
+                código.
+              </p>
+              <div class="project-links">
+                <a
+                  href="https://jluckmay.github.io/smart-minifier/"
+                  target="_blank"
+                  rel="noopener"
+                  >Abrir projeto +</a
+                ><a
+                  href="https://github.com/Jluckmay/smart-minifier"
+                  target="_blank"
+                  rel="noopener"
+                  >GitHub +</a
+                >
+              </div>
+            </article>
+            <article class="card extra-item" hidden>
+              <span class="num">13 / MACHINE LEARNING</span>
+              <h3>Machine Learning Jornada Python</h3>
+              <p>
+                Notebooks de estudo e experimentação com aprendizado de máquina
+                em Python.
+              </p>
+              <div class="project-links">
+                <a
+                  href="https://jluckmay.github.io/machine-learning-jornada-python/"
+                  target="_blank"
+                  rel="noopener"
+                  >Abrir projeto +</a
+                ><a
+                  href="https://github.com/Jluckmay/machine-learning-jornada-python"
+                  target="_blank"
+                  rel="noopener"
+                  >GitHub +</a
+                >
+              </div>
+            </article>
+            <article class="card extra-item" hidden>
+              <span class="num">14 / IA</span>
+              <h3>IA Chatbot Jornada Python</h3>
+              <p>
+                Aplicação web de chatbot com recursos de inteligência
+                artificial.
+              </p>
+              <a
+                href="https://github.com/Jluckmay/IA-Chatbot-Jornada-Python"
+                target="_blank"
+                rel="noopener"
+                >Ver no GitHub +</a
+              >
+            </article>
+            <article class="card extra-item" hidden>
+              <span class="num">15 / AUTOMAÇÃO</span>
+              <h3>Automação Jornada Python</h3>
+              <p>
+                Automação de cadastro de produtos com Python, PyAutoGUI e
+                Pandas.
+              </p>
+              <div class="project-links">
+                <a
+                  href="https://jluckmay.github.io/automacao-jornada-python/"
+                  target="_blank"
+                  rel="noopener"
+                  >Abrir projeto +</a
+                ><a
+                  href="https://github.com/Jluckmay/automacao-jornada-python"
+                  target="_blank"
+                  rel="noopener"
+                  >GitHub +</a
+                >
+              </div>
+            </article>
+            <article class="card extra-item" hidden>
+              <span class="num">16 / PESQUISA</span>
+              <h3>Pré-Projetos de Pesquisa</h3>
+              <p>
+                Coleção de pré-projetos de pesquisa submetidos à UFMG e suas
+                avaliações.
+              </p>
+              <a
+                href="https://github.com/Jluckmay/Pre_Projetos_de_Pesquisa"
+                target="_blank"
+                rel="noopener"
+                >Ver no GitHub +</a
+              >
+            </article>
+            <article class="card extra-item" hidden>
+              <span class="num">17 / PERFIL</span>
+              <h3>Jluckmay</h3>
+              <p>Repositório de apresentação e perfil pessoal no GitHub.</p>
+              <a
+                href="https://github.com/Jluckmay/Jluckmay"
+                target="_blank"
+                rel="noopener"
+                >Ver no GitHub +</a
+              >
+            </article>
+            <article class="card extra-item" hidden>
+              <span class="num">18 / C</span>
+              <h3>C Codes</h3>
+              <p>
+                Jogos, exercícios e bibliotecas desenvolvidos na linguagem C.
+              </p>
+              <div class="project-links">
+                <a
+                  href="https://jluckmay.github.io/C-Codes/"
+                  target="_blank"
+                  rel="noopener"
+                  >Abrir projeto +</a
+                ><a
+                  href="https://github.com/Jluckmay/C-Codes"
+                  target="_blank"
+                  rel="noopener"
+                  >GitHub +</a
+                >
+              </div>
+            </article>
+            <article class="card extra-item" hidden>
+              <span class="num">19 / AUTÔMATOS</span>
+              <h3>Autômatos Finitos</h3>
+              <p>Implementações em Python para estudo de autômatos finitos.</p>
+              <a
+                href="https://github.com/Jluckmay/Automatos_Finitos"
+                target="_blank"
+                rel="noopener"
+                >Ver no GitHub +</a
+              >
+            </article>
+          </div>
+          <button
+            class="expand-toggle collapse-at-end"
+            hidden
+            type="button"
+            aria-expanded="true"
+            aria-controls="projects-extra"
+            data-target="projects-extra"
+            data-kind="projetos"
+          >
+            <span>Recolher projetos</span
+            ><i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
+          </button>
+        </div>
+      </section>
+      <!-- Publications: selected work followed by complete ORCID history. -->
+      <section class="light" id="publicacoes">
+        <div class="wrap">
+          <header class="section-head">
+            <h2>Publicações.</h2>
+            <small>04 / PRODUÇÃO</small>
+          </header>
+          <div class="pub-list">
+            <article class="publication">
+              <div>
+                <h3>
+                  Math-0-Ween: Um Jogo Digital Educacional para Explorar
+                  Operações Matemáticas de Forma Divertida e Assustadora
+                </h3>
+                <p>
+                  Revista Brasileira de Informática na Educação · 2026 · com R.
+                  Coêlho, F. Bastos e P. M. de Sousa
+                </p>
+              </div>
+              <a
+                href="https://doi.org/10.5753/rbie.2026.6599"
+                target="_blank"
+                rel="noopener"
+                >DOI ↗</a
+              >
+            </article>
+            <article class="publication">
+              <div>
+                <h3>
+                  Atividades de aprendizagem em matemática baseadas no uso
+                  interativo de figuras dinâmicas em ambientes virtuais
+                </h3>
+                <p>
+                  Capítulo de livro · Autoria, tecnologia e direitos humanos na
+                  educação · 2025 · p. 45–67
+                </p>
+              </div>
+              <a
+                href="https://orcid.org/0009-0001-0178-4877"
+                target="_blank"
+                rel="noopener"
+                >ORCID ↗</a
+              >
+            </article>
+            <article class="publication">
+              <div>
+                <h3>
+                  PDI Interativo: Uma Ferramenta para Estudo e Experimentação
+                  com Abordagem Espacial e Frequencial
+                </h3>
+                <p>Anais do XVI Workshop de Sistemas de Informação · 2025</p>
+              </div>
+              <a
+                href="https://doi.org/10.5753/wsis.2025.15098"
+                target="_blank"
+                rel="noopener"
+                >DOI ↗</a
+              >
+            </article>
+            <article class="publication">
+              <div>
+                <h3>
+                  Impacto da Solução Inicial na Otimização por Simulated
+                  Annealing: Uma Análise Comparativa entre GRASP e HPG
+                </h3>
+                <p>Anais do XVI Workshop de Sistemas de Informação · 2025</p>
+              </div>
+              <a
+                href="https://doi.org/10.5753/wsis.2025.15099"
+                target="_blank"
+                rel="noopener"
+                >DOI ↗</a
+              >
+            </article>
+            <article class="publication">
+              <div>
+                <h3>
+                  Palavras ao Ar: um jogo digital de descoberta de novas
+                  palavras e seus significados para auxiliar na alfabetização
+                </h3>
+                <p>
+                  XXXV Simpósio Brasileiro de Informática na Educação · 2024 ·
+                  p. 591–601
+                </p>
+              </div>
+              <a
+                href="https://doi.org/10.5753/sbie.2024.241887"
+                target="_blank"
+                rel="noopener"
+                >DOI ↗</a
+              >
+            </article>
+          </div>
+          <button
+            class="expand-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="publications-extra"
+            data-target="publications-extra"
+            data-kind="publicacoes"
+          >
+            <span>Mostrar todas as publicações</span
+            ><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+          </button>
+          <div
+            class="pub-list"
+            id="publications-extra"
+            style="counter-reset: pub 5"
+          >
+            <article class="publication extra-item" hidden>
+              <div>
+                <h3>Explorando a Grécia Antiga: Um Jogo Digital Educativo</h3>
+                <p>XVI Workshop de Sistemas de Informação · 2025 · pôster</p>
+              </div>
+              <a
+                href="https://doi.org/10.5753/wsis.2025.15623"
+                target="_blank"
+                rel="noopener"
+                >DOI ↗</a
+              >
+            </article>
+            <article class="publication extra-item" hidden>
+              <div>
+                <h3>
+                  Gamificação no Ensino de Física: Projeto e Teste de
+                  Usabilidade de um Jogo de Física para Ensino Médio
+                </h3>
+                <p>XVI Workshop de Sistemas de Informação · 2025 · pôster</p>
+              </div>
+              <a
+                href="https://doi.org/10.5753/wsis.2025.15027"
+                target="_blank"
+                rel="noopener"
+                >DOI ↗</a
+              >
+            </article>
+            <article class="publication extra-item" hidden>
+              <div>
+                <h3>
+                  Jogo Digital Educativo como Ferramenta de Apoio no Ensino de
+                  Frações
+                </h3>
+                <p>XVI Workshop de Sistemas de Informação · 2025 · pôster</p>
+              </div>
+              <a
+                href="https://doi.org/10.5753/wsis.2025.15113"
+                target="_blank"
+                rel="noopener"
+                >DOI ↗</a
+              >
+            </article>
+            <article class="publication extra-item" hidden>
+              <div>
+                <h3>
+                  Palavras ao Ar: um jogo digital de descoberta de novas
+                  palavras e seus significados para auxiliar na alfabetização
+                </h3>
+                <p>
+                  XXXV Simpósio Brasileiro de Informática na Educação · 2024 ·
+                  apresentação
+                </p>
+              </div>
+              <a
+                href="https://doi.org/10.5753/sbie.2024.241887"
+                target="_blank"
+                rel="noopener"
+                >DOI ↗</a
+              >
+            </article>
+            <article class="publication extra-item" hidden>
+              <div>
+                <h3>
+                  Palavras ao Ar: um jogo digital de descoberta de novas
+                  palavras e seus significados para auxiliar na alfabetização
+                </h3>
+                <p>XIV Workshop de Sistemas de Informação · 2023 · pôster</p>
+              </div>
+              <a
+                href="https://orcid.org/0009-0001-0178-4877"
+                target="_blank"
+                rel="noopener"
+                >ORCID ↗</a
+              >
+            </article>
+            <article class="publication extra-item" hidden>
+              <div>
+                <h3>
+                  Palavras ao Ar: um jogo digital de descoberta de novas
+                  palavras e seus significados para auxiliar na alfabetização
+                </h3>
+                <p>Simpósio de Integração Acadêmica da UFV · 2023 · pôster</p>
+              </div>
+              <a
+                href="https://www3.dti.ufv.br/sia/vicosa/2023/trabalhos/19027"
+                target="_blank"
+                rel="noopener"
+                >Registro ↗</a
+              >
+            </article>
+          </div>
+          <button
+            class="expand-toggle collapse-at-end"
+            hidden
+            type="button"
+            aria-expanded="true"
+            aria-controls="publications-extra"
+            data-target="publications-extra"
+            data-kind="publicacoes"
+          >
+            <span>Recolher publicações</span
+            ><i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
+          </button>
+          <div class="award">
+            <i class="fa-solid fa-award"></i>
+            <div>
+              <strong>Menção Honrosa · SBIE 2024</strong><br />Palavras ao Ar
+              ficou entre três melhores artigos da trilha de gamificação, jogos
+              digitais, robótica e tecnologias imersivas.
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Contact profiles -->
+      <section class="dark" id="contato">
+        <div class="wrap">
+          <header class="section-head">
+            <h2>Vamos conversar?</h2>
+            <small>05 / CONTATO</small>
+          </header>
+          <div class="contact-grid">
+            <div>
+              <p class="lead">
+                Aberto a conversas sobre pesquisa, colaboração acadêmica,
+                software e oportunidades de desenvolvimento.
+              </p>
+              <p class="eyebrow">Belo Horizonte · Minas Gerais · Brasil</p>
+            </div>
+            <div class="contact-links">
+              <a class="contact-link" href="mailto:lucas.mayrinck@dcc.ufmg.br"
+                ><i class="fa-solid fa-envelope"></i>
+                <div>
+                  <strong>Email acadêmico</strong
+                  ><span>lucas.mayrinck@dcc.ufmg.br</span>
+                </div></a
+              >
+              <a
+                class="contact-link"
+                href="https://homepages.dcc.ufmg.br/~lucas.mayrinck/"
+                target="_blank"
+                rel="noopener"
+                ><i class="fa-solid fa-building-columns"></i>
+                <div>
+                  <strong>Página acadêmica DCC/UFMG</strong
+                  ><span>homepages.dcc.ufmg.br/~lucas.mayrinck</span>
+                </div></a
+              >
+              <a
+                class="contact-link"
+                href="http://lattes.cnpq.br/7395864900833083"
+                target="_blank"
+                rel="noopener"
+                ><i class="fa-solid fa-graduation-cap"></i>
+                <div>
+                  <strong>Currículo Lattes</strong
+                  ><span>ID 7395864900833083</span>
+                </div></a
+              >
+              <a
+                class="contact-link"
+                href="https://orcid.org/0009-0001-0178-4877"
+                target="_blank"
+                rel="noopener"
+                ><i class="fa-brands fa-orcid"></i>
+                <div>
+                  <strong>ORCID</strong><span>0009-0001-0178-4877</span>
+                </div></a
+              >
+              <a
+                class="contact-link"
+                href="https://github.com/Jluckmay"
+                target="_blank"
+                rel="noopener"
+                ><i class="fa-brands fa-github"></i>
+                <div><strong>GitHub</strong><span>@Jluckmay</span></div></a
+              >
+              <a
+                class="contact-link"
+                href="https://www.linkedin.com/in/jluckmay/"
+                target="_blank"
+                rel="noopener"
+                ><i class="fa-brands fa-linkedin-in"></i>
+                <div><strong>LinkedIn</strong><span>@jluckmay</span></div></a
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <div class="wrap">
+        <span>© <span id="year"></span> João Lucas Mayrinck D'Oliveira</span
+        ><span>Feito com amor entre código, pesquisa e café.</span>
+      </div>
+    </footer>
+    <script>
+      // Hero typing effect. Only the non-shared suffix is erased between phrases.
+      const phrases = [
+          "I'm a MSc Studant!",
+          "I'm a programmer!",
+          "I'm a developer!",
+          "I'm a data analist!",
+          "I'm a researcher!",
+          "I'm an academic!",
+          "I'm a bacharelor!",
+          "I'm a profissional!",
+          "I write code!",
+        ],
+        typed = document.getElementById("typed"),
+        srRole = document.getElementById("sr-role"),
+        reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      let phraseIndex = 0,
+        visible = phrases[0],
+        deleting = true,
+        preserved = 0;
+      function commonPrefix(first, second) {
+        let index = 0;
+        while (
+          index < first.length &&
+          index < second.length &&
+          first[index] === second[index]
+        )
+          index++;
+        return index;
+      }
+      function renderPhrase(text) {
+        typed.replaceChildren();
+        const tokens = text.match(/\s+|!|[^\s!]+/g) || [];
+        let contentIndex = 0;
+        tokens.forEach((token) => {
+          const span = document.createElement("span"),
+            control = /^(I'm|I|a|an|!)$/.test(token) || /^\s+$/.test(token),
+            wordIndex = control ? contentIndex : contentIndex++;
+          span.className = control
+            ? "typed-white"
+            : token.toLowerCase() === "analist" || wordIndex === 1
+              ? "typed-yellow"
+              : "typed-red";
+          span.textContent = token;
+          typed.append(span);
+        });
+      }
+      function typeLoop() {
+        if (reduceMotion) {
+          renderPhrase(visible);
+          return;
+        }
+        const current = phrases[phraseIndex],
+          next = phrases[(phraseIndex + 1) % phrases.length];
+        if (deleting) {
+          preserved = commonPrefix(current, next);
+          visible = visible.slice(0, -1);
+          renderPhrase(visible);
+          if (visible.length === preserved) {
+            deleting = false;
+            phraseIndex = (phraseIndex + 1) % phrases.length;
+            setTimeout(typeLoop, 260);
+            return;
+          }
+          setTimeout(typeLoop, 42);
+        } else {
+          const target = phrases[phraseIndex];
+          visible = target.slice(0, visible.length + 1);
+          renderPhrase(visible);
+          if (visible === target) {
+            deleting = true;
+            srRole.textContent = target;
+            setTimeout(typeLoop, 1500);
+            return;
+          }
+          setTimeout(typeLoop, 76);
+        }
+      }
+      renderPhrase(visible);
+      setTimeout(typeLoop, 1500);
+      // Static text translations are applied to captured text nodes, preserving markup.
+      const translations = {
+        "Pular para o conteúdo": "Skip to content",
+        Início: "Home",
+        Sobre: "About",
+        Trajetória: "Journey",
+        Projetos: "Projects",
+        Publicações: "Publications",
+        Contato: "Contact",
+        "Mestrando · DCC/UFMG · Belo Horizonte":
+          "MSc student · DCC/UFMG · Belo Horizonte",
+        "Explorar trabalhos": "Explore works",
+        "Sobre mim.": "About me.",
+        "01 / PERFIL": "01 / PROFILE",
+        "02 / FORMAÇÃO": "02 / EDUCATION",
+        "03 / CÓDIGO & PESQUISA": "03 / CODE & RESEARCH",
+        "04 / PRODUÇÃO": "04 / OUTPUT",
+        "05 / CONTATO": "05 / CONTACT",
+        "Formação acadêmica": "Academic education",
+        "Experiência acadêmica": "Academic experience",
+        "Interesses de pesquisa": "Research interests",
+        "Trajetória.": "Journey.",
+        "Projetos.": "Projects.",
+        "Publicações.": "Publications.",
+        "Vamos conversar?": "Let's talk?",
+        "artigos publicados": "published papers",
+        "anos em ensino": "years teaching",
+        premiações: "awards",
+        "início do mestrado": "MSc started",
+        "Mestrado em Ciência da Computação": "Master's in Computer Science",
+        "Bacharelado em Sistemas de Informação":
+          "Bachelor's in Information Systems",
+        "Monitor de Desenvolvimento de Jogos":
+          "Game Development Teaching Assistant",
+        "Bolsista de pesquisa · FUNARBEN": "Research fellow · FUNARBEN",
+        "Monitor de Programação": "Programming Teaching Assistant",
+        "Tutor de Programação": "Programming Tutor",
+        "Segurança & Redes": "Security & Networks",
+        "Jogos & Educação": "Games & Education",
+        "Engenharia & UX": "Engineering & UX",
+        "Ver publicação +": "View publication +",
+        "Abrir projeto +": "Open project +",
+        "Ver no GitHub +": "View on GitHub +",
+        "Feito com amor entre código, pesquisa e café.":
+          "Made with love between code, research and coffee.",
+        "Belo Horizonte · Minas Gerais · Brasil":
+          "Belo Horizonte · Minas Gerais · Brazil",
+        "Email acadêmico": "Academic email",
+        "Página acadêmica DCC/UFMG": "DCC/UFMG academic page",
+        "Currículo Lattes": "Lattes CV",
+        "Aberto a conversas sobre pesquisa, colaboração acadêmica, software e oportunidades de desenvolvimento.":
+          "Open to conversations about research, academic collaboration, software and development opportunities.",
+        "Formação em desenvolvimento de software, sistemas, dados e tecnologia aplicada à educação.":
+          "Education in software development, systems, data and technology applied to learning.",
+        "Formação avançada com interesse em redes sem fio, segurança, algoritmos e sistemas inteligentes.":
+          "Advanced studies focused on wireless networks, security, algorithms and intelligent systems.",
+        "Apoio didático na disciplina Introduction to Game Development da UFV.":
+          "Teaching support for UFV's Introduction to Game Development course.",
+        "Figuras dinâmicas no GeoGebra aplicadas ao ensino de matemática.":
+          "Dynamic GeoGebra figures applied to mathematics education.",
+        "Acompanhamento de estudantes e apoio ao aprendizado de fundamentos de programação.":
+          "Student mentoring and support for learning programming fundamentals.",
+        "Atendimento, orientação prática e reforço de conceitos introdutórios.":
+          "Tutoring, hands-on guidance and reinforcement of introductory concepts.",
+        "Hoje investigo problemas ligados a redes, segurança e sistemas inteligentes, sem perder foco em Engenharia de Software, UX, Internet das Coisas e educação tecnológica.":
+          "I currently investigate problems in networks, security and intelligent systems while maintaining an interest in Software Engineering, UX, Internet of Things and technology education.",
+        "Minha trajetória passa por desenvolvimento de jogos digitais, gamificação educacional, ensino de programação e projetos de pesquisa e extensão. Trabalhei como tutor, monitor e bolsista, coordenando iniciativas que transformam conteúdos abstratos em experiências interativas.":
+          "My journey spans digital game development, educational gamification, programming education, research and outreach. I worked as a tutor, teaching assistant and fellow, coordinating initiatives that turn abstract content into interactive experiences.",
+        "Pesquisador e desenvolvedor que conecta":
+          "Researcher and developer connecting",
+        "computação, educação e impacto social":
+          "computing, education and social impact",
+        ". Bacharel em Sistemas de Informação pela UFV e mestrando em Ciência da Computação no DCC/UFMG.":
+          ". BSc in Information Systems from UFV and MSc student in Computer Science at DCC/UFMG.",
+        "Segurança da informação, detecção, redes sem fio e sistemas conectados.":
+          "Information security, detection, wireless networks and connected systems.",
+        "Internet das Coisas, sensoriamento e interação entre mundo físico e software.":
+          "Internet of Things, sensing and interaction between physical environments and software.",
+        "Gamificação, usabilidade e ferramentas digitais de apoio à aprendizagem.":
+          "Gamification, usability and digital tools supporting learning.",
+        "Software confiável, interfaces legíveis e experiências centradas no usuário.":
+          "Reliable software, readable interfaces and user-centered experiences.",
+        "Jogo digital educacional para descoberta de palavras e apoio à alfabetização. Menção honrosa no SBIE 2024.":
+          "Educational digital game for word discovery and literacy support. Honorable mention at SBIE 2024.",
+        "Visualização interativa do algoritmo de casamento estável, desenvolvida em TypeScript.":
+          "Interactive visualization of the stable matching algorithm, developed in TypeScript.",
+        "Ambiente computacional para explorar, visualizar e documentar comportamento do problema 3n+1.":
+          "Computational environment for exploring, visualizing and documenting the behavior of the 3n+1 problem.",
+        "Ferramenta de estudo em processamento digital de imagens nos domínios espacial e frequencial.":
+          "Study tool for digital image processing in spatial and frequency domains.",
+        "Extração, tratamento e análise de dados com Python, Pandas e Plotly, incluindo propostas de intervenção.":
+          "Data extraction, processing and analysis with Python, Pandas and Plotly, including proposed interventions.",
+        "Projeto em Python voltado à assinatura e manipulação de documentos digitais.":
+          "Python project for signing and handling digital documents.",
+        "01 / DESTAQUE": "01 / HIGHLIGHT",
+        "02 / ALGORITMOS": "02 / ALGORITHMS",
+        "03 / MATEMÁTICA": "03 / MATHEMATICS",
+        "04 / IMAGENS": "04 / IMAGES",
+        "05 / DADOS": "05 / DATA",
+        "06 / SOFTWARE": "06 / SOFTWARE",
+        "Math-0-Ween: Um Jogo Digital Educacional para Explorar Operações Matemáticas de Forma Divertida e Assustadora":
+          "Math-0-Ween: An Educational Digital Game for Exploring Mathematical Operations in a Fun and Spooky Way",
+        "Atividades de aprendizagem em matemática baseadas no uso interativo de figuras dinâmicas em ambientes virtuais":
+          "Mathematics learning activities based on interactive use of dynamic figures in virtual environments",
+        "PDI Interativo: Uma Ferramenta para Estudo e Experimentação com Abordagem Espacial e Frequencial":
+          "Interactive DIP: A Study and Experimentation Tool with Spatial and Frequency Approaches",
+        "Impacto da Solução Inicial na Otimização por Simulated Annealing: Uma Análise Comparativa entre GRASP e HPG":
+          "Impact of Initial Solution on Simulated Annealing Optimization: A Comparative Analysis of GRASP and HPG",
+        "Palavras ao Ar: um jogo digital de descoberta de novas palavras e seus significados para auxiliar na alfabetização":
+          "Palavras ao Ar: a digital game for discovering new words and their meanings to support literacy",
+        "Revista Brasileira de Informática na Educação · 2026 · com R. Coêlho, F. Bastos e P. M. de Sousa":
+          "Brazilian Journal of Informatics in Education · 2026 · with R. Coêlho, F. Bastos and P. M. de Sousa",
+        "Capítulo de livro · Autoria, tecnologia e direitos humanos na educação · 2025 · p. 45–67":
+          "Book chapter · Authorship, technology and human rights in education · 2025 · pp. 45–67",
+        "Anais do XVI Workshop de Sistemas de Informação · 2025":
+          "Proceedings of the XVI Information Systems Workshop · 2025",
+        "XXXV Simpósio Brasileiro de Informática na Educação · 2024 · p. 591–601":
+          "XXXV Brazilian Symposium on Computers in Education · 2024 · pp. 591–601",
+        "Menção Honrosa · SBIE 2024": "Honorable Mention · SBIE 2024",
+        "Palavras ao Ar ficou entre três melhores artigos da trilha de gamificação, jogos digitais, robótica e tecnologias imersivas.":
+          "Palavras ao Ar ranked among the top three papers in the gamification, digital games, robotics and immersive technologies track.",
+      };
+      Object.assign(translations, {
+        "Interface em JavaScript para consulta e organização de ofertas do Programa de Pós-Graduação em Ciência da Computação.":
+          "JavaScript interface for browsing and organizing Computer Science Graduate Program course offerings.",
+        "Quadro branco interativo desenvolvido para navegador com JavaScript.":
+          "Interactive browser-based whiteboard developed with JavaScript.",
+        "Projeto de jogo desenvolvido para a disciplina SIN 141.":
+          "Game project developed for the SIN 141 course.",
+        "Assinatura de email acadêmica construída em HTML.":
+          "Academic email signature built with HTML.",
+        "Material interativo sobre classes de complexidade computacional.":
+          "Interactive material about computational complexity classes.",
+        "Ferramenta web para redução e otimização de conteúdo textual ou código.":
+          "Web tool for reducing and optimizing text content or code.",
+        "Notebooks de estudo e experimentação com aprendizado de máquina em Python.":
+          "Machine learning study and experimentation notebooks in Python.",
+        "Aplicação web de chatbot com recursos de inteligência artificial.":
+          "Web chatbot application with artificial intelligence features.",
+        "Automação de cadastro de produtos com Python, PyAutoGUI e Pandas.":
+          "Product registration automation using Python, PyAutoGUI and Pandas.",
+        "Coleção de pré-projetos de pesquisa submetidos à UFMG e suas avaliações.":
+          "Collection of research proposals submitted to UFMG and their evaluations.",
+        "Repositório de apresentação e perfil pessoal no GitHub.":
+          "Personal profile and introduction repository on GitHub.",
+        "Jogos, exercícios e bibliotecas desenvolvidos na linguagem C.":
+          "Games, exercises and libraries developed in C.",
+        "Implementações em Python para estudo de autômatos finitos.":
+          "Python implementations for studying finite automata.",
+        "Explorando a Grécia Antiga: Um Jogo Digital Educativo":
+          "Exploring Ancient Greece: An Educational Digital Game",
+        "Gamificação no Ensino de Física: Projeto e Teste de Usabilidade de um Jogo de Física para Ensino Médio":
+          "Gamification in Physics Education: Design and Usability Testing of a Physics Game for High School",
+        "Jogo Digital Educativo como Ferramenta de Apoio no Ensino de Frações":
+          "Educational Digital Game as a Support Tool for Teaching Fractions",
+        "XVI Workshop de Sistemas de Informação · 2025 · pôster":
+          "XVI Information Systems Workshop · 2025 · poster",
+        "XXXV Simpósio Brasileiro de Informática na Educação · 2024 · apresentação":
+          "XXXV Brazilian Symposium on Computers in Education · 2024 · presentation",
+        "XIV Workshop de Sistemas de Informação · 2023 · pôster":
+          "XIV Information Systems Workshop · 2023 · poster",
+        "Simpósio de Integração Acadêmica da UFV · 2023 · pôster":
+          "UFV Academic Integration Symposium · 2023 · poster",
+        "07 / EDUCAÇÃO": "07 / EDUCATION",
+        "09 / JOGO": "09 / GAME",
+        "11 / TEORIA": "11 / THEORY",
+        "12 / FERRAMENTA": "12 / TOOL",
+        "14 / IA": "14 / AI",
+        "15 / AUTOMAÇÃO": "15 / AUTOMATION",
+        "16 / PESQUISA": "16 / RESEARCH",
+        "17 / PERFIL": "17 / PROFILE",
+        "19 / AUTÔMATOS": "19 / AUTOMATA",
+      });
+      Object.assign(translations, {
+        "Comissão eleitoral · CAPosComp/UFMG":
+          "Electoral committee · CAPosComp/UFMG",
+        "Participação no processo de eleição da representação discente do Centro Acadêmico da Pós-Graduação em Ciência da Computação.":
+          "Participation in the election process for student representation in the Computer Science Graduate Student Association.",
+        "Centro Acadêmico de Sistemas de Informação · UFV":
+          "Information Systems Student Association · UFV",
+        "Participação na representação estudantil e nas atividades do curso de Sistemas de Informação.":
+          "Participation in student representation and Information Systems course activities.",
+        "Projeto de Introdução à Informática":
+          "Introduction to Computing Project",
+        "Aulas em escola pública sobre história da computação, noções de informática, pacote Office, segurança online, copyright e cidadania digital.":
+          "Classes at a public school covering computing history, computer basics, Microsoft Office, online safety, copyright and digital citizenship.",
+        "Análise de Dados": "Data Analysis",
+        "Modelos de aprendizado, avaliação de desempenho e aplicações inteligentes orientadas por dados.":
+          "Learning models, performance evaluation and intelligent data-driven applications.",
+        "Extração, tratamento, visualização e interpretação de dados para apoiar decisões.":
+          "Data extraction, processing, visualization and interpretation to support decisions.",
+        Algoritmos: "Algorithms",
+        "Otimização, estruturas de dados, complexidade computacional e análise experimental.":
+          "Optimization, data structures, computational complexity and experimental analysis.",
+        "Registro ↗": "Record ↗",
+      });
+      // Capture translatable nodes once so repeated language switches remain deterministic.
+      const textNodes = [],
+        walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      let node;
+      while ((node = walker.nextNode())) {
+        const value = node.nodeValue.trim();
+        if (translations[value])
+          textNodes.push({ node, pt: value, en: translations[value] });
+      }
+      let language =
+        localStorage.getItem("language") ||
+        (navigator.language.toLowerCase().startsWith("pt") ? "pt" : "en");
+      const languageToggle = document.getElementById("language-toggle");
+      // Labels shared by top and bottom controls of each expandable collection.
+      const expandLabels = {
+        pt: {
+          projetos: ["Mostrar todos os projetos", "Recolher projetos"],
+          publicacoes: ["Mostrar todas as publicações", "Recolher publicações"],
+          experiencias: [
+            "Mostrar todas as experiências",
+            "Recolher experiências",
+          ],
+          interesses: ["Mostrar todos os interesses", "Recolher interesses"],
+        },
+        en: {
+          projetos: ["Show all projects", "Collapse projects"],
+          publicacoes: ["Show all publications", "Collapse publications"],
+          experiencias: ["Show all experiences", "Collapse experiences"],
+          interesses: ["Show all interests", "Collapse interests"],
+        },
+      };
+      function updateExpandLabels() {
+        document.querySelectorAll(".expand-toggle").forEach((button) => {
+          const container = document.getElementById(button.dataset.target),
+            expanded = container?.dataset.expanded === "true";
+          button.setAttribute("aria-expanded", String(expanded));
+          button.querySelector("span").textContent =
+            expandLabels[language][button.dataset.kind][expanded ? 1 : 0];
+          if (button.classList.contains("collapse-at-end"))
+            button.hidden = !expanded;
+        });
+      }
+      function applyLanguage() {
+        document.documentElement.lang = language === "pt" ? "pt-BR" : "en";
+        textNodes.forEach(
+          (item) =>
+            (item.node.nodeValue = item.node.nodeValue.replace(
+              item.node.nodeValue.trim(),
+              item[language],
+            )),
+        );
+        languageToggle.textContent = language === "pt" ? "EN" : "PT";
+        languageToggle.setAttribute("aria-pressed", language === "en");
+        languageToggle.setAttribute(
+          "aria-label",
+          language === "pt"
+            ? "Mudar idioma para inglês"
+            : "Switch language to Portuguese",
+        );
+        updateExpandLabels();
+      }
+      languageToggle.addEventListener("click", () => {
+        language = language === "pt" ? "en" : "pt";
+        localStorage.setItem("language", language);
+        applyLanguage();
+      });
+      applyLanguage();
+      // All collection controls synchronize through their data-target container.
+      document.querySelectorAll(".expand-toggle").forEach((button) =>
+        button.addEventListener("click", () => {
+          const container = document.getElementById(button.dataset.target),
+            expanded = container.dataset.expanded === "true",
+            next = !expanded;
+          container.dataset.expanded = String(next);
+          container
+            .querySelectorAll(".extra-item")
+            .forEach((item) => (item.hidden = !next));
+          updateExpandLabels();
+          if (!next) {
+            const anchor = document.querySelector(
+              `.expand-toggle[data-target="${button.dataset.target}"]:not(.collapse-at-end)`,
+            );
+            anchor.scrollIntoView({
+              block: "center",
+              behavior: reduceMotion ? "auto" : "smooth",
+            });
+          }
+        }),
+      );
+      // Theme preference follows the OS until the visitor makes an explicit choice.
+      const themeToggle = document.getElementById("theme-toggle"),
+        themeQuery = matchMedia("(prefers-color-scheme:dark)");
+      function updateThemeButton() {
+        const dark = document.documentElement.dataset.theme === "dark";
+        themeToggle.querySelector("i").className = dark
+          ? "fa-solid fa-sun"
+          : "fa-solid fa-moon";
+        themeToggle.setAttribute("aria-pressed", dark);
+        themeToggle.setAttribute(
+          "aria-label",
+          dark ? "Ativar tema claro" : "Ativar tema escuro",
+        );
+      }
+      themeToggle.addEventListener("click", () => {
+        const theme =
+          document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        document.documentElement.dataset.theme = theme;
+        localStorage.setItem("theme", theme);
+        updateThemeButton();
+      });
+      themeQuery.addEventListener("change", (event) => {
+        if (!localStorage.getItem("theme")) {
+          document.documentElement.dataset.theme = event.matches
+            ? "dark"
+            : "light";
+          updateThemeButton();
+        }
+      });
+      updateThemeButton();
+      // Controls hide on downward scroll and return on reverse scroll or pointer proximity.
+      const sideNav = document.querySelector(".side-nav"),
+        utility = document.querySelector(".utility");
+      let lastScroll = scrollY,
+        hideTimer;
+      function setControlsVisible(visible) {
+        sideNav.classList.toggle("ui-hidden", !visible);
+        utility.classList.toggle("ui-hidden", !visible);
+      }
+      function revealTemporarily() {
+        setControlsVisible(true);
+        clearTimeout(hideTimer);
+        if (scrollY > 120)
+          hideTimer = setTimeout(() => setControlsVisible(false), 1200);
+      }
+      addEventListener(
+        "scroll",
+        () => {
+          const current = scrollY;
+          if (current < 120 || current < lastScroll - 8)
+            setControlsVisible(true);
+          else if (current > lastScroll + 8) setControlsVisible(false);
+          lastScroll = current;
+        },
+        { passive: true },
+      );
+      addEventListener(
+        "pointermove",
+        (event) => {
+          const nearNav =
+              innerWidth <= 850
+                ? event.clientY > innerHeight - 100
+                : event.clientX < 110,
+            nearUtility =
+              event.clientY < 90 && event.clientX > innerWidth - 180;
+          if (nearNav || nearUtility) revealTemporarily();
+        },
+        { passive: true },
+      );
+      document.addEventListener("focusin", (event) => {
+        if (sideNav.contains(event.target) || utility.contains(event.target))
+          setControlsVisible(true);
+      });
+      // Keep the active navigation item aligned with the section near viewport center.
+      const sections = [...document.querySelectorAll("main section")],
+        links = [...document.querySelectorAll(".nav-link")];
+      const observer = new IntersectionObserver(
+        (entries) =>
+          entries.forEach((entry) => {
+            if (entry.isIntersecting)
+              links.forEach((link) => {
+                const active = link.hash === `#${entry.target.id}`;
+                link.classList.toggle("active", active);
+                if (active) link.setAttribute("aria-current", "location");
+                else link.removeAttribute("aria-current");
+              });
+          }),
+        { rootMargin: "-40% 0px -50%" },
+      );
+      sections.forEach((section) => observer.observe(section));
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+  </body>
 </html>
