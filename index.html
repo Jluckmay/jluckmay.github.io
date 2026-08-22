@@ -95,6 +95,59 @@
         filter: grayscale(1) contrast(1.45) sepia(0.2);
         pointer-events: none;
       }
+      /* Local network animation remains visible below the optional live widget. */
+      .cyber-fallback {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        color: var(--red2);
+        opacity: 0.62;
+      }
+      .cyber-fallback .land {
+        fill: #ffffff0a;
+        stroke: #ffffff20;
+        stroke-width: 1.2;
+      }
+      .cyber-fallback .connection {
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.2;
+        stroke-linecap: round;
+        stroke-dasharray: 3 12;
+        animation: network-flow 4s linear infinite;
+      }
+      .cyber-fallback .connection:nth-of-type(even) {
+        color: var(--yellow);
+        animation-duration: 5.5s;
+        animation-direction: reverse;
+      }
+      .cyber-fallback .node {
+        fill: var(--yellow);
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: network-pulse 2.4s ease-in-out infinite alternate;
+      }
+      .cyber-fallback .node:nth-of-type(3n) {
+        fill: var(--red2);
+        animation-delay: -1.2s;
+      }
+      @keyframes network-flow {
+        to {
+          stroke-dashoffset: -60;
+        }
+      }
+      @keyframes network-pulse {
+        to {
+          opacity: 0.3;
+          transform: scale(1.8);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .cyber-fallback * {
+          animation: none !important;
+        }
+      }
       .cyber-bg:after {
         content: "";
         position: absolute;
@@ -696,6 +749,7 @@
       }
       .cyber-bg iframe {
         position: absolute;
+        z-index: 1;
         left: -15%;
         top: -90px;
         width: 130%;
@@ -703,6 +757,9 @@
         opacity: 0.58;
         filter: grayscale(1) contrast(1.5) sepia(0.2);
         transform: scale(1.22);
+      }
+      .cyber-bg.map-unavailable iframe {
+        display: none;
       }
       .cyber-bg:after {
         background:
@@ -942,7 +999,7 @@
         font-size: 0.65rem;
         transition: transform 0.25s;
       }
-      .expand-toggle[aria-expanded="true"] i {
+      .expand-toggle:not(.collapse-at-end)[aria-expanded="true"] i {
         transform: rotate(180deg);
       }
       .collapse-at-end[hidden] {
@@ -1072,10 +1129,35 @@
     <a class="skip" href="#conteudo">Pular para o conteúdo</a>
     <!-- Decorative live data layer; hidden from assistive technology. -->
     <div class="cyber-bg" aria-hidden="true">
+      <svg
+        class="cyber-fallback"
+        viewBox="0 0 1440 800"
+        preserveAspectRatio="xMidYMid slice"
+        focusable="false"
+      >
+        <path class="land" d="M90 210l105-70 150 16 74 72-48 88-104 25-72 92-88-39-40-103zM475 400l83-48 70 35 34 98-39 164-63 83-42-121-57-93zM676 175l93-51 169 21 83 71-42 69-108 1-43 66-101-45-77-66zM888 363l96-57 149 27 59 85-63 93-106-18-74-65zM1122 585l90-38 105 47-25 77-114 12z" />
+        <g>
+          <path class="connection" d="M180 270Q480 40 760 230" />
+          <path class="connection" d="M180 270Q520 490 955 400" />
+          <path class="connection" d="M570 470Q760 170 955 400" />
+          <path class="connection" d="M760 230Q980 110 1205 620" />
+          <path class="connection" d="M570 470Q810 760 1205 620" />
+          <path class="connection" d="M955 400Q1120 260 1260 330" />
+        </g>
+        <g>
+          <circle class="node" cx="180" cy="270" r="4" />
+          <circle class="node" cx="570" cy="470" r="5" />
+          <circle class="node" cx="760" cy="230" r="4" />
+          <circle class="node" cx="955" cy="400" r="5" />
+          <circle class="node" cx="1205" cy="620" r="4" />
+          <circle class="node" cx="1260" cy="330" r="3" />
+        </g>
+      </svg>
       <iframe
         src="https://cybermap.kaspersky.com/pt/widget/dynamic/dark"
         title="Mapa mundial de ciberameaças em tempo real"
         tabindex="-1"
+        referrerpolicy="no-referrer"
       ></iframe>
     </div>
     <!-- User preferences remain independent from page navigation. -->
@@ -2113,6 +2195,12 @@
       </div>
     </footer>
     <script>
+      // Keep local background usable when browser cannot fetch third-party widget.
+      const cyberMapFrame = document.querySelector(".cyber-bg iframe");
+      cyberMapFrame.addEventListener("error", () => {
+        cyberMapFrame.parentElement.classList.add("map-unavailable");
+      });
+
       // Hero typing effect. Only the non-shared suffix is erased between phrases.
       const phrases = [
           "I'm a MSc Studant!",
@@ -2387,16 +2475,64 @@
         "Otimização, estruturas de dados, complexidade computacional e análise experimental.":
           "Optimization, data structures, computational complexity and experimental analysis.",
         "Registro ↗": "Record ↗",
+        "2026 — atual": "2026 — present",
+        "Análise de Cancelamentos": "Customer Churn Analysis",
+        "Automação Jornada Python": "Python Journey Automation",
+        "Autômatos Finitos": "Finite Automata",
+        "Oferta PPGCC UFMG": "UFMG PPGCC Course Offerings",
+        "PDI Interativo": "Interactive DIP",
+        "Pré-Projetos de Pesquisa": "Research Proposals",
+        "Quadro Branco": "Whiteboard",
+        "Universidade Federal de Minas Gerais · DCC":
+          "Federal University of Minas Gerais · DCC",
+        "Universidade Federal de Viçosa · Campus Rio Paranaíba":
+          "Federal University of Viçosa · Rio Paranaíba Campus",
       });
-      // Capture translatable nodes once so repeated language switches remain deterministic.
+      // Normalize source whitespace so wrapped HTML text still matches translation keys.
       const textNodes = [],
         walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
       let node;
       while ((node = walker.nextNode())) {
-        const value = node.nodeValue.trim();
+        const raw = node.nodeValue,
+          value = raw.trim().replace(/\s+/g, " ");
         if (translations[value])
-          textNodes.push({ node, pt: value, en: translations[value] });
+          textNodes.push({
+            node,
+            pt: value,
+            en: translations[value],
+            leading: raw.match(/^\s*/)[0],
+            trailing: raw.match(/\s*$/)[0],
+          });
       }
+      const attributeTranslations = {
+          "Preferências da página": "Page preferences",
+          "Navegação principal": "Main navigation",
+          Início: "Home",
+          Sobre: "About",
+          Trajetória: "Journey",
+          Projetos: "Projects",
+          Publicações: "Publications",
+          Contato: "Contact",
+          "Redes sociais e perfis acadêmicos":
+            "Social networks and academic profiles",
+          "Currículo Lattes": "Lattes CV",
+          Competências: "Skills",
+          "Mapa mundial de ciberameaças em tempo real":
+            "Real-time global cyberthreat map",
+        },
+        translatedAttributes = [];
+      document.querySelectorAll("[aria-label], [title]").forEach((element) => {
+        ["aria-label", "title"].forEach((attribute) => {
+          const pt = element.getAttribute(attribute);
+          if (attributeTranslations[pt])
+            translatedAttributes.push({
+              element,
+              attribute,
+              pt,
+              en: attributeTranslations[pt],
+            });
+        });
+      });
       let language =
         localStorage.getItem("language") ||
         (navigator.language.toLowerCase().startsWith("pt") ? "pt" : "en");
@@ -2434,10 +2570,11 @@
         document.documentElement.lang = language === "pt" ? "pt-BR" : "en";
         textNodes.forEach(
           (item) =>
-            (item.node.nodeValue = item.node.nodeValue.replace(
-              item.node.nodeValue.trim(),
-              item[language],
-            )),
+            (item.node.nodeValue =
+              item.leading + item[language] + item.trailing),
+        );
+        translatedAttributes.forEach((item) =>
+          item.element.setAttribute(item.attribute, item[language]),
         );
         languageToggle.textContent = language === "pt" ? "EN" : "PT";
         languageToggle.setAttribute("aria-pressed", language === "en");
@@ -2453,6 +2590,7 @@
         language = language === "pt" ? "en" : "pt";
         localStorage.setItem("language", language);
         applyLanguage();
+        updateThemeButton();
       });
       applyLanguage();
       // All collection controls synchronize through their data-target container.
@@ -2488,7 +2626,13 @@
         themeToggle.setAttribute("aria-pressed", dark);
         themeToggle.setAttribute(
           "aria-label",
-          dark ? "Ativar tema claro" : "Ativar tema escuro",
+          language === "pt"
+            ? dark
+              ? "Ativar tema claro"
+              : "Ativar tema escuro"
+            : dark
+              ? "Enable light theme"
+              : "Enable dark theme",
         );
       }
       themeToggle.addEventListener("click", () => {

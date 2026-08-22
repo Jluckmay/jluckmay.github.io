@@ -12,7 +12,8 @@ Portfólio pessoal e acadêmico desenvolvido como página estática. Reúne traj
 
 ### Recursos
 
-- mapa de ciberameaças da Kaspersky como plano de fundo interativo;
+- mapa de ciberameaças da Kaspersky como plano de fundo, com política de
+  referência restritiva e animação de rede local como fallback;
 - apresentação animada com frases rotativas;
 - temas claro e escuro com detecção da preferência do sistema;
 - idiomas português e inglês com detecção automática;
@@ -61,7 +62,7 @@ Conteúdo, traduções, animações e links ficam em `index.html`. As principais
 
 ### Serviços externos
 
-A página carrega fontes, ícones, fotografia de perfil e mapa por serviços externos. Esses recursos dependem de conexão com a internet e podem estar sujeitos às políticas de privacidade dos respectivos provedores.
+A página carrega fontes, ícones, fotografia de perfil e mapa por serviços externos. Esses recursos dependem de conexão com a internet e podem estar sujeitos às políticas de privacidade dos respectivos provedores. Caso o mapa da Kaspersky não carregue, uma animação SVG local preserva o plano de fundo visual.
 
 ### Licença
 
@@ -75,7 +76,8 @@ Personal and academic portfolio built as a static website. It presents academic 
 
 ### Features
 
-- Kaspersky cyberthreat map as an interactive background;
+- Kaspersky cyberthreat map as a background, with a restrictive referrer
+  policy and a local network animation as fallback;
 - animated introduction with rotating phrases;
 - light and dark themes with automatic system-preference detection;
 - Portuguese and English languages with automatic detection;
@@ -124,7 +126,7 @@ Content, translations, animations and links are contained in `index.html`. Main 
 
 ### External services
 
-The page loads fonts, icons, the profile image and the map from external services. These resources require an internet connection and may be subject to their providers' privacy policies.
+The page loads fonts, icons, the profile image and the map from external services. These resources require an internet connection and may be subject to their providers' privacy policies. If the Kaspersky map fails to load, a local SVG animation preserves the visual background.
 
 ### License
 
