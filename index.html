@@ -520,14 +520,14 @@
       }
       .card:hover {
         transform: translateY(-6px);
-        border-color: var(--red);
-        box-shadow: 8px 8px 0 var(--yellow);
+        border-color: var(--yellow);
+        box-shadow: 8px 8px 0 var(--red);
       }
       .card .num {
         font:
           500 0.72rem "Roboto Mono",
           monospace;
-        color: var(--red);
+        color: var(--yellow);
       }
       .card h3 {
         font-size: 1.35rem;
@@ -545,11 +545,11 @@
           monospace;
         text-transform: uppercase;
         text-decoration: none;
-        color: var(--red);
+        color: var(--yellow);
       }
       .card a:hover,
       .publication a:hover {
-        color: var(--red2);
+        color: var(--red);
         width: max-content;
       }
       .pub-list {
@@ -569,7 +569,7 @@
         font:
           500 1rem "Roboto Mono",
           monospace;
-        color: var(--yellow);
+        color: var(--red2);
       }
       .publication h3 {
         font-size: 1.08rem;
@@ -582,7 +582,7 @@
         font-size: 0.82rem;
       }
       .publication a {
-        color: var(--yellow);
+        color: var(--red2);
         text-decoration: none;
         font:
           700 0.72rem "Roboto Mono",
@@ -852,11 +852,11 @@
       #trajetoria .section-head small{
         color: var(--yellow);
       }
-      #publicacoes .section-head h2:before {
+      #projetos .section-head h2:before {
         content: "./ ";
         color: var(--yellow);
       }
-      #publicacoes .section-head small {
+      #projetos .section-head small {
         color: var(--yellow);
       }
       .hero h1 {
@@ -1253,9 +1253,9 @@
             <span class="surname">D'Oliveira</span>
           </h1>
           <p class="role">
-            <span id="typed" aria-hidden="true">I'm a MSc Studant!</span
+            <span id="typed" aria-hidden="true">Sou mestrando!</span
             ><span id="sr-role" class="sr-only" aria-live="polite"
-              >I'm a MSc Studant!</span
+              >Sou mestrando!</span
             >
           </p>
           <div class="actions">
@@ -2158,7 +2158,7 @@
           <div class="award" id="premiacoes">
             <i class="fa-solid fa-award"></i>
             <div>
-              <strong>Menção Honrosa · SBIE 2024</strong><br />Palavras ao Ar
+              <strong>Menção Honrosa · Games · SBIE 2024</strong><br />Palavras ao Ar
               ficou entre três melhores artigos da trilha de gamificação, jogos
               digitais, robótica e tecnologias imersivas.
             </div>
@@ -2182,14 +2182,14 @@
             <div class="award extra-item" hidden>
               <i class="fa-solid fa-award"></i>
               <div>
-                <strong>Menção Honrosa · WSIS 2025</strong><br />Explorando a Grécia Antiga: Um Jogo Digital Educativo foi selecionado
+                <strong>Menção Honrosa · Pôster · WSIS 2025</strong><br />Explorando a Grécia Antiga: Um Jogo Digital Educativo foi selecionado
                 entre os melhores trabalhos apresentados na categoria pôster do XVI Workshop de Sistemas de Informação.
               </div>
             </div>
             <div class="award extra-item" hidden>
               <i class="fa-solid fa-award"></i>
               <div>
-                <strong>Menção Honrosa · SIA 2023</strong><br />Palavras ao Ar
+                <strong>Segundo Lugar · Ensino · SIA 2023</strong><br />Palavras ao Ar
                 ganhou segundo lugar dentre os trabalhos apresentados na categoria ensino durante o XIV Simpósio de Integração Acadêmica da
                 Universidade Federal de Viçosa — campus Rio Paranaíba.
               </div>
@@ -2328,18 +2328,35 @@
       });
 
       // Hero typing effect. Only the non-shared suffix is erased between phrases.
-      const phrases = [
-          "I'm a MSc Studant!",
-          "I'm a programmer!",
-          "I'm a developer!",
-          "I'm a data analist!",
-          "I'm a researcher!",
-          "I'm an academic!",
-          "I'm a bacharelor!",
-          "I'm a profissional!",
-          "I write code!",
-        ],
-        typed = document.getElementById("typed"),
+      let language =
+        localStorage.getItem("language") ||
+        (navigator.language.toLowerCase().startsWith("pt") ? "pt" : "en");
+      const phraseSets = {
+          pt: [
+            "Sou mestrando!",
+            "Sou programador!",
+            "Sou desenvolvedor!",
+            "Sou analista de dados!",
+            "Sou pesquisador!",
+            "Sou acadêmico!",
+            "Sou bacharel!",
+            "Sou profissional!",
+            "Eu escrevo código!",
+          ],
+          en: [
+            "I'm an MSc student!",
+            "I'm a programmer!",
+            "I'm a developer!",
+            "I'm a data analyst!",
+            "I'm a researcher!",
+            "I'm an academic!",
+            "I'm a bachelor!",
+            "I'm a professional!",
+            "I write code!",
+          ],
+        };
+      let phrases = phraseSets[language];
+      const typed = document.getElementById("typed"),
         srRole = document.getElementById("sr-role"),
         reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
       let phraseIndex = 0,
@@ -2366,7 +2383,7 @@
             wordIndex = control ? contentIndex : contentIndex++;
           span.className = control
             ? "typed-white"
-            : token.toLowerCase() === "analist" || wordIndex === 1
+            : ["analyst", "analista"].includes(token.toLowerCase()) || wordIndex === 1
               ? "typed-yellow"
               : "typed-red";
           span.textContent = token;
@@ -2412,19 +2429,20 @@
         Início: "Home",
         Sobre: "About",
         Trajetoria: "Journey",
+        Trajetória: "Journey",
         Projetos: "Projects",
         Publicações: "Publications",
         Contato: "Contact",
         "Mestrando · DCC/UFMG · Belo Horizonte":
           "MSc student · DCC/UFMG · Belo Horizonte",
         "Explorar trabalhos": "Explore works",
-        "Sobre-mim": "About-me",
+        "Sobre-mim": "About me",
         "01 / PERFIL": "01 / PROFILE",
         "02 / CÓDIGO & PESQUISA": "02 / CODE & RESEARCH",
         "03 / PRODUÇÃO": "03 / OUTPUT",
         "04 / FORMAÇÃO": "04 / EDUCATION",
         "05 / VAMOS CONVERSAR?": "05 / LET'S TALK?",
-        "Formação acadêmica": "Academic education",
+        "Formação acadêmica": "Academic background",
         "Experiência acadêmica": "Academic experience",
         "Interesses de pesquisa": "Research interests",
         "Trajetoria": "Journey",
@@ -2434,7 +2452,7 @@
         "artigos publicados": "published papers",
         "anos de estudo": "years of study",
         premiações: "awards",
-        "projetos públicos": "Public projects",
+        "projetos públicos": "public projects",
         "Mestrado em Ciência da Computação": "Master's in Computer Science",
         "Bacharelado em Sistemas de Informação":
           "Bachelor's in Information Systems",
@@ -2449,7 +2467,7 @@
         "Ver publicação +": "View publication +",
         "Abrir projeto +": "Open project +",
         "Ver no GitHub +": "View on GitHub +",
-        "Feito com amor entre código, pesquisa e café.":
+        "Feito com amor entre código, pesquisa e café":
           "Made with love between code, research and coffee.",
         "Belo Horizonte · Minas Gerais · Brasil":
           "Belo Horizonte · Minas Gerais · Brazil",
@@ -2458,10 +2476,10 @@
         "Currículo Lattes": "Lattes CV",
         "Aberto a conversas sobre pesquisa, colaboração acadêmica, software e oportunidades de desenvolvimento.":
           "Open to conversations about research, academic collaboration, software and development opportunities.",
-        "Formação em desenvolvimento de software, sistemas, dados e tecnologia aplicada à educação.":
-          "Education in software development, systems, data and technology applied to learning.",
-        "Formação avançada com interesse em redes sem fio, segurança, algoritmos e sistemas inteligentes.":
-          "Advanced studies focused on wireless networks, security, algorithms and intelligent systems.",
+        "Formação em desenvolvimento de software e sistemas, UX design, análise de dados e tecnologia aplicada à educação.":
+          "Education in software development and systems, UX design, data analysis and technology applied to learning.",
+        "Formação avançada em redes sem fio, segurança, algoritmos e machine learning.":
+          "Advanced studies in wireless networks, security, algorithms and machine learning.",
         "Apoio didático na disciplina Introduction to Game Development da UFV.":
           "Teaching support for UFV's Introduction to Game Development course.",
         "Figuras dinâmicas no GeoGebra aplicadas ao ensino de matemática.":
@@ -2524,9 +2542,19 @@
           "Proceedings of the XVI Information Systems Workshop · 2025",
         "XXXV Simpósio Brasileiro de Informática na Educação · 2024 · p. 591–601":
           "XXXV Brazilian Symposium on Computers in Education · 2024 · pp. 591–601",
-        "Menção Honrosa · SBIE 2024": "Honorable Mention · SBIE 2024",
+        "Menção Honrosa · Games · SBIE 2024":
+          "Honorable Mention · Games · SBIE 2024",
+        "Menção Honrosa · Pôster · WSIS 2025":
+          "Honorable Mention · Poster · WSIS 2025",
+        "Segundo Lugar · Ensino · SIA 2023":
+          "Second Place · Education · SIA 2023",
         "Palavras ao Ar ficou entre três melhores artigos da trilha de gamificação, jogos digitais, robótica e tecnologias imersivas.":
           "Palavras ao Ar ranked among the top three papers in the gamification, digital games, robotics and immersive technologies track.",
+        "Explorando a Grécia Antiga: Um Jogo Digital Educativo foi selecionado entre os melhores trabalhos apresentados na categoria pôster do XVI Workshop de Sistemas de Informação.":
+          "Exploring Ancient Greece: An Educational Digital Game was selected among the best posters presented at the XVI Information Systems Workshop.",
+        "Palavras ao Ar ganhou segundo lugar dentre os trabalhos apresentados na categoria ensino durante o XIV Simpósio de Integração Acadêmica da Universidade Federal de Viçosa — campus Rio Paranaíba.":
+          "Palavras ao Ar won second place among the education projects presented at the XIV Academic Integration Symposium of the Federal University of Viçosa — Rio Paranaíba Campus.",
+        "Alternar tema claro ou escuro": "Switch between light and dark themes",
       };
       Object.assign(translations, {
         "Interface em JavaScript para consulta e organização de ofertas do Programa de Pós-Graduação em Ciência da Computação.":
@@ -2633,6 +2661,8 @@
       const attributeTranslations = {
           "Preferências da página": "Page preferences",
           "Navegação principal": "Main navigation",
+          "Mudar idioma": "Change language",
+          "Alternar tema": "Switch theme",
           Início: "Home",
           Sobre: "About",
           Trajetoria: "Journey",
@@ -2659,9 +2689,6 @@
             });
         });
       });
-      let language =
-        localStorage.getItem("language") ||
-        (navigator.language.toLowerCase().startsWith("pt") ? "pt" : "en");
       const languageToggle = document.getElementById("language-toggle");
       // Labels shared by top and bottom controls of each expandable collection.
       const expandLabels = {
@@ -2701,6 +2728,12 @@
       }
       function applyLanguage() {
         document.documentElement.lang = language === "pt" ? "pt-BR" : "en";
+        phrases = phraseSets[language];
+        phraseIndex = 0;
+        visible = phrases[0];
+        deleting = true;
+        renderPhrase(visible);
+        srRole.textContent = visible;
         textNodes.forEach(
           (item) =>
             (item.node.nodeValue =
