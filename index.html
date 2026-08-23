@@ -384,6 +384,11 @@
       .fact {
         background: var(--white);
         padding: 1.4rem;
+        height: 100%;
+      }
+      .facts > a {
+        color: inherit;
+        text-decoration: none;
       }
       .fact b {
         display: block;
@@ -405,6 +410,10 @@
         margin-top: 1.4rem;
         justify-content: center;
       }
+      .tags .tag {
+        color: inherit;
+        text-decoration: none;
+      }
       .tag {
         border: 1px solid #777;
         padding: 0.35rem 0.65rem;
@@ -413,6 +422,7 @@
           monospace;
       }
       .tag:hover {
+        color: var(--red2);
         background: var(--yellow);
         border-color: var(--yellow);
       }
@@ -539,8 +549,7 @@
       }
       .card a:hover,
       .publication a:hover {
-        color: #000;
-        background: var(--yellow);
+        color: var(--red2);
         width: max-content;
       }
       .pub-list {
@@ -560,7 +569,7 @@
         font:
           500 1rem "Roboto Mono",
           monospace;
-        color: var(--red);
+        color: var(--yellow);
       }
       .publication h3 {
         font-size: 1.08rem;
@@ -573,7 +582,7 @@
         font-size: 0.82rem;
       }
       .publication a {
-        color: var(--red);
+        color: var(--yellow);
         text-decoration: none;
         font:
           700 0.72rem "Roboto Mono",
@@ -836,8 +845,18 @@
         content: "~/ ";
         color: var(--red2);
       }
-      #projetos .section-head h2:before {
+      #trajetoria .section-head h2:before {
         content: "./ ";
+        color: var(--yellow);
+      }
+      #trajetoria .section-head small{
+        color: var(--yellow);
+      }
+      #publicacoes .section-head h2:before {
+        content: "./ ";
+        color: var(--yellow);
+      }
+      #publicacoes .section-head small {
         color: var(--yellow);
       }
       .hero h1 {
@@ -1029,6 +1048,9 @@
       .collapse-at-end[hidden] {
         display: none;
       }
+      a{
+        text-decoration: none;
+      }
       /* Theme-specific surface colors */
       html[data-theme="dark"] .light {
         background: #111;
@@ -1207,14 +1229,14 @@
       <a class="nav-link" href="#sobre" aria-label="Sobre"
         ><i class="fa-regular fa-user"></i><span>Sobre</span></a
       >
-      <a class="nav-link" href="#trajetoria" aria-label="Trajetória"
-        ><i class="fa-solid fa-route"></i><span>Trajetória</span></a
-      >
       <a class="nav-link" href="#projetos" aria-label="Projetos"
         ><i class="fa-solid fa-code"></i><span>Projetos</span></a
       >
       <a class="nav-link" href="#publicacoes" aria-label="Publicações"
         ><i class="fa-solid fa-book-open"></i><span>Publicações</span></a
+      >
+      <a class="nav-link" href="#trajetoria" aria-label="Trajetoria"
+        ><i class="fa-solid fa-route"></i><span>Trajetória</span></a
       >
       <a class="nav-link" href="#contato" aria-label="Contato"
         ><i class="fa-regular fa-envelope"></i><span>Contato</span></a
@@ -1280,7 +1302,7 @@
       <section class="light" id="sobre">
         <div class="wrap">
           <header class="section-head">
-            <h2>Sobre mim.</h2>
+            <h2>Sobre-mim</h2>
             <small>01 / PERFIL</small>
           </header>
           <p class="lead">
@@ -1310,20 +1332,24 @@
                 Internet das Coisas e educação tecnológica.
               </p>
               <div class="facts">
-                <div class="fact"><b>11</b><span>artigos publicados</span></div>
-                <div class="fact"><b>4+</b><span>anos de estudo</span></div>
-                <div class="fact"><b>2</b><span>premiações</span></div>
-                <div class="fact">
-                  <b>2026</b><span>início do mestrado</span>
-                </div>
+                <a href="#publicacoes"><div class="fact"><b>10+</b><span>artigos publicados</span></div></a>
+                <a href="#trajetoria"><div class="fact"><b>4+</b><span>anos de estudo</span></div></a>
+                <a href="#premiacoes"><div class="fact"><b>3</b><span>premiações</span></div></a>
+                <a href="#projetos"><div class="fact"><b>20+</b><span>projetos públicos</span></div></a>
               </div>
               <div class="tags" aria-label="Competências">
-                <span class="tag">Python</span><span class="tag">C / C++</span
-                ><span class="tag">Java</span><span class="tag">Unity 3D</span
-                ><span class="tag">JavaScript</span><span class="tag">SQL</span
-                ><span class="tag">vscode</span><span class="tag">Linux</span
-                ><span class="tag">Postgree</span><span class="tag">HTML</span
-                ><span class="tag">Latex</span><span class="tag">DOCKER</span>
+                <a class="tag" href="https://www.python.org/" target="_blank" rel="noopener noreferrer">Python</a
+                ><a class="tag" href="https://isocpp.org/" target="_blank" rel="noopener noreferrer">C / C++</a
+                ><a class="tag" href="https://www.java.com/" target="_blank" rel="noopener noreferrer">Java</a
+                ><a class="tag" href="https://unity.com/" target="_blank" rel="noopener noreferrer">Unity</a
+                ><a class="tag" href="https://developer.mozilla.org/docs/Web/JavaScript" target="_blank" rel="noopener noreferrer">JavaScript</a
+                ><a class="tag" href="https://www.iso.org/standard/76583.html" target="_blank" rel="noopener noreferrer">SQL</a
+                ><a class="tag" href="https://code.visualstudio.com/" target="_blank" rel="noopener noreferrer">VS Code</a
+                ><a class="tag" href="https://www.kernel.org/" target="_blank" rel="noopener noreferrer">Linux</a
+                ><a class="tag" href="https://www.postgresql.org/" target="_blank" rel="noopener noreferrer">PostgreSQL</a
+                ><a class="tag" href="https://html.spec.whatwg.org/" target="_blank" rel="noopener noreferrer">HTML</a
+                ><a class="tag" href="https://www.latex-project.org/" target="_blank" rel="noopener noreferrer">LaTeX</a
+                ><a class="tag" href="https://www.docker.com/" target="_blank" rel="noopener noreferrer">Docker</a>
               </div>
             </div>
           </div>
@@ -1333,8 +1359,8 @@
       <section class="dark" id="trajetoria">
         <div class="wrap">
           <header class="section-head">
-            <h2>Trajetória.</h2>
-            <small>02 / FORMAÇÃO</small>
+            <h2>Trajetoria</h2>
+            <small>04 / FORMAÇÃO</small>
           </header>
           <h3 class="subhead">Formação acadêmica</h3>
           <div class="timeline">
@@ -1346,8 +1372,8 @@
                   <strong>Universidade Federal de Minas Gerais · DCC</strong>
                 </p>
                 <p>
-                  Formação avançada com interesse em redes sem fio, segurança,
-                  algoritmos e sistemas inteligentes.
+                  Formação avançada em redes sem fio, segurança,
+                  algoritmos e machine learning.
                 </p>
               </div>
             </article>
@@ -1362,7 +1388,7 @@
                   >
                 </p>
                 <p>
-                  Formação em desenvolvimento de software, sistemas, dados e
+                  Formação em desenvolvimento de software e sistemas, UX design, análise de dados e
                   tecnologia aplicada à educação.
                 </p>
               </div>
@@ -1542,8 +1568,8 @@
       <section class="light" id="projetos">
         <div class="wrap">
           <header class="section-head">
-            <h2>Projetos.</h2>
-            <small>03 / CÓDIGO & PESQUISA</small>
+            <h2>Projetos</h2>
+            <small>02 / CÓDIGO & PESQUISA</small>
           </header>
           <div class="cards">
             <article class="card">
@@ -1921,8 +1947,8 @@
       <section class="light" id="publicacoes">
         <div class="wrap">
           <header class="section-head">
-            <h2>Publicações.</h2>
-            <small>04 / PRODUÇÃO</small>
+            <h2>Publicações</h2>
+            <small>03 / PRODUÇÃO</small>
           </header>
           <div class="pub-list">
             <article class="publication">
@@ -2129,12 +2155,44 @@
             <span>Recolher publicações</span
             ><i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
           </button>
-          <div class="award">
+          <div class="award" id="premiacoes">
             <i class="fa-solid fa-award"></i>
             <div>
               <strong>Menção Honrosa · SBIE 2024</strong><br />Palavras ao Ar
               ficou entre três melhores artigos da trilha de gamificação, jogos
               digitais, robótica e tecnologias imersivas.
+            </div>
+          </div>
+          <button
+            class="expand-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="award-extra"
+            data-target="award-extra"
+            data-kind="premiacoes"
+          >
+            <span>Mostrar todas as premiações</span
+            ><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+          </button>
+          <div
+            class="award-list"
+            id="award-extra"
+            style="counter-reset: awards 2"
+          >
+            <div class="award extra-item" hidden>
+              <i class="fa-solid fa-award"></i>
+              <div>
+                <strong>Menção Honrosa · WSIS 2025</strong><br />Explorando a Grécia Antiga: Um Jogo Digital Educativo foi selecionado
+                entre os melhores trabalhos apresentados na categoria pôster do XVI Workshop de Sistemas de Informação.
+              </div>
+            </div>
+            <div class="award extra-item" hidden>
+              <i class="fa-solid fa-award"></i>
+              <div>
+                <strong>Menção Honrosa · SIA 2023</strong><br />Palavras ao Ar
+                ganhou segundo lugar dentre os trabalhos apresentados na categoria ensino durante o XIV Simpósio de Integração Acadêmica da
+                Universidade Federal de Viçosa — campus Rio Paranaíba.
+              </div>
             </div>
           </div>
         </div>
@@ -2143,8 +2201,8 @@
       <section class="dark" id="contato">
         <div class="wrap">
           <header class="section-head">
-            <h2>Vamos conversar?</h2>
-            <small>05 / CONTATO</small>
+            <h2>contato</h2>
+            <small>05 / VAMOS CONVERSAR?</small>
           </header>
           <div class="contact-grid">
             <div>
@@ -2353,30 +2411,30 @@
         "Pular para o conteúdo": "Skip to content",
         Início: "Home",
         Sobre: "About",
-        Trajetória: "Journey",
+        Trajetoria: "Journey",
         Projetos: "Projects",
         Publicações: "Publications",
         Contato: "Contact",
         "Mestrando · DCC/UFMG · Belo Horizonte":
           "MSc student · DCC/UFMG · Belo Horizonte",
         "Explorar trabalhos": "Explore works",
-        "Sobre mim.": "About me.",
+        "Sobre-mim": "About-me",
         "01 / PERFIL": "01 / PROFILE",
-        "02 / FORMAÇÃO": "02 / EDUCATION",
-        "03 / CÓDIGO & PESQUISA": "03 / CODE & RESEARCH",
-        "04 / PRODUÇÃO": "04 / OUTPUT",
-        "05 / CONTATO": "05 / CONTACT",
+        "02 / CÓDIGO & PESQUISA": "02 / CODE & RESEARCH",
+        "03 / PRODUÇÃO": "03 / OUTPUT",
+        "04 / FORMAÇÃO": "04 / EDUCATION",
+        "05 / VAMOS CONVERSAR?": "05 / LET'S TALK?",
         "Formação acadêmica": "Academic education",
         "Experiência acadêmica": "Academic experience",
         "Interesses de pesquisa": "Research interests",
-        "Trajetória.": "Journey.",
-        "Projetos.": "Projects.",
-        "Publicações.": "Publications.",
-        "Vamos conversar?": "Let's talk?",
+        "Trajetoria": "Journey",
+        "Projetos": "Projects",
+        "Publicações": "Publications",
+        "contato": "contact",
         "artigos publicados": "published papers",
         "anos de estudo": "years of study",
         premiações: "awards",
-        "início do mestrado": "MSc started",
+        "projetos públicos": "Public projects",
         "Mestrado em Ciência da Computação": "Master's in Computer Science",
         "Bacharelado em Sistemas de Informação":
           "Bachelor's in Information Systems",
@@ -2577,7 +2635,7 @@
           "Navegação principal": "Main navigation",
           Início: "Home",
           Sobre: "About",
-          Trajetória: "Journey",
+          Trajetoria: "Journey",
           Projetos: "Projects",
           Publicações: "Publications",
           Contato: "Contact",
@@ -2610,6 +2668,7 @@
         pt: {
           projetos: ["Mostrar todos os projetos", "Recolher projetos"],
           publicacoes: ["Mostrar todas as publicações", "Recolher publicações"],
+          premiacoes: ["Mostrar todas as premiações", "Recolher premiações"],
           experiencias: [
             "Mostrar todas as experiências",
             "Recolher experiências",
@@ -2619,6 +2678,7 @@
         en: {
           projetos: ["Show all projects", "Collapse projects"],
           publicacoes: ["Show all publications", "Collapse publications"],
+          premiacoes: ["Show all awards", "Collapse awards"],
           experiencias: ["Show all experiences", "Collapse experiences"],
           interesses: ["Show all interests", "Collapse interests"],
         },
@@ -2630,8 +2690,13 @@
           button.setAttribute("aria-expanded", String(expanded));
           button.querySelector("span").textContent =
             expandLabels[language][button.dataset.kind][expanded ? 1 : 0];
-          if (button.classList.contains("collapse-at-end"))
+          const collapseAtEnd = button.classList.contains("collapse-at-end"),
+            hasEndControl = document.querySelector(
+              `.expand-toggle.collapse-at-end[data-target="${button.dataset.target}"]`,
+            );
+          if (collapseAtEnd)
             button.hidden = !expanded;
+          else if (hasEndControl) button.hidden = expanded;
         });
       }
       function applyLanguage() {
@@ -2762,6 +2827,12 @@
         if (sideNav.contains(event.target) || utility.contains(event.target))
           setControlsVisible(true);
       });
+      // Keep content order aligned with navigation and reading flow.
+      const main = document.getElementById("conteudo"),
+        contactSection = document.getElementById("contato");
+      ["projetos", "publicacoes", "trajetoria"].forEach((id) =>
+        main.insertBefore(document.getElementById(id), contactSection),
+      );
       // Keep the active navigation item aligned with the section near viewport center.
       const sections = [...document.querySelectorAll("main section")],
         links = [...document.querySelectorAll(".nav-link")];
