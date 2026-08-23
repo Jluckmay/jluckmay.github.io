@@ -2333,14 +2333,14 @@
         (navigator.language.toLowerCase().startsWith("pt") ? "pt" : "en");
       const phraseSets = {
           pt: [
-            "Sou mestrando!",
-            "Sou programador!",
-            "Sou desenvolvedor!",
-            "Sou analista de dados!",
-            "Sou pesquisador!",
-            "Sou acadêmico!",
-            "Sou bacharel!",
-            "Sou profissional!",
+            "Sou um mestrando!",
+            "Sou um programador!",
+            "Sou um desenvolvedor!",
+            "Sou um analista de dados!",
+            "Sou um pesquisador!",
+            "Sou um acadêmico!",
+            "Sou um bacharel!",
+            "Sou um profissional!",
             "Eu escrevo código!",
           ],
           en: [
@@ -2379,11 +2379,11 @@
         let contentIndex = 0;
         tokens.forEach((token) => {
           const span = document.createElement("span"),
-            control = /^(I'm|I|a|an|!)$/.test(token) || /^\s+$/.test(token),
+            control = /^(I'm|I|a|an|!)$/.test(token) || /^(Eu|Sou|!)$/.test(token) || /^\s+$/.test(token),
             wordIndex = control ? contentIndex : contentIndex++;
           span.className = control
             ? "typed-white"
-            : ["analyst", "analista"].includes(token.toLowerCase()) || wordIndex === 1
+            : ["analyst", "dados"].includes(token.toLowerCase()) || wordIndex === 1
               ? "typed-yellow"
               : "typed-red";
           span.textContent = token;
