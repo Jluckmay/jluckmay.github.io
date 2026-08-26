@@ -33,7 +33,7 @@
       /* Design tokens and global defaults */
       :root {
         --black: #050505;
-        --white: #f7f5f0;
+        --white: #ebebeb;
         --red: #a30f18;
         --red2: #d51e2b;
         --yellow: #ffd21c;
@@ -86,6 +86,9 @@
           #080808 40%,
           #000 70%
         );
+      }
+      html[data-theme="light"] .cyber-bg {
+        filter: invert(0.92);
       }
       .cyber-bg iframe {
         width: 100%;
@@ -403,6 +406,13 @@
         text-transform: uppercase;
         letter-spacing: 0.1em;
       }
+
+      .fact:hover {
+        transform: translateY(-6px);
+        border: 1px solid #bbb;
+        box-shadow: 0 8px 8px var(--yellow);
+      }
+
       .tags {
         display: flex;
         flex-wrap: wrap;
@@ -485,6 +495,31 @@
         grid-template-columns: repeat(4, 1fr);
         gap: 1rem;
       }
+      .skills-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .language-list {
+        display: grid;
+        gap: 1rem;
+        margin-top: 1.4rem;
+      }
+      .language-label {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        font-size: 0.78rem;
+      }
+      .proficiency {
+        height: 0.45rem;
+        margin-top: 0.35rem;
+        background: #7775;
+      }
+      .proficiency span {
+        display: block;
+        width: var(--level);
+        height: 100%;
+        background: linear-gradient(90deg, var(--red2), var(--yellow));
+      }
       .research-item {
         border-top: 3px solid var(--red);
         padding: 1.5rem 1rem;
@@ -517,6 +552,7 @@
         flex-direction: column;
         transition: 0.25s;
         background: #fff;
+        cursor: pointer;
       }
       .card:hover {
         transform: translateY(-6px);
@@ -547,6 +583,13 @@
         text-decoration: none;
         color: var(--yellow);
       }
+
+      .publication:hover {
+        transform: translateY(-6px);
+        border-color: var(--yellow);
+        box-shadow: 0 8px 8px var(--yellow);
+      }
+
       .card a:hover,
       .publication a:hover {
         color: var(--red);
@@ -563,6 +606,12 @@
         border-top: 1px solid #bbb;
         padding: 1.7rem 0;
         align-items: start;
+        cursor: pointer;
+      }
+      .card:focus-visible,
+      .publication:focus-visible {
+        outline: 3px solid var(--yellow);
+        outline-offset: 4px;
       }
       .publication:before {
         content: counter(pub, decimal-leading-zero);
@@ -1052,6 +1101,11 @@
         text-decoration: none;
       }
       /* Theme-specific surface colors */
+      html[data-theme="light"] {
+        --red: #7f0b13;
+        --red2: #a30f18;
+        --yellow: #765b00;
+      }
       html[data-theme="dark"] .light {
         background: #111;
         color: #f5f3ed;
@@ -1068,6 +1122,26 @@
       html[data-theme="light"] .dark {
         background: #eeeae2;
         color: #111;
+      }
+      html[data-theme="light"] .hero,
+      html[data-theme="light"] .typed-white,
+      html[data-theme="light"] .hero-socials a,
+      html[data-theme="light"] .hero h1 .first-name,
+      html[data-theme="light"] .hero h1 .surname {
+        color: #111;
+      }
+      html[data-theme="light"] .hero h1 {
+        text-shadow: 0 4px 40px #fff;
+      }
+      html[data-theme="light"] .eyebrow,
+      html[data-theme="light"] .typed-yellow {
+        color: #765b00;
+      }
+      html[data-theme="light"] .hero-socials a {
+        border-color: #111;
+      }
+      html[data-theme="light"] #contato .contact-link i {
+        color: #8b111a;
       }
       html[data-theme="light"] .dark .event p,
       html[data-theme="light"] .dark .research-item p,
@@ -1232,6 +1306,9 @@
       <a class="nav-link" href="#projetos" aria-label="Projetos"
         ><i class="fa-solid fa-code"></i><span>Projetos</span></a
       >
+      <a class="nav-link" href="#habilidades" aria-label="Skills e Soft Skills"
+        ><i class="fa-solid fa-gears"></i><span>Habilidades</span></a
+      >
       <a class="nav-link" href="#publicacoes" aria-label="Publicações"
         ><i class="fa-solid fa-book-open"></i><span>Publicações</span></a
       >
@@ -1335,7 +1412,7 @@
                 <a href="#publicacoes"><div class="fact"><b>10+</b><span>artigos publicados</span></div></a>
                 <a href="#trajetoria"><div class="fact"><b>4+</b><span>anos de estudo</span></div></a>
                 <a href="#premiacoes"><div class="fact"><b>3</b><span>premiações</span></div></a>
-                <a href="#projetos"><div class="fact"><b>20+</b><span>projetos públicos</span></div></a>
+                <a href="#projetos"><div class="fact"><b>20+</b><span>projetos</span></div></a>
               </div>
               <div class="tags" aria-label="Competências">
                 <a class="tag" href="https://www.python.org/" target="_blank" rel="noopener noreferrer">Python</a
@@ -1360,7 +1437,7 @@
         <div class="wrap">
           <header class="section-head">
             <h2>Trajetoria</h2>
-            <small>04 / FORMAÇÃO</small>
+            <small>05 / FORMAÇÃO</small>
           </header>
           <h3 class="subhead">Formação acadêmica</h3>
           <div class="timeline">
@@ -1943,12 +2020,80 @@
           </button>
         </div>
       </section>
+      <!-- Technical and interpersonal skills. -->
+      <section class="dark" id="habilidades">
+        <div class="wrap">
+          <header class="section-head">
+            <h2>Competências-e-Habilidades</h2>
+            <small>03 / SOFT AND SKILLS</small>
+          </header>
+          <div class="research-grid skills-grid">
+            <article class="research-item">
+              <i class="fa-solid fa-people-group" aria-hidden="true"></i>
+              <h3>Competências</h3>
+              <div class="tags">
+                <span class="tag">Comunicação</span
+                ><span class="tag">Trabalho em equipe</span
+                ><span class="tag">Pensamento crítico</span
+                ><span class="tag">Resolução de problemas</span
+                ><span class="tag">Adaptabilidade</span
+                ><span class="tag">Organização</span
+                ><span class="tag">Liderança e mentoria</span
+                ><span class="tag">Aprendizado contínuo</span>
+              </div>
+            </article>
+            <article class="research-item">
+              <i class="fa-solid fa-code" aria-hidden="true"></i>
+              <h3>Habilidades técnicas</h3>
+              <div class="tags">
+
+                <a class="tag" href="https://www.python.org/" target="_blank" rel="noopener noreferrer">Python</a
+                ><a class="tag" href="https://isocpp.org/" target="_blank" rel="noopener noreferrer">C / C++</a
+                ><a class="tag" href="https://www.java.com/" target="_blank" rel="noopener noreferrer">Java</a
+                ><a class="tag" href="https://unity.com/" target="_blank" rel="noopener noreferrer">Unity</a
+                ><a class="tag" href="https://developer.mozilla.org/docs/Web/JavaScript" target="_blank" rel="noopener noreferrer">JavaScript</a
+                ><a class="tag" href="https://www.iso.org/standard/76583.html" target="_blank" rel="noopener noreferrer">SQL</a
+                ><a class="tag" href="https://code.visualstudio.com/" target="_blank" rel="noopener noreferrer">VS Code</a
+                ><a class="tag" href="https://www.kernel.org/" target="_blank" rel="noopener noreferrer">Linux</a
+                ><a class="tag" href="https://www.postgresql.org/" target="_blank" rel="noopener noreferrer">PostgreSQL</a
+                ><a class="tag" href="https://html.spec.whatwg.org/" target="_blank" rel="noopener noreferrer">HTML</a
+                ><a class="tag" href="https://www.latex-project.org/" target="_blank" rel="noopener noreferrer">LaTeX</a
+                ><a class="tag" href="https://www.docker.com/" target="_blank" rel="noopener noreferrer">Docker</a>
+                <span class="tag">Análise de dados</span
+                ><span class="tag">Machine Learning</span>
+              </div>
+            </article>
+            <article class="research-item">
+              <i class="fa-solid fa-language" aria-hidden="true"></i>
+              <h3>Idiomas</h3>
+              <div class="language-list">
+                <div>
+                  <div class="language-label"><span>Português</span><strong>Fluente</strong></div>
+                  <div class="proficiency" role="img" aria-label="Português: fluente"><span style="--level: 100%"></span></div>
+                </div>
+                <div>
+                  <div class="language-label"><span>Inglês</span><strong>Intermediário</strong></div>
+                  <div class="proficiency" role="img" aria-label="Inglês: intermediário"><span style="--level: 65%"></span></div>
+                </div>
+                <div>
+                  <div class="language-label"><span>Espanhol</span><strong>Iniciante</strong></div>
+                  <div class="proficiency" role="img" aria-label="Espanhol: iniciante"><span style="--level: 30%"></span></div>
+                </div>
+                <div>
+                  <div class="language-label"><span>Libras</span><strong>Iniciante</strong></div>
+                  <div class="proficiency" role="img" aria-label="Libras: iniciante"><span style="--level: 30%"></span></div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
       <!-- Publications: selected work followed by complete ORCID history. -->
       <section class="light" id="publicacoes">
         <div class="wrap">
           <header class="section-head">
             <h2>Publicações</h2>
-            <small>03 / PRODUÇÃO</small>
+            <small>04 / PRODUÇÃO</small>
           </header>
           <div class="pub-list">
             <article class="publication">
@@ -2202,7 +2347,7 @@
         <div class="wrap">
           <header class="section-head">
             <h2>contato</h2>
-            <small>05 / VAMOS CONVERSAR?</small>
+            <small>06 / VAMOS CONVERSAR?</small>
           </header>
           <div class="contact-grid">
             <div>
@@ -2321,6 +2466,22 @@
       </div>
     </footer>
     <script>
+      // Make each project and publication open its primary link without changing
+      // the behavior of links already present inside it.
+      document.querySelectorAll(".card, .publication").forEach((item) => {
+        const primaryLink = item.querySelector("a[href]");
+        if (!primaryLink) return;
+
+        item.tabIndex = 0;
+        item.setAttribute("role", "link");
+        item.addEventListener("click", (event) => {
+          if (!event.target.closest("a")) primaryLink.click();
+        });
+        item.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") primaryLink.click();
+        });
+      });
+
       // Keep local background usable when browser cannot fetch third-party widget.
       const cyberMapFrame = document.querySelector(".cyber-bg iframe");
       cyberMapFrame.addEventListener("error", () => {
@@ -2433,17 +2594,41 @@
         Trajetoria: "Journey",
         Trajetória: "Journey",
         Projetos: "Projects",
+        Skills: "Skills",
+        Habilidades: "Skills",
         Publicações: "Publications",
         Contato: "Contact",
         "Mestrando · DCC/UFMG · Belo Horizonte":
           "MSc student · DCC/UFMG · Belo Horizonte",
         "Explorar trabalhos": "Explore works",
-        "Sobre-mim": "About me",
+        "Sobre-mim": "About-me",
         "01 / PERFIL": "01 / PROFILE",
         "02 / CÓDIGO & PESQUISA": "02 / CODE & RESEARCH",
-        "03 / PRODUÇÃO": "03 / OUTPUT",
-        "04 / FORMAÇÃO": "04 / EDUCATION",
-        "05 / VAMOS CONVERSAR?": "05 / LET'S TALK?",
+        "03 / SOFT AND SKILLS": "03 / SKILLS AND LANGUAGES",
+        "04 / PRODUÇÃO": "04 / OUTPUT",
+        "05 / FORMAÇÃO": "05 / EDUCATION",
+        "06 / VAMOS CONVERSAR?": "06 / LET'S TALK?",
+        "Skills técnicas": "Technical Skills",
+        "Habilidades técnicas": "Technical Skills",
+        Competências: "Soft Skills",
+        "Competências-e-Habilidades": "Soft-and-Skills",
+        "Análise de dados": "Data Analysis",
+        Comunicação: "Communication",
+        "Trabalho em equipe": "Teamwork",
+        "Pensamento crítico": "Critical Thinking",
+        "Resolução de problemas": "Problem Solving",
+        Adaptabilidade: "Adaptability",
+        Organização: "Organization",
+        "Liderança e mentoria": "Leadership and Mentoring",
+        "Aprendizado contínuo": "Continuous Learning",
+        Idiomas: "Languages",
+        Português: "Portuguese",
+        Inglês: "English",
+        Espanhol: "Spanish",
+        Libras: "Brazilian Sign Language",
+        Fluente: "Fluent",
+        Intermediário: "Intermediate",
+        Iniciante: "Beginner",
         "Formação acadêmica": "Academic background",
         "Experiência acadêmica": "Academic experience",
         "Interesses de pesquisa": "Research interests",
@@ -2454,7 +2639,7 @@
         "artigos publicados": "published papers",
         "anos de estudo": "years of study",
         premiações: "awards",
-        "projetos públicos": "public projects",
+        "projetos": "projects",
         "Mestrado em Ciência da Computação": "Master's in Computer Science",
         "Bacharelado em Sistemas de Informação":
           "Bachelor's in Information Systems",
@@ -2669,12 +2854,17 @@
           Sobre: "About",
           Trajetoria: "Journey",
           Projetos: "Projects",
+          "Skills e Soft Skills": "Skills and Soft Skills",
           Publicações: "Publications",
           Contato: "Contact",
           "Redes sociais e perfis acadêmicos":
             "Social networks and academic profiles",
           "Currículo Lattes": "Lattes CV",
           Competências: "Skills",
+          "Português: fluente": "Portuguese: fluent",
+          "Inglês: intermediário": "English: intermediate",
+          "Espanhol: iniciante": "Spanish: beginner",
+          "Libras: iniciante": "Brazilian Sign Language: beginner",
           "Mapa mundial de ciberameaças em tempo real":
             "Real-time global cyberthreat map",
         },
@@ -2865,7 +3055,7 @@
       // Keep content order aligned with navigation and reading flow.
       const main = document.getElementById("conteudo"),
         contactSection = document.getElementById("contato");
-      ["projetos", "publicacoes", "trajetoria"].forEach((id) =>
+      ["projetos", "habilidades", "publicacoes", "trajetoria"].forEach((id) =>
         main.insertBefore(document.getElementById(id), contactSection),
       );
       // Keep the active navigation item aligned with the section near viewport center.

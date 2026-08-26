@@ -8,18 +8,22 @@
 
 ## Português
 
-Portfólio pessoal e acadêmico desenvolvido como página estática. Reúne trajetória acadêmica, interesses de pesquisa, projetos, publicações e canais de contato.
+Portfólio pessoal e acadêmico desenvolvido como página estática. Reúne trajetória acadêmica, interesses de pesquisa, projetos, competências técnicas e interpessoais, idiomas, publicações e canais de contato.
 
 ### Recursos
 
 - mapa de ciberameaças da Kaspersky como plano de fundo, com política de
   referência restritiva e animação de rede local como fallback;
 - apresentação animada com frases rotativas;
-- temas claro e escuro com detecção da preferência do sistema;
+- temas claro e escuro com detecção da preferência do sistema e adaptação do
+  plano de fundo e das cores para melhor contraste;
 - idiomas português e inglês com detecção automática;
+- seção de skills e soft skills com idiomas e níveis visuais de proficiência;
 - seções expansíveis para experiências, interesses, projetos e publicações;
 - navegação responsiva e contextual;
 - suporte a leitores de tela, navegação por teclado e movimento reduzido;
+- cards de projetos e publicações integralmente clicáveis, preservando seus
+  botões e links específicos;
 - links para GitHub Pages, repositórios, DOI, ORCID, Lattes e página acadêmica.
 
 ### Tecnologias
@@ -72,18 +76,22 @@ Distribuído sob a licença MIT. Consulte [LICENSE](LICENSE).
 
 ## English
 
-Personal and academic portfolio built as a static website. It presents academic experience, research interests, projects, publications and contact channels.
+Personal and academic portfolio built as a static website. It presents academic experience, research interests, projects, technical and interpersonal skills, languages, publications and contact channels.
 
 ### Features
 
 - Kaspersky cyberthreat map as a background, with a restrictive referrer
   policy and a local network animation as fallback;
 - animated introduction with rotating phrases;
-- light and dark themes with automatic system-preference detection;
+- light and dark themes with automatic system-preference detection and
+  background and color adaptation for improved contrast;
 - Portuguese and English languages with automatic detection;
+- skills and soft skills section with languages and visual proficiency levels;
 - expandable sections for experience, interests, projects and publications;
 - responsive, contextual navigation;
 - screen-reader, keyboard-navigation and reduced-motion support;
+- fully clickable project and publication cards that preserve their specific
+  buttons and links;
 - links to GitHub Pages, repositories, DOI records, ORCID, Lattes and the academic homepage.
 
 ### Technologies
