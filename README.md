@@ -24,6 +24,8 @@ Portfólio pessoal e acadêmico desenvolvido como página estática. Reúne traj
 - suporte a leitores de tela, navegação por teclado e movimento reduzido;
 - cards de projetos e publicações integralmente clicáveis, preservando seus
   botões e links específicos;
+- SEO técnico com URL canônica, metadados sociais, dados estruturados,
+  sitemap, diretivas de rastreamento e favicon rastreável;
 - links para GitHub Pages, repositórios, DOI, ORCID, Lattes e página acadêmica.
 
 ### Tecnologias
@@ -55,9 +57,14 @@ A página está disponível pelo link: `https://jluckmay.github.io/`
 
 ```text
 .
-├── index.html   # Página, estilos, conteúdo e comportamento
-├── README.md    # Documentação bilíngue do projeto
-└── LICENSE      # Licença MIT
+├── index.html                       # Página, estilos, conteúdo e comportamento
+├── favicon.svg                     # Ícone rastreável do site
+├── profile.png                     # Imagem de perfil e compartilhamento social
+├── robots.txt                      # Regras para rastreadores
+├── sitemap.xml                     # Mapa do site para mecanismos de busca
+├── googled9a84729087bb788.html     # Verificação do Google Search Console
+├── README.md                       # Documentação bilíngue do projeto
+└── LICENSE                         # Licença MIT
 ```
 
 ### Personalização
@@ -92,6 +99,8 @@ Personal and academic portfolio built as a static website. It presents academic 
 - screen-reader, keyboard-navigation and reduced-motion support;
 - fully clickable project and publication cards that preserve their specific
   buttons and links;
+- technical SEO with a canonical URL, social metadata, structured data,
+  sitemap, crawler directives and a crawlable favicon;
 - links to GitHub Pages, repositories, DOI records, ORCID, Lattes and the academic homepage.
 
 ### Technologies
@@ -123,9 +132,14 @@ This page can be accessed by the following link: `https://jluckmay.github.io/`
 
 ```text
 .
-├── index.html   # Page content, styles and behavior
-├── README.md    # Bilingual project documentation
-└── LICENSE      # MIT License
+├── index.html                       # Page content, styles and behavior
+├── favicon.svg                     # Crawlable site icon
+├── profile.png                     # Profile and social sharing image
+├── robots.txt                      # Crawler rules
+├── sitemap.xml                     # Search engine sitemap
+├── googled9a84729087bb788.html     # Google Search Console verification
+├── README.md                       # Bilingual project documentation
+└── LICENSE                         # MIT License
 ```
 
 ### Customization
