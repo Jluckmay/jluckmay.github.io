@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jluckmay.github.io/sitemap.xml
