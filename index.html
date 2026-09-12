@@ -109,7 +109,6 @@
       html[data-mode="retro"] :focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
       html[data-mode="retro"] .cyber-bg,
       html[data-mode="retro"] i,
-      html[data-mode="retro"] .wedding-rings,
       html[data-mode="retro"] [hidden] { display: none !important; }
       html[data-mode="retro"] .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
       html[data-mode="retro"] .utility,
@@ -132,7 +131,9 @@
       html[data-mode="retro"] .experience,
       html[data-mode="retro"] .award { margin: 1rem 0; padding: .5rem 0; }
       html[data-mode="retro"] .hero-socials a::after { content: attr(aria-label); }
-      html[data-mode="retro"] .wedding-rings-link::after { content: "Ítalo Freitas Makeup"; margin-left: .3em; }
+      html[data-mode="retro"] .wedding-rings-link { display: inline-flex; align-items: center; margin-left: .25rem; color: inherit; text-decoration: none; vertical-align: middle; }
+      html[data-mode="retro"] .wedding-rings { display: inline-flex; align-items: center; padding-inline: .2rem; transform: rotate(-90deg); }
+      html[data-mode="retro"] .wedding-rings svg { width: 1.05rem; height: .75rem; overflow: visible; }
       html[data-mode="retro"] .tag,
       html[data-mode="retro"] .chip { display: inline-block; border: 1px solid #888; padding: 0 .4rem; margin: .2rem; }
       html[data-mode="retro"] .contact-link { display: block; margin: .6rem 0; }
@@ -1340,8 +1341,7 @@
           >Feito com amor entre código, pesquisa e café<a
             class="wedding-rings-link"
             href="https://italofreitasmakeup.github.io/"
-            aria-label="Visitar site de Ítalo Freitas Makeup"
-            title="Ítalo Freitas Makeup"
+            aria-label="Descobrir uma surpresa"
             ><span class="wedding-rings" aria-hidden="true"
               ><svg viewBox="0 0 32 24" fill="none" focusable="false">
                 <defs>
@@ -1779,6 +1779,7 @@
           });
       }
       const attributeTranslations = {
+          "Descobrir uma surpresa": "Discover a surprise",
           "página otimizada": "optimized page",
           "Versão completa": "Full version",
           "Preferências da página": "Page preferences",
