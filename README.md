@@ -39,7 +39,8 @@ Portfólio pessoal e acadêmico desenvolvido como página estática. Reúne traj
 - Google Fonts
 - Kaspersky Cybermap Widget
 
-O projeto não exige etapa de compilação nem gerenciador de pacotes.
+A página editorial pode ser aberta sem compilação ou gerenciador de pacotes.
+A sincronização automática usa um script de geração com Node.js 24, sem dependências npm.
 
 ### Execução local
 
@@ -82,6 +83,54 @@ node tests/retro.cjs
 `PLAYWRIGHT_MODULE` pode indicar uma instalação existente do Playwright;
 `BROWSER_CHANNEL` permite selecionar outro canal compatível, como `chrome`.
 
+### Atualização automática: GitHub e ORCID
+
+O workflow `.github/workflows/update-portfolio.yml` gera e publica uma página
+atualizada mensalmente, no dia **1 às 09:17 UTC (06:17 em Brasília)**, a cada push em `main`
+e por execução manual na aba Actions. O GitHub pode atrasar execuções agendadas
+ou desativá-las após 60 dias sem atividade no repositório público.
+
+- A seleção editorial de `index.html`, seus destaques e descrições são preservados.
+- Novos repositórios e trabalhos públicos entram nas listas expansíveis, depois
+  dos destaques. Repositórios são comparados por URL; publicações, por DOI e título.
+- `sync.config.json` define os perfis e exclusões. Novos forks são ignorados por
+  padrão; forks já selecionados manualmente permanecem. Repositórios arquivados
+  são aceitos; este próprio site é excluído da importação automática.
+- A coleta acontece durante a geração. Nenhuma consulta às APIs ocorre no navegador,
+  e ambas as versões da página recebem o mesmo conteúdo atualizado.
+- Títulos e descrições importados mantêm o idioma da fonte. Controles continuam
+  bilíngues. Conteúdo externo é escapado antes de entrar no HTML.
+- Falha em qualquer API interrompe a publicação, mantendo a última versão publicada.
+  A cada geração bem-sucedida, os itens automáticos refletem os dados públicos atuais;
+  os itens editados manualmente continuam sob controle de `index.html`.
+
+Para ativar, publique os arquivos em `main` e selecione **Settings → Pages →
+Build and deployment → Source → GitHub Actions** no repositório. Execute
+**Actions → Update portfolio and deploy Pages → Run workflow** para conferir a
+primeira publicação. O workflow não cria commits automáticos: publica `dist/`
+diretamente no Pages, sem enviar testes, configuração ou scripts ao site.
+
+GitHub usa o token de leitura fornecido automaticamente pelo Actions. ORCID usa
+leitura pública anônima; se necessário, configure o secret opcional
+`ORCID_READ_PUBLIC_TOKEN` com um token `/read-public`. Nunca coloque tokens no HTML
+ou em `sync.config.json`.
+
+Para gerar e inspecionar a versão sincronizada localmente, use Node.js 24:
+
+```bash
+node --test tests/sync-portfolio.test.mjs
+node scripts/sync-portfolio.mjs
+python -m http.server 8000 --directory dist
+```
+
+`dist/` é gerado e ignorado pelo Git. Editar `index.html` altera a seleção editorial;
+as novidades das APIs aparecem em `dist/index.html`. Para executar os testes de
+navegador sobre essa saída, defina `SITE_DIR` com o caminho absoluto de `dist/`.
+
+Referências: [GitHub Pages com Actions](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages),
+[agendamentos](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule),
+[API pública do ORCID](https://info.orcid.org/documentation/api-tutorials/api-tutorial-read-data-on-a-record/).
+
 ### Acesso Web
 
 A página está disponível pelo link: `https://jluckmay.github.io/`
@@ -93,6 +142,10 @@ A página está disponível pelo link: `https://jluckmay.github.io/`
 ├── index.html                       # Conteúdo, modo leve e comportamento
 ├── modern.css                       # Estilos exclusivos da versão completa
 ├── tests/retro.cjs                  # Verificação dos modos em navegador
+├── tests/sync-portfolio.test.mjs    # Testes da importação e geração
+├── scripts/sync-portfolio.mjs       # Coleta das APIs e geração estática
+├── sync.config.json                # Perfis e exclusões da sincronização
+├── .github/workflows/update-portfolio.yml # Agendamento e publicação no Pages
 ├── favicon.svg                     # Ícone rastreável do site
 ├── profile.webp                    # Foto da versão completa e compartilhamento social
 ├── profile-retro.webp              # Miniatura otimizada para o modo leve
@@ -156,7 +209,8 @@ Personal and academic portfolio built as a static website. It presents academic 
 - Google Fonts
 - Kaspersky Cybermap Widget
 
-The project requires no build step or package manager.
+The editorial page can be opened without a build step or package manager.
+Automatic synchronization uses a Node.js 24 generation script with no npm dependencies.
 
 ### Local development
 
@@ -199,6 +253,53 @@ node tests/retro.cjs
 `PLAYWRIGHT_MODULE` can point to an existing Playwright installation;
 `BROWSER_CHANNEL` selects another supported channel, such as `chrome`.
 
+### Automatic updates: GitHub and ORCID
+
+The `.github/workflows/update-portfolio.yml` workflow builds and publishes a fresh
+page monthly, on day **1 at 09:17 UTC (06:17 in Brasilia)**, on pushes to `main`, and on manual
+runs from the Actions tab. GitHub can delay scheduled runs or disable them after
+60 days without activity in a public repository.
+
+- The editorial selection in `index.html`, its highlights and descriptions stay intact.
+- Additional public repositories and works appear in the expandable lists after
+  the highlights. Repositories are deduplicated by URL; works, by DOI and title.
+- `sync.config.json` sets the profiles and exclusions. New forks are ignored by
+  default; manually selected forks remain. Archived repositories are eligible;
+  this portfolio repository is excluded from automatic imports.
+- APIs are queried during generation, never in the visitor's browser. Both page
+  editions receive the same updated content.
+- Imported titles and descriptions retain their source language. Controls remain
+  bilingual. External content is escaped before insertion into HTML.
+- If either API fails, publication stops and the previous deployment remains live.
+  Each successful build reflects the current public data for automatic entries;
+  manual entries remain controlled by `index.html`.
+
+To activate, push the files to `main` and select **Settings → Pages → Build and
+deployment → Source → GitHub Actions** in the repository. Run **Actions → Update
+portfolio and deploy Pages → Run workflow** to verify the first deployment.
+The workflow does not create automatic commits: it deploys `dist/` directly to
+Pages, excluding tests, configuration and scripts from the published website.
+
+GitHub uses the read token automatically provided by Actions. ORCID uses anonymous
+public reads; if needed, configure the optional `ORCID_READ_PUBLIC_TOKEN` secret
+with a `/read-public` token. Never place tokens in HTML or `sync.config.json`.
+
+Generate and inspect the synchronized version locally with Node.js 24:
+
+```bash
+node --test tests/sync-portfolio.test.mjs
+node scripts/sync-portfolio.mjs
+python -m http.server 8000 --directory dist
+```
+
+`dist/` is generated and ignored by Git. Edit `index.html` to change the editorial
+selection; API additions appear in `dist/index.html`. To run browser checks against
+that output, set `SITE_DIR` to the absolute path of `dist/`.
+
+References: [GitHub Pages with Actions](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages),
+[schedules](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule),
+[ORCID public API](https://info.orcid.org/documentation/api-tutorials/api-tutorial-read-data-on-a-record/).
+
 ### Web Access
 
 This page can be accessed by the following link: `https://jluckmay.github.io/`
@@ -210,6 +311,10 @@ This page can be accessed by the following link: `https://jluckmay.github.io/`
 ├── index.html                       # Content, lightweight styles and behavior
 ├── modern.css                       # Full-version styles
 ├── tests/retro.cjs                  # Browser checks for both modes
+├── tests/sync-portfolio.test.mjs    # Import and generation checks
+├── scripts/sync-portfolio.mjs       # API fetching and static generation
+├── sync.config.json                # Profiles and sync exclusions
+├── .github/workflows/update-portfolio.yml # Scheduled builds and Pages deployment
 ├── favicon.svg                     # Crawlable site icon
 ├── profile.webp                    # Profile and social sharing image
 ├── profile-retro.webp              # Optimized thumbnail for the lightweight edition

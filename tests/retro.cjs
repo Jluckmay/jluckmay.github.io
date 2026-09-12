@@ -4,6 +4,7 @@ const { readFileSync } = require('node:fs');
 const { createServer } = require('node:http');
 const { join } = require('node:path');
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const siteRoot = process.env.SITE_DIR || join(__dirname, '..');
 
 (async () => {
   const server = createServer((request, response) => {
@@ -14,7 +15,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
     }
     response.setHeader('Content-Type', file.endsWith('.css') ? 'text/css' :
       file.endsWith('.svg') ? 'image/svg+xml' : file.endsWith('.webp') ? 'image/webp' : file.endsWith('.png') ? 'image/png' : 'text/html; charset=utf-8');
-    response.end(readFileSync(join(__dirname, '..', file === '/' ? 'index.html' : file.slice(1))));
+    response.end(readFileSync(join(siteRoot, file === '/' ? 'index.html' : file.slice(1))));
   });
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   let browser;

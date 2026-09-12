@@ -1,0 +1,57 @@
+name: Update portfolio and deploy Pages
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # First day of each month, 09:17 UTC = 06:17 in Brasilia. GitHub may delay runs.
+    - cron: '17 9 1 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Test synchronization
+        run: node --test tests/sync-portfolio.test.mjs
+      - name: Fetch public records and generate the static site
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          ORCID_READ_PUBLIC_TOKEN: ${{ secrets.ORCID_READ_PUBLIC_TOKEN }}
+        run: node scripts/sync-portfolio.mjs
+      - name: Upload only the generated website
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
