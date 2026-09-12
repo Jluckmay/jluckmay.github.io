@@ -21,6 +21,8 @@ Portfólio pessoal e acadêmico desenvolvido como página estática. Reúne traj
 - seção de skills e soft skills com idiomas e níveis visuais de proficiência;
 - seções expansíveis para experiências, interesses, projetos e publicações;
 - navegação responsiva e contextual;
+- versão retrô leve em `/#retro`, com seleção automática para conexões lentas
+  detectadas e opção de voltar à versão completa;
 - suporte a leitores de tela, navegação por teclado e movimento reduzido;
 - cards de projetos e publicações integralmente clicáveis, preservando seus
   botões e links específicos;
@@ -49,6 +51,37 @@ python -m http.server 8000
 
 Depois acesse `http://localhost:8000`.
 
+### Versão leve / retrô
+
+Acesse `/#retro` ou use **#** (descrição: “página otimizada”) nos controles da página. O modo retrô
+mantém o conteúdo, os links, as coleções expansíveis, os idiomas e os temas,
+usando fontes do sistema e navegação textual. A foto usa uma miniatura WebP local
+de aproximadamente 13 KB, carregada ao se aproximar da área visível. Não baixa a foto original, o mapa, as fontes
+externas, os ícones ou `modern.css`, nem executa as animações e os efeitos de rolagem.
+O HTML e o favicon continuam sendo transferidos; não se trata de um modo offline.
+
+Na abertura, o navegador seleciona esse modo quando informa economia de dados,
+rede efetiva `slow-2g`, `2g` ou `3g`, velocidade inferior a 1,5 Mbps, latência de
+pelo menos 500 ms ou estado offline. São estimativas do navegador, não uma medição
+de estabilidade. Sem essas informações, a versão completa permanece como padrão;
+o acesso manual por `/#retro` funciona independentemente dessa detecção.
+
+**Versão completa** (`/#completo`) permite ignorar a detecção automática.
+A escolha explícita permanece durante a sessão da aba, inclusive ao navegar pelas
+seções e recarregar. Não há troca automática no meio da leitura. Se o armazenamento
+estiver bloqueado, o modo ainda pode ser escolhido pelo endereço, mas a preferência
+não persiste entre recarregamentos de âncoras de seção. Sem JavaScript, o conteúdo
+aparece no formato leve em português, com todas as coleções abertas.
+
+Teste de navegador, com Node.js, Playwright e Microsoft Edge disponíveis:
+
+```bash
+node tests/retro.cjs
+```
+
+`PLAYWRIGHT_MODULE` pode indicar uma instalação existente do Playwright;
+`BROWSER_CHANNEL` permite selecionar outro canal compatível, como `chrome`.
+
 ### Acesso Web
 
 A página está disponível pelo link: `https://jluckmay.github.io/`
@@ -57,9 +90,12 @@ A página está disponível pelo link: `https://jluckmay.github.io/`
 
 ```text
 .
-├── index.html                       # Página, estilos, conteúdo e comportamento
+├── index.html                       # Conteúdo, modo leve e comportamento
+├── modern.css                       # Estilos exclusivos da versão completa
+├── tests/retro.cjs                  # Verificação dos modos em navegador
 ├── favicon.svg                     # Ícone rastreável do site
-├── profile.png                     # Imagem de perfil e compartilhamento social
+├── profile.webp                    # Foto da versão completa e compartilhamento social
+├── profile-retro.webp              # Miniatura otimizada para o modo leve
 ├── robots.txt                      # Regras para rastreadores
 ├── sitemap.xml                     # Mapa do site para mecanismos de busca
 ├── googled9a84729087bb788.html     # Verificação do Google Search Console
@@ -69,11 +105,17 @@ A página está disponível pelo link: `https://jluckmay.github.io/`
 
 ### Personalização
 
-Conteúdo, traduções, animações e links ficam em `index.html`. As principais configurações visuais estão nas variáveis CSS declaradas em `:root`.
+Conteúdo, traduções, comportamento e links ficam em `index.html`, junto aos estilos
+do modo retrô. O design completo e suas animações ficam em `modern.css`, com
+configurações visuais nas variáveis CSS declaradas em `:root`.
+
+A versão completa usa `profile.webp` (1089 × 1444 px, aproximadamente 153 KB),
+gerado do PNG com qualidade 90 e transparência preservada. A compressão tem perdas;
+o mesmo WebP também é usado como imagem de compartilhamento social.
 
 ### Serviços externos
 
-A página carrega fontes, ícones, fotografia de perfil e mapa por serviços externos. Esses recursos dependem de conexão com a internet e podem estar sujeitos às políticas de privacidade dos respectivos provedores. Caso o mapa da Kaspersky não carregue, uma animação SVG local preserva o plano de fundo visual.
+A versão completa carrega fontes, ícones e mapa por serviços externos. Esses recursos dependem de conexão com a internet e podem estar sujeitos às políticas de privacidade dos respectivos provedores. A foto é local. Caso o mapa da Kaspersky não carregue, uma animação SVG local preserva o plano de fundo visual. O modo retrô dispensa esses recursos.
 
 ### Licença
 
@@ -96,6 +138,8 @@ Personal and academic portfolio built as a static website. It presents academic 
 - skills and soft skills section with languages and visual proficiency levels;
 - expandable sections for experience, interests, projects and publications;
 - responsive, contextual navigation;
+- lightweight retro edition at `/#retro`, selected automatically for detected
+  slow connections, with an option to return to the full version;
 - screen-reader, keyboard-navigation and reduced-motion support;
 - fully clickable project and publication cards that preserve their specific
   buttons and links;
@@ -124,6 +168,37 @@ python -m http.server 8000
 
 Then visit `http://localhost:8000`.
 
+### Lightweight / retro edition
+
+Visit `/#retro` or select **#** (description: “optimized page”) in the page controls. Retro mode
+keeps the content, links, expandable collections, languages and themes, using
+system fonts and text navigation. The photo uses a local WebP thumbnail of about
+13 KB, loaded as it approaches the viewport. It does not download the original photo, map, external
+fonts, icons or `modern.css`, or run animations and scroll effects. The HTML and
+favicon are still transferred; this is not an offline mode.
+
+On startup, the browser selects this mode when it reports data saving, an effective
+`slow-2g`, `2g` or `3g` connection, speed below 1.5 Mbps, latency of at least 500 ms,
+or offline status. These are browser estimates, not a stability measurement.
+Without this information, the full version remains the default; manual access
+through `/#retro` works regardless of detection support.
+
+**Full version** (`/#completo`) overrides automatic detection. Explicit choices
+last for the tab session, including section navigation and reloads. The mode does
+not change automatically while reading. When storage is blocked, the URL still
+selects the mode, but preferences cannot survive reloads of section anchors.
+Without JavaScript, content appears in lightweight Portuguese with all collections
+expanded.
+
+Browser checks require Node.js, Playwright and Microsoft Edge:
+
+```bash
+node tests/retro.cjs
+```
+
+`PLAYWRIGHT_MODULE` can point to an existing Playwright installation;
+`BROWSER_CHANNEL` selects another supported channel, such as `chrome`.
+
 ### Web Access
 
 This page can be accessed by the following link: `https://jluckmay.github.io/`
@@ -132,9 +207,12 @@ This page can be accessed by the following link: `https://jluckmay.github.io/`
 
 ```text
 .
-├── index.html                       # Page content, styles and behavior
+├── index.html                       # Content, lightweight styles and behavior
+├── modern.css                       # Full-version styles
+├── tests/retro.cjs                  # Browser checks for both modes
 ├── favicon.svg                     # Crawlable site icon
-├── profile.png                     # Profile and social sharing image
+├── profile.webp                    # Profile and social sharing image
+├── profile-retro.webp              # Optimized thumbnail for the lightweight edition
 ├── robots.txt                      # Crawler rules
 ├── sitemap.xml                     # Search engine sitemap
 ├── googled9a84729087bb788.html     # Google Search Console verification
@@ -144,11 +222,17 @@ This page can be accessed by the following link: `https://jluckmay.github.io/`
 
 ### Customization
 
-Content, translations, animations and links are contained in `index.html`. Main visual settings are defined by CSS custom properties under `:root`.
+Content, translations, behavior and links are contained in `index.html`, alongside
+retro styles. The full design and its animations live in `modern.css`, with main
+visual settings defined by CSS custom properties under `:root`.
+
+The full version uses `profile.webp` (1089 × 1444 px, approximately 153 KB),
+encoded from the PNG at quality 90 with transparency preserved. Compression is
+lossy; the same WebP is also used as the social sharing image.
 
 ### External services
 
-The page loads fonts, icons, the profile image and the map from external services. These resources require an internet connection and may be subject to their providers' privacy policies. If the Kaspersky map fails to load, a local SVG animation preserves the visual background.
+The full version loads fonts, icons and the map from external services. These resources require an internet connection and may be subject to their providers' privacy policies. The profile image is local. If the Kaspersky map fails to load, a local SVG animation preserves the visual background. Retro mode skips these resources.
 
 ### License
 
