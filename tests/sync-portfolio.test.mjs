@@ -4,7 +4,7 @@ import { mkdtemp, readFile, readdir, stat } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
-  assets, buildSite, fetchJson, fetchRepositories, normalizeWorks, renderPortfolio,
+  assets, buildSite, fetchJson, fetchRepositories, formatProjectName, normalizeWorks, renderPortfolio,
 } from '../scripts/sync-portfolio.mjs';
 
 const config = {
@@ -48,8 +48,33 @@ test('filters new forks, private repositories, other owners and configured exclu
     repo('external', { owner: { login: 'someone-else' } }), repo('jluckmay.github.io'), repo('archived', { archived: true })];
   const result = renderPortfolio(template, repositories, record(), config);
   assert.equal(result.addedProjects, 1);
-  assert(result.html.includes('<h3>archived</h3>'));
+  assert(result.html.includes('<h3>Archived</h3>'));
   assert.equal(renderPortfolio(template, [repo('fork', { fork: true })], record(), { ...config, includeForks: true }).addedProjects, 1);
+});
+
+test('formats repository names and supplies descriptions or custom overrides', () => {
+  assert.equal(formatProjectName('minecraft-map-convertion'), 'Minecraft Map Convertion');
+  assert.equal(formatProjectName('oferta-ppgcc-ufmg'), 'Oferta PPGCC UFMG');
+  assert.equal(formatProjectName('smart_minifier'), 'Smart Minifier');
+
+  const repos = [
+    repo('minecraft-map-convertion', { language: 'Python' }),
+    repo('simple-tool', { description: 'Ferramenta utilitária.', language: 'JavaScript' }),
+  ];
+  const customConfig = {
+    ...config,
+    projectOverrides: {
+      'minecraft-map-convertion': {
+        name: 'Minecraft Map Converter',
+        description: 'Pipeline automatizado em Python para conversão de mapas, entidades e comandos entre Minecraft Java e Bedrock.',
+      },
+    },
+  };
+  const result = renderPortfolio(template, repos, record(), customConfig);
+  assert(result.html.includes('<h3>Minecraft Map Converter</h3>'));
+  assert(result.html.includes('<p>Pipeline automatizado em Python para conversão de mapas, entidades e comandos entre Minecraft Java e Bedrock.</p>'));
+  assert(result.html.includes('<h3>Simple Tool</h3>'));
+  assert(result.html.includes('<p>Ferramenta utilitária.</p>'));
 });
 
 test('escapes external text and URLs; rejects executable homepage protocols', () => {

@@ -93,12 +93,13 @@ ou desativá-las após 60 dias sem atividade no repositório público.
 - A seleção editorial de `index.html`, seus destaques e descrições são preservados.
 - Novos repositórios e trabalhos públicos entram nas listas expansíveis, depois
   dos destaques. Repositórios são comparados por URL; publicações, por DOI e título.
-- `sync.config.json` define os perfis e exclusões. Novos forks são ignorados por
-  padrão; forks já selecionados manualmente permanecem. Repositórios arquivados
-  são aceitos; este próprio site é excluído da importação automática.
+- `sync.config.json` define os perfis, exclusões e sobreposições de metadados (`projectOverrides`).
+  Novos forks são ignorados por padrão; forks já selecionados manualmente permanecem.
+  Repositórios arquivados são aceitos; este próprio site é excluído da importação automática.
 - A coleta acontece durante a geração. Nenhuma consulta às APIs ocorre no navegador,
   e ambas as versões da página recebem o mesmo conteúdo atualizado.
-- Títulos e descrições importados mantêm o idioma da fonte. Controles continuam
+- Nomes de repositórios importados são formatados em Title Case e projetos com sobreposição
+  ou ausência de descrição recebem formatação e descrições apropriadas. Controles continuam
   bilíngues. Conteúdo externo é escapado antes de entrar no HTML.
 - Falha em qualquer API interrompe a publicação, mantendo a última versão publicada.
   A cada geração bem-sucedida, os itens automáticos refletem os dados públicos atuais;

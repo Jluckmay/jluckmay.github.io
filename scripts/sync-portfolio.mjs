@@ -51,6 +51,33 @@ function requiredString(value, label) {
   return value.trim();
 }
 
+export const DEFAULT_PROJECT_OVERRIDES = {
+  'minecraft-map-convertion': {
+    name: 'Minecraft Map Converter',
+    description: 'Pipeline automatizado em Python para conversão de mapas, entidades e comandos entre Minecraft Java e Bedrock.',
+  },
+};
+
+export function formatProjectName(name) {
+  if (typeof name !== 'string' || !name.trim()) return '';
+  const knownAcronyms = new Set([
+    'UFMG', 'PPGCC', 'DCC', 'UFV', 'IA', 'AI', 'ML', 'API', 'PDI', 'HTML', 'CSS', 'JS', 'UI', 'UX', 'SQL',
+  ]);
+  return name
+    .replace(/[_-]+/g, ' ')
+    .trim()
+    .split(/\s+/)
+    .map(word => {
+      const upper = word.toUpperCase();
+      if (knownAcronyms.has(upper)) return upper;
+      if (/[a-z][A-Z]/.test(word)) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      }
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
+    .join(' ');
+}
+
 export function validateConfig(config) {
   if (!/^[a-z\d](?:[a-z\d-]{0,38})$/i.test(config.githubUsername ?? '')) throw new Error('Invalid GitHub username');
   if (!/^\d{4}-\d{4}-\d{4}-\d{3}[\dX]$/.test(config.orcidId ?? '')) throw new Error('Invalid ORCID iD');
@@ -58,6 +85,22 @@ export function validateConfig(config) {
   for (const field of ['excludedRepositories', 'excludedDois', 'excludedOrcidPutCodes']) {
     if (!Array.isArray(config[field]) || config[field].some(value => typeof value !== 'string')) {
       throw new Error(`${field} must be an array of strings`);
+    }
+  }
+  if (config.projectOverrides !== undefined) {
+    if (typeof config.projectOverrides !== 'object' || config.projectOverrides === null || Array.isArray(config.projectOverrides)) {
+      throw new Error('projectOverrides must be an object');
+    }
+    for (const [key, value] of Object.entries(config.projectOverrides)) {
+      if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+        throw new Error(`Override for ${key} must be an object`);
+      }
+      if (value.name !== undefined && (typeof value.name !== 'string' || !value.name.trim())) {
+        throw new Error(`Invalid name override for ${key}`);
+      }
+      if (value.description !== undefined && (typeof value.description !== 'string' || !value.description.trim())) {
+        throw new Error(`Invalid description override for ${key}`);
+      }
     }
   }
   return config;
@@ -102,14 +145,23 @@ export async function fetchRepositories(config, { token, fetcher = fetch, wait =
 export function normalizeRepositories(repositories, config) {
   if (!Array.isArray(repositories)) throw new Error('Invalid repository list');
   const excluded = new Set(config.excludedRepositories.map(name => name.toLowerCase()));
+  const overrides = { ...DEFAULT_PROJECT_OVERRIDES, ...(config.projectOverrides || {}) };
   return repositories.flatMap(repo => {
-    const name = requiredString(repo?.name, 'repository name');
+    const rawName = requiredString(repo?.name, 'repository name');
     const owner = requiredString(repo?.owner?.login, 'repository owner');
     if (owner.toLowerCase() !== config.githubUsername.toLowerCase() || repo.private || repo.disabled ||
-      (!config.includeForks && repo.fork) || excluded.has(name.toLowerCase())) return [];
-    const url = `https://github.com/${encodeURIComponent(owner)}/${encodeURIComponent(name)}`;
-    return [{ name, url, description: typeof repo.description === 'string' ? repo.description : '',
-      homepage: safeUrl(repo.homepage), language: typeof repo.language === 'string' ? repo.language : '' }];
+      (!config.includeForks && repo.fork) || excluded.has(rawName.toLowerCase())) return [];
+    const url = `https://github.com/${encodeURIComponent(owner)}/${encodeURIComponent(rawName)}`;
+    const override = overrides[rawName] || overrides[rawName.toLowerCase()] || {};
+    const name = override.name ? requiredString(override.name, 'project override name') : formatProjectName(rawName);
+    const repoDesc = typeof repo.description === 'string' ? repo.description.trim() : '';
+    const description = override.description
+      ? requiredString(override.description, 'project override description')
+      : (repoDesc || (repo.language ? `Projeto em ${repo.language} disponível no GitHub.` : 'Projeto disponível no GitHub.'));
+    const homepage = safeUrl(override.homepage || repo.homepage);
+    const language = typeof repo.language === 'string' ? repo.language : '';
+    const tag = typeof override.tag === 'string' ? override.tag : '';
+    return [{ name, rawName, url, description, homepage, language, tag }];
   }).sort((a, b) => a.name.localeCompare(b.name, 'en'));
 }
 
@@ -190,15 +242,22 @@ export function renderPortfolio(template, repositories, record, config) {
     knownTitles.add(title);
     return true;
   });
-  const projectHtml = newProjects.map(repo => `            <article class="card extra-item" hidden data-sync-source="github">
-              <span class="num">GitHub${repo.language ? ' / ' + escapeHtml(repo.language) : ''}</span>
+  const projectHtml = newProjects.map(repo => {
+    const linkItems = [];
+    if (repo.homepage) {
+      linkItems.push(`<a href="${escapeHtml(repo.homepage)}" target="_blank" rel="noopener noreferrer">Abrir projeto +</a>`);
+    }
+    linkItems.push(`<a href="${escapeHtml(repo.url)}" target="_blank" rel="noopener noreferrer">${repo.homepage ? 'GitHub +' : 'Ver no GitHub +'}</a>`);
+    const linksHtml = linkItems.join('\n                ');
+    return `            <article class="card extra-item" hidden data-sync-source="github">
+              <span class="num">${escapeHtml(repo.tag || ('GitHub' + (repo.language ? ' / ' + repo.language : '')))}</span>
               <h3>${escapeHtml(repo.name)}</h3>
               ${repo.description ? `<p>${escapeHtml(repo.description)}</p>` : ''}
               <div class="project-links">
-                ${repo.homepage ? `<a href="${escapeHtml(repo.homepage)}" target="_blank" rel="noopener noreferrer">Abrir projeto +</a>` : ''}
-                <a href="${escapeHtml(repo.url)}" target="_blank" rel="noopener noreferrer">Ver no GitHub +</a>
+                ${linksHtml}
               </div>
-            </article>`).join('\n');
+            </article>`;
+  }).join('\n');
   const workHtml = newWorks.map(work => `            <article class="publication extra-item" hidden data-sync-source="orcid" data-orcid-id="${work.code}">
               <div>
                 <h3>${escapeHtml(work.title)}</h3>

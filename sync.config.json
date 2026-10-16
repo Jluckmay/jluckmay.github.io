@@ -4,5 +4,11 @@
   "includeForks": false,
   "excludedRepositories": ["jluckmay.github.io"],
   "excludedDois": [],
-  "excludedOrcidPutCodes": []
+  "excludedOrcidPutCodes": [],
+  "projectOverrides": {
+    "minecraft-map-convertion": {
+      "name": "Minecraft Map Converter",
+      "description": "Pipeline automatizado em Python para conversão de mapas, entidades e comandos entre Minecraft Java e Bedrock."
+    }
+  }
 }
