@@ -6,7 +6,7 @@ import { setTimeout as delay } from 'node:timers/promises';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 export const assets = [
   'modern.css', 'favicon.svg', 'profile.webp', 'profile-retro.webp',
-  'robots.txt', 'sitemap.xml', 'googled9a84729087bb788.html',
+  'robots.txt', 'sitemap.xml', 'googled9a84729087bb788.html', 'curriculo.pdf',
 ];
 
 export function escapeHtml(value) {

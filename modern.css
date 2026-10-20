@@ -259,6 +259,20 @@ section {
   background: #080808aa;
   border-color: #777;
 }
+html[data-theme="light"] .button.ghost {
+  background: #ffffffdd;
+  color: #111;
+  border-color: #bbb;
+}
+html[data-theme="light"] .button.ghost:hover {
+  background: var(--yellow);
+  color: #000;
+  border-color: var(--yellow);
+}
+.button.loading {
+  opacity: 0.85;
+  cursor: wait;
+}
 .button:hover {
   background: var(--yellow);
   color: #000;
