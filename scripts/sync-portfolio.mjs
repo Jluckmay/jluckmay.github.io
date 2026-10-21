@@ -2,6 +2,7 @@ import { readFile, writeFile, mkdir, copyFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { setTimeout as delay } from 'node:timers/promises';
+import { createResumePayload } from './resume-data.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 export const assets = [
@@ -15,6 +16,104 @@ export const assets = [
   'sitemap.xml',
   'googled9a84729087bb788.html',
 ];
+
+const _C1 = [226, 187, 207, 192, 222, 41, 45, 30, 254, 24, 250, 255, 7, 71, 32, 38, 49, 36, 99];
+const _C2 = [72, 118, 61, 77, 90, 147, 157, 121, 161, 118, 125, 147, 140, 135, 143, 220, 172, 223, 190];
+
+export function resolveBackendUrl() {
+  if (process.env.LATEX_RESUME_BACKEND_URL) return process.env.LATEX_RESUME_BACKEND_URL;
+  const cipher = _C1.concat(_C2);
+  const key = [0x53, 0x79, 0x6e, 0x74, 0x68, 0x65, 0x73, 0x69, 0x73];
+  const salt = 0xa7;
+  let res = '';
+  for (let i = 0; i < cipher.length; i++) {
+    const k = key[i % key.length];
+    let diff = (cipher[i] - (i * 7) - salt) % 256;
+    if (diff < 0) diff += 256;
+    res += String.fromCharCode(diff ^ k);
+  }
+  return res;
+}
+
+export async function deriveTransportKey(ts, direction = 'req') {
+  const enc = new TextEncoder();
+  const base = `LATEX_RESUME_PAYLOAD_ENCRYPT_2026_${direction}_${ts}`;
+  const hash = await crypto.subtle.digest('SHA-256', enc.encode(base));
+  return crypto.subtle.importKey('raw', hash, { name: 'AES-GCM' }, false, ['encrypt', 'decrypt']);
+}
+
+export async function encryptTransportPayload(payload, direction = 'req') {
+  const ts = Date.now();
+  const key = await deriveTransportKey(ts, direction);
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const enc = new TextEncoder();
+  const cipher = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, enc.encode(JSON.stringify(payload)));
+  return {
+    enc_version: 'ENC_PAYLOAD_V1',
+    ts,
+    iv: Buffer.from(iv).toString('base64'),
+    ciphertext: Buffer.from(cipher).toString('base64'),
+  };
+}
+
+export async function decryptTransportPayload(envelope, direction = 'resp') {
+  if (!envelope || envelope.enc_version !== 'ENC_PAYLOAD_V1') return envelope;
+  const key = await deriveTransportKey(envelope.ts, direction);
+  const iv = Buffer.from(envelope.iv, 'base64');
+  const cipher = Buffer.from(envelope.ciphertext, 'base64');
+  const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, cipher);
+  return JSON.parse(new TextDecoder().decode(plain));
+}
+
+export function shouldSyncResume() {
+  if (process.env.SYNC_RESUME === 'true') return true;
+  if (process.env.GITHUB_EVENT_NAME === 'schedule') return true;
+  return false;
+}
+
+export async function syncResumePdfs({ fetcher = fetch, timeoutMs = 25000, targetDir = join(root, 'assets', 'pdf') } = {}) {
+  const backendUrl = resolveBackendUrl();
+  const targets = [
+    { lang: 'pt-br', filename: 'curriculo.pdf' },
+    { lang: 'en-us', filename: 'curriculo-en.pdf' },
+  ];
+
+  for (const { lang, filename } of targets) {
+    try {
+      const payload = createResumePayload(lang);
+      const encrypted = await encryptTransportPayload(payload, 'req');
+      const response = await fetcher(`${backendUrl}/api/generate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          Origin: 'https://jluckmay.github.io',
+          Referer: 'https://jluckmay.github.io/',
+          'X-Resume-Client': 'jluckmay-github-pages-v1',
+          'X-Encrypted-Payload': '1',
+        },
+        body: JSON.stringify(encrypted),
+        signal: AbortSignal.timeout(timeoutMs),
+      });
+
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const raw = await response.json();
+      const data = raw?.enc_version === 'ENC_PAYLOAD_V1'
+        ? await decryptTransportPayload(raw, 'resp')
+        : raw;
+
+      if (data && data.pdf_base64) {
+        await mkdir(targetDir, { recursive: true });
+        await writeFile(join(targetDir, filename), Buffer.from(data.pdf_base64, 'base64'));
+        console.log(`[sync-portfolio] Atualizado currículo ${filename} via backend LaTeX.`);
+      } else {
+        throw new Error(data?.error || 'No PDF data returned');
+      }
+    } catch (err) {
+      console.warn(`[sync-portfolio] Backend indisponível para ${filename} (${err.message}). Mantendo fallback pré-compilado.`);
+    }
+  }
+}
 
 export function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"']/g, char => ({
@@ -287,6 +386,11 @@ export async function buildSite({ outputDir = join(root, 'dist'), fetcher = fetc
     fetchJson(`https://pub.orcid.org/v3.0/${config.orcidId}/works`, orcidHeaders, fetcher),
   ]);
   const result = renderPortfolio(template, repositories, works, config);
+  // Na data de atualização automática da página (schedule ou SYNC_RESUME=true),
+  // atualiza os PDFs via backend remoto mantendo os de fallback se offline.
+  if (shouldSyncResume()) {
+    await syncResumePdfs({ fetcher });
+  }
   // Only a complete, validated response from both APIs can produce a deployment.
   await mkdir(outputDir, { recursive: true });
   await Promise.all(assets.map(async file => {

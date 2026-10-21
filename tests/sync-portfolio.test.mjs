@@ -4,7 +4,7 @@ import { mkdtemp, readFile, readdir, stat } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
-  assets, buildSite, fetchJson, fetchRepositories, formatProjectName, normalizeWorks, renderPortfolio,
+  assets, buildSite, fetchJson, fetchRepositories, formatProjectName, normalizeWorks, renderPortfolio, shouldSyncResume, syncResumePdfs,
 } from '../scripts/sync-portfolio.mjs';
 
 const config = {
@@ -167,4 +167,45 @@ test('an API failure cannot replace the previous generated page', async () => {
   await assert.rejects(buildSite({ outputDir, fetcher: async url => url.includes('api.github.com')
     ? response([]) : new Response('', { status: 403 }) }), /HTTP 403/);
   await assert.rejects(stat(outputDir), { code: 'ENOENT' });
+});
+
+test('syncResumePdfs updates PDFs on backend response and safely preserves fallbacks on error', async () => {
+  const testDir = await mkdtemp(join(tmpdir(), 'portfolio-resume-test-'));
+  const mockPdfBytes = Buffer.from('%PDF-1.4 Mock PDF Content');
+  const mockFetcherSuccess = async () => response({ pdf_base64: mockPdfBytes.toString('base64') });
+
+  await syncResumePdfs({ fetcher: mockFetcherSuccess, targetDir: testDir });
+  assert.equal(await readFile(join(testDir, 'curriculo.pdf'), 'utf8'), '%PDF-1.4 Mock PDF Content');
+  assert.equal(await readFile(join(testDir, 'curriculo-en.pdf'), 'utf8'), '%PDF-1.4 Mock PDF Content');
+
+  // Test graceful failure: keeps files intact without throwing
+  const mockFetcherFail = async () => new Response('Internal Error', { status: 500 });
+  await syncResumePdfs({ fetcher: mockFetcherFail, targetDir: testDir });
+  assert.equal(await readFile(join(testDir, 'curriculo.pdf'), 'utf8'), '%PDF-1.4 Mock PDF Content');
+});
+
+test('shouldSyncResume only triggers on scheduled page updates or when explicitly requested', () => {
+  const originalSync = process.env.SYNC_RESUME;
+  const originalEvent = process.env.GITHUB_EVENT_NAME;
+  try {
+    delete process.env.SYNC_RESUME;
+    delete process.env.GITHUB_EVENT_NAME;
+    assert.equal(shouldSyncResume(), false);
+
+    process.env.SYNC_RESUME = 'true';
+    assert.equal(shouldSyncResume(), true);
+
+    process.env.SYNC_RESUME = 'false';
+    process.env.GITHUB_EVENT_NAME = 'schedule';
+    assert.equal(shouldSyncResume(), true);
+
+    process.env.GITHUB_EVENT_NAME = 'push';
+    assert.equal(shouldSyncResume(), false);
+  } finally {
+    if (originalSync === undefined) delete process.env.SYNC_RESUME;
+    else process.env.SYNC_RESUME = originalSync;
+
+    if (originalEvent === undefined) delete process.env.GITHUB_EVENT_NAME;
+    else process.env.GITHUB_EVENT_NAME = originalEvent;
+  }
 });

@@ -247,15 +247,18 @@
               >Explorar trabalhos
               <i class="fa-solid fa-arrow-down" aria-hidden="true"></i
             ></a>
-            <button
-              type="button"
+            <a
               class="button ghost"
               id="btn-resume-pdf"
+              href="assets/pdf/curriculo.pdf"
+              target="_blank"
+              rel="noopener"
+              download="Curriculo_Joao_Lucas_Mayrinck.pdf"
               aria-label="Currículo Profissional em PDF"
             >
               <span id="btn-resume-txt">Currículo PDF</span>
               <i class="fa-solid fa-file-pdf" aria-hidden="true"></i>
-            </button>
+            </a>
           </div>
           <div
             class="hero-socials"
@@ -1353,7 +1356,7 @@
                 rel="noopener"
                 download="Curriculo_Joao_Lucas_Mayrinck.pdf"
                 ><i class="fa-solid fa-file-pdf"></i>
-                <div><strong>Currículo Profissional (PDF)</strong><span id="contact-resume-status">Gerado dinamicamente via LaTeX</span></div></a
+                <div><strong>Currículo Profissional (PDF)</strong><span id="contact-resume-status">Compilado via LaTeX</span></div></a
               >
             </div>
           </div>
@@ -1559,9 +1562,8 @@
         Contato: "Contact",
         "Currículo PDF": "PDF Resume",
         "Currículo Profissional (PDF)": "Professional Resume (PDF)",
-        "Gerando PDF...": "Generating PDF...",
-        "Gerado dinamicamente via LaTeX": "Dynamically generated via LaTeX",
-        "Atualizado dinamicamente via LaTeX": "Dynamically updated via LaTeX",
+        "Compilado via LaTeX": "Compiled via LaTeX",
+        "Gerado via LaTeX": "Generated via LaTeX",
         "Mestrando · DCC/UFMG · Belo Horizonte":
           "MSc student · DCC/UFMG · Belo Horizonte",
         "Explorar trabalhos": "Explore works",
@@ -1915,15 +1917,35 @@
             : "Switch language to Portuguese",
         );
         updateExpandLabels();
+        updateResumeLinks();
+      }
+      function updateResumeLinks() {
+        const isPt = language === "pt";
+        const resumeFile = isPt ? "assets/pdf/curriculo.pdf" : "assets/pdf/curriculo-en.pdf";
+        const downloadName = isPt ? "Curriculo_Joao_Lucas_Mayrinck.pdf" : "Resume_Joao_Lucas_Mayrinck.pdf";
+
+        const heroResume = document.getElementById("btn-resume-pdf");
+        if (heroResume) {
+          heroResume.href = resumeFile;
+          heroResume.setAttribute("download", downloadName);
+        }
+
+        const contactResume = document.getElementById("contact-resume-pdf");
+        if (contactResume) {
+          contactResume.href = resumeFile;
+          contactResume.setAttribute("download", downloadName);
+        }
+
+        const statusSpan = document.getElementById("contact-resume-status");
+        if (statusSpan) {
+          statusSpan.textContent = isPt ? "Compilado via LaTeX" : "Compiled via LaTeX";
+        }
       }
       languageToggle.addEventListener("click", () => {
         language = language === "pt" ? "en" : "pt";
         writePreference("localStorage", "language", language);
         applyLanguage();
         updateThemeButton();
-        if (typeof refreshResumePdf === "function") {
-          refreshResumePdf();
-        }
       });
       applyLanguage();
       // All collection controls synchronize through their data-target container.
@@ -2054,456 +2076,6 @@
         );
         sections.forEach((section) => observer.observe(section));
       }
-      // --- Integração Segura com Servidor LaTeX Resume ---
-      const BackendEnclave = (() => {
-        const _C1 = [226, 187, 207, 192, 222, 41, 45, 30, 254, 24, 250, 255, 7, 71, 32, 38, 49, 36, 99];
-        const _C2 = [72, 118, 61, 77, 90, 147, 157, 121, 161, 118, 125, 147, 140, 135, 143, 220, 172, 223, 190];
-        let _dec = null;
-        function _resolve() {
-          if (_dec) return _dec;
-          const cipher = _C1.concat(_C2);
-          const key = [0x53, 0x79, 0x6e, 0x74, 0x68, 0x65, 0x73, 0x69, 0x73]; // 'Synthesis'
-          const salt = 0xa7;
-          let res = "";
-          for (let i = 0; i < cipher.length; i++) {
-            const k = key[i % key.length];
-            let diff = (cipher[i] - (i * 7) - salt) % 256;
-            if (diff < 0) diff += 256;
-            res += String.fromCharCode(diff ^ k);
-          }
-          _dec = res;
-          return _dec;
-        }
-
-        function resolve() {
-          const isLocal =
-            window.location.hostname === "localhost" ||
-            window.location.hostname === "127.0.0.1" ||
-            window.location.protocol === "file:";
-          if (isLocal) {
-            return "http://127.0.0.1:5000";
-          }
-          return _resolve();
-        }
-
-        return { resolve };
-      })();
-
-      async function deriveTransportKey(ts, direction = "req") {
-        const enc = new TextEncoder();
-        const base = `LATEX_RESUME_PAYLOAD_ENCRYPT_2026_${direction}_${ts}`;
-        const hash = await crypto.subtle.digest("SHA-256", enc.encode(base));
-        return crypto.subtle.importKey(
-          "raw",
-          hash,
-          { name: "AES-GCM" },
-          false,
-          ["encrypt", "decrypt"],
-        );
-      }
-
-      function bufferToBase64(buf) {
-        let bin = "";
-        const bytes = new Uint8Array(buf);
-        for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
-        return btoa(bin);
-      }
-
-      function base64ToBuffer(b64) {
-        const bin = atob(b64);
-        const bytes = new Uint8Array(bin.length);
-        for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-        return bytes.buffer;
-      }
-
-      async function encryptTransportPayload(payload, direction = "req") {
-        const ts = Date.now();
-        const key = await deriveTransportKey(ts, direction);
-        const iv = crypto.getRandomValues(new Uint8Array(12));
-        const enc = new TextEncoder();
-        const cipher = await crypto.subtle.encrypt(
-          { name: "AES-GCM", iv },
-          key,
-          enc.encode(JSON.stringify(payload)),
-        );
-        return {
-          enc_version: "ENC_PAYLOAD_V1",
-          ts,
-          iv: bufferToBase64(iv),
-          ciphertext: bufferToBase64(cipher),
-        };
-      }
-
-      async function decryptTransportPayload(envelope, direction = "resp") {
-        if (!envelope || envelope.enc_version !== "ENC_PAYLOAD_V1") {
-          return envelope;
-        }
-        const key = await deriveTransportKey(envelope.ts, direction);
-        const iv = new Uint8Array(base64ToBuffer(envelope.iv));
-        const cipher = base64ToBuffer(envelope.ciphertext);
-        const plain = await crypto.subtle.decrypt(
-          { name: "AES-GCM", iv },
-          key,
-          cipher,
-        );
-        const dec = new TextDecoder();
-        return JSON.parse(dec.decode(plain));
-      }
-
-      function getActiveLanguage() {
-        const docLang = (document.documentElement.lang || "").toLowerCase();
-        if (docLang.startsWith("en")) return "en";
-        if (docLang.startsWith("pt")) return "pt";
-        if (typeof language === "string" && (language === "en" || language === "pt")) {
-          return language;
-        }
-        return "pt";
-      }
-
-      const resumeManager = {
-        blobs: { pt: null, en: null },
-        blobUrls: { pt: null, en: null },
-        activePromises: { pt: null, en: null },
-      };
-
-      function triggerDownload(blobOrUrl, filename) {
-        const isBlob = blobOrUrl instanceof Blob;
-        const url = isBlob ? URL.createObjectURL(blobOrUrl) : blobOrUrl;
-        const link = document.createElement("a");
-        link.style.display = "none";
-        link.href = url;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        setTimeout(() => {
-          document.body.removeChild(link);
-          if (isBlob) {
-            URL.revokeObjectURL(url);
-          }
-        }, 500);
-      }
-
-      function updateContactResumeLink(targetLang) {
-        const isPt = targetLang === "pt";
-        const contactBtn = document.getElementById("contact-resume-pdf");
-        const statusSpan = document.getElementById("contact-resume-status");
-        const filename = isPt
-          ? "Curriculo_Joao_Lucas_Mayrinck.pdf"
-          : "Resume_Joao_Lucas_Mayrinck.pdf";
-
-        if (contactBtn) {
-          const blob = resumeManager.blobs[targetLang];
-          if (blob) {
-            if (resumeManager.blobUrls[targetLang]) {
-              URL.revokeObjectURL(resumeManager.blobUrls[targetLang]);
-            }
-            resumeManager.blobUrls[targetLang] = URL.createObjectURL(blob);
-            contactBtn.href = resumeManager.blobUrls[targetLang];
-          } else {
-            contactBtn.href = isPt ? "assets/pdf/curriculo.pdf" : "assets/pdf/curriculo-en.pdf";
-          }
-          contactBtn.setAttribute("download", filename);
-        }
-
-        if (statusSpan) {
-          statusSpan.textContent = isPt
-            ? (resumeManager.blobs[targetLang]
-                ? "Atualizado dinamicamente via LaTeX"
-                : "Gerado dinamicamente via LaTeX")
-            : (resumeManager.blobs[targetLang]
-                ? "Dynamically updated via LaTeX"
-                : "Dynamically generated via LaTeX");
-        }
-      }
-
-      async function requestResumeGeneration(targetLang) {
-        if (resumeManager.activePromises[targetLang]) {
-          return resumeManager.activePromises[targetLang];
-        }
-
-        const isPt = targetLang === "pt";
-        const lattesXmlPt = `<?xml version="1.0" encoding="UTF-8"?>
-<CURRICULO-VITAE NUMERO-IDENTIFICADOR="7395864900833083">
-    <DADOS-GERAIS NOME-COMPLETO="João Lucas Mayrinck D'Oliveira">
-        <RESUMO-CV TEXTO-RESUMO-CV-RH="Pesquisador e desenvolvedor que conecta computação, educação e impacto social. Bacharel em Sistemas de Informação pela UFV (2019–2025) e mestrando em Ciência da Computação no DCC/UFMG (2026–atual). Atuação com foco em redes de computadores, segurança da informação, sistemas inteligentes, jogos educacionais e engenharia de software." />
-        <FORMACAO-ACADEMICA-TITULACAO>
-            <MESTRADO NOME-CURSO="Ciência da Computação" NOME-INSTITUICAO="Universidade Federal de Minas Gerais (UFMG · DCC)" ANO-DE-INICIO="2026" ANO-DE-CONCLUSAO="" TITULO-DA-DISSERTACAO-TESE="Formação avançada em redes sem fio, segurança, algoritmos e machine learning" />
-            <GRADUACAO NOME-CURSO="Sistemas de Informação" NOME-INSTITUICAO="Universidade Federal de Viçosa (UFV · Campus Rio Paranaíba)" ANO-DE-INICIO="2019" ANO-DE-CONCLUSAO="2025" TITULO-DA-DISSERTACAO-TESE="Formação em desenvolvimento de software e sistemas, UX design, análise de dados e tecnologia aplicada à educação" />
-        </FORMACAO-ACADEMICA-TITULACAO>
-        <ATUACOES-PROFISSIONAIS>
-            <ATUACAO-PROFISSIONAL NOME-INSTITUICAO="Universidade Federal de Minas Gerais (DCC / UFMG)">
-                <VINCULOS ENQUADRAMENTO-FUNCIONAL="Pesquisador / Mestrando" ANO-INICIO="2026" ANO-FIM="" OUTRAS-INFORMACOES="Pesquisa e formação avançada em redes de computadores, segurança da informação, sistemas inteligentes e machine learning." />
-            </ATUACAO-PROFISSIONAL>
-            <ATUACAO-PROFISSIONAL NOME-INSTITUICAO="Universidade Federal de Viçosa (UFV · Jogos)">
-                <VINCULOS ENQUADRAMENTO-FUNCIONAL="Monitor de Desenvolvimento de Jogos" ANO-INICIO="2025" ANO-FIM="2025" OUTRAS-INFORMACOES="Orientação prática e acompanhamento de estudantes e apoio no desenvolvimento e revisão de materiais didáticos na disciplina Introdução ao Desenvolvimento de Jogos Digitais." />
-            </ATUACAO-PROFISSIONAL>
-            <ATUACAO-PROFISSIONAL NOME-INSTITUICAO="Fundação Arthur Bernardes (FUNARBEN / UFV)">
-                <VINCULOS ENQUADRAMENTO-FUNCIONAL="Bolsista de Pesquisa" ANO-INICIO="2023" ANO-FIM="2024" OUTRAS-INFORMACOES="Investigação de figuras dinâmicas no GeoGebra aplicadas ao ensino de matemática e tecnologia educacional." />
-            </ATUACAO-PROFISSIONAL>
-            <ATUACAO-PROFISSIONAL NOME-INSTITUICAO="Instituto Health Lake">
-                <VINCULOS ENQUADRAMENTO-FUNCIONAL="Frontend Developer (Voluntário)" ANO-INICIO="2021" ANO-FIM="2023" OUTRAS-INFORMACOES="Atuação voluntária (dez. de 2021 a mar. de 2023) em Ciência e Tecnologia: migração de website para WordPress, criação de wireframes no Figma, administração e manutenção da plataforma web." />
-            </ATUACAO-PROFISSIONAL>
-            <ATUACAO-PROFISSIONAL NOME-INSTITUICAO="Universidade Federal de Viçosa (UFV · Monitoria)">
-                <VINCULOS ENQUADRAMENTO-FUNCIONAL="Monitor de Programação" ANO-INICIO="2021" ANO-FIM="2022" OUTRAS-INFORMACOES="Acompanhamento de estudantes e apoio didático ao aprendizado de fundamentos de programação e estruturas de dados." />
-            </ATUACAO-PROFISSIONAL>
-            <ATUACAO-PROFISSIONAL NOME-INSTITUICAO="Universidade Federal de Viçosa (UFV · Tutoria)">
-                <VINCULOS ENQUADRAMENTO-FUNCIONAL="Tutor de Programação" ANO-INICIO="2019" ANO-FIM="2020" OUTRAS-INFORMACOES="Atendimento individual e em grupo, orientação prática e reforço de conceitos introdutórios de algoritmos." />
-            </ATUACAO-PROFISSIONAL>
-        </ATUACOES-PROFISSIONAIS>
-        <IDIOMAS>
-            <IDIOMA DESCRICAO-DO-IDIOMA="Português" PROFICIENCIA-DE-LEITURA="Fluente" PROFICIENCIA-DE-FALA="Fluente" />
-            <IDIOMA DESCRICAO-DO-IDIOMA="Inglês" PROFICIENCIA-DE-LEITURA="Intermediário" PROFICIENCIA-DE-FALA="Intermediário" />
-            <IDIOMA DESCRICAO-DO-IDIOMA="Espanhol" PROFICIENCIA-DE-LEITURA="Pouco" PROFICIENCIA-DE-FALA="Pouco" />
-            <IDIOMA DESCRICAO-DO-IDIOMA="Libras" PROFICIENCIA-DE-LEITURA="Pouco" PROFICIENCIA-DE-FALA="Pouco" />
-        </IDIOMAS>
-        <PREMIOS-TITULOS>
-            <PREMIO-TITULO NOME-DO-PREMIO-OU-TITULO="Menção Honrosa – Games – SBIE 2024 (Palavras ao Ar)" ANO-DA-PREMIACAO="2024" />
-            <PREMIO-TITULO NOME-DO-PREMIO-OU-TITULO="Menção Honrosa – Pôster – WSIS 2025 (Explorando a Grécia Antiga)" ANO-DA-PREMIACAO="2025" />
-            <PREMIO-TITULO NOME-DO-PREMIO-OU-TITULO="Segundo Lugar – Ensino – SIA 2023 (Palavras ao Ar)" ANO-DA-PREMIACAO="2023" />
-        </PREMIOS-TITULOS>
-    </DADOS-GERAIS>
-    <PRODUCAO-BIBLIOGRAFICA>
-        <ARTIGOS-PUBLICADOS>
-            <ARTIGO-PUBLICADO>
-                <DADOS-BASICOS-DO-ARTIGO TITULO-DO-ARTIGO="Palavras ao Ar: Um Jogo Digital Educacional para Alfabetização de Crianças" ANO-DO-ARTIGO="2024" DOI="10.5753/sbie.2024.241887" />
-                <DETALHAMENTO-DO-ARTIGO TITULO-DO-PERIODICO-OU-REVISTA="Simpósio Brasileiro de Informática na Educação (SBIE)" />
-                <AUTORES NOME-PARA-CITACAO="D’OLIVEIRA, J. L. M." />
-            </ARTIGO-PUBLICADO>
-        </ARTIGOS-PUBLICADOS>
-    </PRODUCAO-BIBLIOGRAFICA>
-</CURRICULO-VITAE>`;
-
-        const lattesXmlEn = `<?xml version="1.0" encoding="UTF-8"?>
-<CURRICULO-VITAE NUMERO-IDENTIFICADOR="7395864900833083">
-    <DADOS-GERAIS NOME-COMPLETO="João Lucas Mayrinck D'Oliveira">
-        <RESUMO-CV TEXTO-RESUMO-CV-RH="Researcher and software developer connecting computing, education, and social impact. BSc in Information Systems from UFV (2019–2025) and MSc student in Computer Science at DCC/UFMG (2026–present). Research focus on computer networks, information security, intelligent systems, educational games, and software engineering." />
-        <FORMACAO-ACADEMICA-TITULACAO>
-            <MESTRADO NOME-CURSO="Computer Science" NOME-INSTITUICAO="Federal University of Minas Gerais (UFMG · DCC)" ANO-DE-INICIO="2026" ANO-DE-CONCLUSAO="Present" TITULO-DA-DISSERTACAO-TESE="Advanced studies in wireless networks, security, algorithms, and machine learning" />
-            <GRADUACAO NOME-CURSO="Information Systems" NOME-INSTITUICAO="Federal University of Viçosa (UFV · Rio Paranaíba Campus)" ANO-DE-INICIO="2019" ANO-DE-CONCLUSAO="2025" TITULO-DA-DISSERTACAO-TESE="Education in software and systems development, UX design, data analysis, and educational technology" />
-        </FORMACAO-ACADEMICA-TITULACAO>
-        <ATUACOES-PROFISSIONAIS>
-            <ATUACAO-PROFISSIONAL NOME-INSTITUICAO="Federal University of Minas Gerais (DCC / UFMG)">
-                <VINCULOS ENQUADRAMENTO-FUNCIONAL="Graduate Researcher / M.Sc. Student" ANO-INICIO="2026" ANO-FIM="Present" OUTRAS-INFORMACOES="Research and advanced coursework in computer networks, information security, intelligent systems, and machine learning." />
-            </ATUACAO-PROFISSIONAL>
-            <ATUACAO-PROFISSIONAL NOME-INSTITUICAO="Federal University of Viçosa (UFV · Game Dev)">
-                <VINCULOS ENQUADRAMENTO-FUNCIONAL="Game Development Teaching Assistant" ANO-INICIO="2025" ANO-FIM="2025" OUTRAS-INFORMACOES="Hands-on guidance and student mentoring, supporting the development and review of course materials in Digital Game Development." />
-            </ATUACAO-PROFISSIONAL>
-            <ATUACAO-PROFISSIONAL NOME-INSTITUICAO="Arthur Bernardes Foundation (FUNARBEN / UFV)">
-                <VINCULOS ENQUADRAMENTO-FUNCIONAL="Research Fellow" ANO-INICIO="2023" ANO-FIM="2024" OUTRAS-INFORMACOES="Investigation of dynamic GeoGebra figures applied to mathematics education and educational technology." />
-            </ATUACAO-PROFISSIONAL>
-            <ATUACAO-PROFISSIONAL NOME-INSTITUICAO="Health Lake Institute">
-                <VINCULOS ENQUADRAMENTO-FUNCIONAL="Frontend Developer (Volunteer)" ANO-INICIO="2021" ANO-FIM="2023" OUTRAS-INFORMACOES="Volunteer work (Dec 2021 – Mar 2023) in Science and Technology: migrating website to WordPress, creating wireframes using Figma, website administration and maintenance." />
-            </ATUACAO-PROFISSIONAL>
-            <ATUACAO-PROFISSIONAL NOME-INSTITUICAO="Federal University of Viçosa (UFV · Teaching Assistant)">
-                <VINCULOS ENQUADRAMENTO-FUNCIONAL="Programming Teaching Assistant" ANO-INICIO="2021" ANO-FIM="2022" OUTRAS-INFORMACOES="Student mentoring and instructional support for learning programming fundamentals and data structures." />
-            </ATUACAO-PROFISSIONAL>
-            <ATUACAO-PROFISSIONAL NOME-INSTITUICAO="Federal University of Viçosa (UFV · Tutoring)">
-                <VINCULOS ENQUADRAMENTO-FUNCIONAL="Programming Tutor" ANO-INICIO="2019" ANO-FIM="2020" OUTRAS-INFORMACOES="Individual and group tutoring, practical guidance, and reinforcement of introductory algorithms concepts." />
-            </ATUACAO-PROFISSIONAL>
-        </ATUACOES-PROFISSIONAIS>
-        <IDIOMAS>
-            <IDIOMA DESCRICAO-DO-IDIOMA="Portuguese" PROFICIENCIA-DE-LEITURA="Fluente" PROFICIENCIA-DE-FALA="Fluente" />
-            <IDIOMA DESCRICAO-DO-IDIOMA="English" PROFICIENCIA-DE-LEITURA="Intermediário" PROFICIENCIA-DE-FALA="Intermediário" />
-            <IDIOMA DESCRICAO-DO-IDIOMA="Spanish" PROFICIENCIA-DE-LEITURA="Pouco" PROFICIENCIA-DE-FALA="Pouco" />
-            <IDIOMA DESCRICAO-DO-IDIOMA="Libras" PROFICIENCIA-DE-LEITURA="Pouco" PROFICIENCIA-DE-FALA="Pouco" />
-        </IDIOMAS>
-        <PREMIOS-TITULOS>
-            <PREMIO-TITULO NOME-DO-PREMIO-OU-TITULO="Honorable Mention – Games Track – SBIE 2024 (Palavras ao Ar)" ANO-DA-PREMIACAO="2024" />
-            <PREMIO-TITULO NOME-DO-PREMIO-OU-TITULO="Honorable Mention – Poster Track – WSIS 2025 (Explorando a Grécia Antiga)" ANO-DA-PREMIACAO="2025" />
-            <PREMIO-TITULO NOME-DO-PREMIO-OU-TITULO="Second Place – Teaching &amp; Education – SIA 2023 (Palavras ao Ar)" ANO-DA-PREMIACAO="2023" />
-        </PREMIOS-TITULOS>
-    </DADOS-GERAIS>
-    <PRODUCAO-BIBLIOGRAFICA>
-        <ARTIGOS-PUBLICADOS>
-            <ARTIGO-PUBLICADO>
-                <DADOS-BASICOS-DO-ARTIGO TITULO-DO-ARTIGO="Palavras ao Ar: An Educational Digital Game for Children's Literacy" ANO-DO-ARTIGO="2024" DOI="10.5753/sbie.2024.241887" />
-                <DETALHAMENTO-DO-ARTIGO TITULO-DO-PERIODICO-OU-REVISTA="Brazilian Symposium on Computers in Education (SBIE)" />
-                <AUTORES NOME-PARA-CITACAO="D’OLIVEIRA, J. L. M." />
-            </ARTIGO-PUBLICADO>
-        </ARTIGOS-PUBLICADOS>
-    </PRODUCAO-BIBLIOGRAFICA>
-</CURRICULO-VITAE>`;
-
-        const payload = {
-          resume_type: "profissional",
-          template_id: "overleaf_russell_ti",
-          lang: isPt ? "pt-br" : "en-us",
-          primary_color: "#000000",
-          secondary_color: "#000000",   
-          github: "Jluckmay",
-          orcid: "0009-0001-0178-4877",
-          linkedin: "https://www.linkedin.com/in/jluckmay/",
-          lattes: "http://lattes.cnpq.br/7395864900833083",
-          lattes_file: {
-            filename: isPt ? "lattes_pt.xml" : "lattes_en.xml",
-            data: btoa(unescape(encodeURIComponent(isPt ? lattesXmlPt : lattesXmlEn))),
-          },
-          portfolio: "https://jluckmay.github.io/",
-          name: "João Lucas Mayrinck D'Oliveira",
-          role: isPt
-            ? "Mestrando em Ciência da Computação · DCC/UFMG | Desenvolvedor de Software"
-            : "M.Sc. Student in Computer Science · DCC/UFMG | Software Engineer",
-          email: "lucas.mayrinck@dcc.ufmg.br",
-          location: isPt ? "Belo Horizonte, MG, Brasil" : "Belo Horizonte, MG, Brazil",
-          provider: "default",
-          use_ai: true,
-          ai_mode: "auto",
-        };
-
-        const genPromise = (async () => {
-          try {
-            const encryptedBody = await encryptTransportPayload(payload, "req");
-            const base = BackendEnclave.resolve();
-            const isRender = base.includes("onrender.com");
-            const maxAttempts = isRender ? 3 : 1;
-            let resp = null;
-
-            for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-              try {
-                resp = await fetch(`${base}/api/generate`, {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                    "X-Resume-Client": "jluckmay-github-pages-v1",
-                    "X-Client-Timestamp": String(encryptedBody.ts),
-                    "X-Encrypted-Payload": "1",
-                  },
-                  body: JSON.stringify(encryptedBody),
-                });
-                if (
-                  (resp.status === 500 ||
-                    resp.status === 502 ||
-                    resp.status === 503 ||
-                    resp.status === 504) &&
-                  isRender &&
-                  attempt < maxAttempts
-                ) {
-                  await new Promise((r) => setTimeout(r, 4000));
-                  continue;
-                }
-                break;
-              } catch (err) {
-                if (isRender && attempt < maxAttempts) {
-                  await new Promise((r) => setTimeout(r, 4000));
-                  continue;
-                }
-                throw err;
-              }
-            }
-
-            if (!resp || !resp.ok) {
-              let detail = "";
-              try {
-                const errJson = await resp.json();
-                const decErr =
-                  errJson && errJson.enc_version === "ENC_PAYLOAD_V1"
-                    ? await decryptTransportPayload(errJson, "resp")
-                    : errJson;
-                if (decErr && decErr.error) detail = `: ${decErr.error}`;
-              } catch (_) {}
-              throw new Error(`Server status: ${resp ? resp.status : "No response"}${detail}`);
-            }
-
-            const rawData = await resp.json();
-            const data =
-              rawData && rawData.enc_version === "ENC_PAYLOAD_V1"
-                ? await decryptTransportPayload(rawData, "resp")
-                : rawData;
-
-            if (!data || !data.pdf_base64) {
-              throw new Error(data && data.error ? data.error : "PDF generation failed");
-            }
-
-            const binaryStr = atob(data.pdf_base64);
-            const len = binaryStr.length;
-            const bytes = new Uint8Array(len);
-            for (let i = 0; i < len; i++) {
-              bytes[i] = binaryStr.charCodeAt(i);
-            }
-            const pdfBlob = new Blob([bytes], { type: "application/pdf" });
-
-            if (resumeManager.blobUrls[targetLang]) {
-              URL.revokeObjectURL(resumeManager.blobUrls[targetLang]);
-              resumeManager.blobUrls[targetLang] = null;
-            }
-            resumeManager.blobs[targetLang] = pdfBlob;
-            updateContactResumeLink(targetLang);
-
-            return pdfBlob;
-          } finally {
-            resumeManager.activePromises[targetLang] = null;
-          }
-        })();
-
-        resumeManager.activePromises[targetLang] = genPromise;
-        return genPromise;
-      }
-
-      async function handleResumeButtonClick(event) {
-        if (event) event.preventDefault();
-
-        // Obtém o idioma ATUAL da página na exata hora da requisição
-        const currentLang = getActiveLanguage();
-        const isPt = currentLang === "pt";
-        const filename = isPt
-          ? "Curriculo_Joao_Lucas_Mayrinck.pdf"
-          : "Resume_Joao_Lucas_Mayrinck.pdf";
-
-        const heroBtn = document.getElementById("btn-resume-pdf");
-        const heroTxt = document.getElementById("btn-resume-txt");
-        const heroIcon = heroBtn ? heroBtn.querySelector("i") : null;
-
-        // Se o PDF já foi gerado e está em memória para este idioma, baixa imediatamente
-        if (resumeManager.blobs[currentLang]) {
-          triggerDownload(resumeManager.blobs[currentLang], filename);
-          return;
-        }
-
-        // Caso contrário, sinaliza geração em andamento
-        if (heroBtn) heroBtn.classList.add("loading");
-        if (heroTxt) heroTxt.textContent = isPt ? "Gerando PDF..." : "Generating PDF...";
-        if (heroIcon) heroIcon.className = "fa-solid fa-spinner fa-spin";
-
-        try {
-          const blob = await requestResumeGeneration(currentLang);
-          triggerDownload(blob, filename);
-        } catch (err) {
-          console.warn("Aviso na geração dinâmica:", err.message);
-          // Fallback seguro: garante o download de um PDF autêntico (PT ou EN gerado via LaTeX)
-          const fallbackPdf = isPt ? "assets/pdf/curriculo.pdf" : "assets/pdf/curriculo-en.pdf";
-          triggerDownload(fallbackPdf, filename);
-        } finally {
-          if (heroBtn) heroBtn.classList.remove("loading");
-          if (heroTxt) heroTxt.textContent = isPt ? "Currículo PDF" : "PDF Resume";
-          if (heroIcon) heroIcon.className = "fa-solid fa-file-pdf";
-        }
-      }
-
-      const heroResumeBtn = document.getElementById("btn-resume-pdf");
-      if (heroResumeBtn) {
-        heroResumeBtn.addEventListener("click", handleResumeButtonClick);
-      }
-
-      const contactResumeBtn = document.getElementById("contact-resume-pdf");
-      if (contactResumeBtn) {
-        contactResumeBtn.addEventListener("click", handleResumeButtonClick);
-      }
-
-      function refreshResumePdf() {
-        const activeLang = getActiveLanguage();
-        updateContactResumeLink(activeLang);
-        requestResumeGeneration(activeLang).catch((err) => {
-          console.warn("Pré-geração em segundo plano:", err.message);
-        });
-      }
-
-      // Executa automaticamente na atualização da página
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", () => refreshResumePdf());
-      } else {
-        refreshResumePdf();
-      }
-
       document.getElementById("year").textContent = new Date().getFullYear();
     </script>
   </body>

@@ -33,6 +33,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           ORCID_READ_PUBLIC_TOKEN: ${{ secrets.ORCID_READ_PUBLIC_TOKEN }}
+          SYNC_RESUME: ${{ github.event_name == 'schedule' && 'true' || 'false' }}
         run: node scripts/sync-portfolio.mjs
       - name: Upload only the generated website
         uses: actions/upload-pages-artifact@v4
