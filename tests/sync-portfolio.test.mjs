@@ -135,13 +135,27 @@ test('retries temporary API failures, but never turns an authorization failure i
   await assert.rejects(fetchJson('https://example.org/data', {}, async () => new Response('', { status: 401 })), /HTTP 401/);
 });
 
+async function listFiles(dir, base = '') {
+  const entries = await readdir(dir, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries) {
+    const rel = base ? `${base}/${entry.name}` : entry.name;
+    if (entry.isDirectory()) {
+      files.push(...(await listFiles(join(dir, entry.name), rel)));
+    } else {
+      files.push(rel);
+    }
+  }
+  return files;
+}
+
 test('builds only deployable assets and leaves the source HTML untouched', async () => {
   const before = await readFile(new URL('../index.html', import.meta.url), 'utf8');
   const outputDir = await mkdtemp(join(tmpdir(), 'portfolio-sync-test-'));
   const result = await buildSite({ outputDir, fetcher: async url => response(
     url.includes('api.github.com') ? [repo('a-new-test-project')] : record(work('A new test publication', 42, '10.1234/test')),
   ) });
-  assert.deepEqual((await readdir(outputDir)).sort(), [...assets, 'index.html', '.nojekyll'].sort());
+  assert.deepEqual((await listFiles(outputDir)).sort(), [...assets, 'index.html', '.nojekyll'].sort());
   assert.equal(result.addedProjects, 1);
   assert.equal(result.addedWorks, 1);
   assert.equal(await readFile(new URL('../index.html', import.meta.url), 'utf8'), before);

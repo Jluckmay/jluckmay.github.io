@@ -1,0 +1,19 @@
+{
+  "name": "jluckmay-portfolio",
+  "version": "1.0.0",
+  "description": "Portfólio profissional e acadêmico de João Lucas Mayrinck D'Oliveira",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/sync-portfolio.mjs",
+    "test": "node --test tests/sync-portfolio.test.mjs",
+    "start": "python -m http.server 8000 --directory dist"
+  },
+  "keywords": [
+    "portfolio",
+    "academic",
+    "ufmg",
+    "computer-science"
+  ],
+  "author": "João Lucas Mayrinck D'Oliveira",
+  "license": "MIT"
+}

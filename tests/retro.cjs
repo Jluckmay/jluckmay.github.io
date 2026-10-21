@@ -9,7 +9,7 @@ const siteRoot = process.env.SITE_DIR || join(__dirname, '..');
 (async () => {
   const server = createServer((request, response) => {
     const file = request.url.split('?')[0];
-    if (!['/', '/index.html', '/modern.css', '/favicon.svg', '/profile.webp', '/profile-retro.webp'].includes(file)) {
+    if (!['/', '/index.html', '/assets/css/modern.css', '/assets/img/favicon.svg', '/assets/img/profile.webp', '/assets/img/profile-retro.webp'].includes(file)) {
       response.writeHead(404).end();
       return;
     }
@@ -56,7 +56,7 @@ const siteRoot = process.env.SITE_DIR || join(__dirname, '..');
         return image.complete && image.naturalWidth === 320;
       });
       assert(requests.some(url => url.endsWith('/profile-retro.webp')));
-      assert(requests.every(url => [origin + '/', origin + '/favicon.svg', origin + '/profile-retro.webp'].includes(url.split('#')[0])), requests.join('\n'));
+      assert(requests.every(url => [origin + '/', origin + '/assets/img/favicon.svg', origin + '/assets/img/profile-retro.webp'].includes(url.split('#')[0])), requests.join('\n'));
       assert.deepEqual(errors, []);
       return result;
     }

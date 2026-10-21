@@ -140,30 +140,39 @@ A página está disponível pelo link: `https://jluckmay.github.io/`
 
 ```text
 .
-├── index.html                       # Conteúdo, modo leve e comportamento
-├── modern.css                       # Estilos exclusivos da versão completa
-├── tests/retro.cjs                  # Verificação dos modos em navegador
-├── tests/sync-portfolio.test.mjs    # Testes da importação e geração
-├── scripts/sync-portfolio.mjs       # Coleta das APIs e geração estática
-├── sync.config.json                # Perfis e exclusões da sincronização
-├── .github/workflows/update-portfolio.yml # Agendamento e publicação no Pages
-├── favicon.svg                     # Ícone rastreável do site
-├── profile.webp                    # Foto da versão completa e compartilhamento social
-├── profile-retro.webp              # Miniatura otimizada para o modo leve
-├── robots.txt                      # Regras para rastreadores
-├── sitemap.xml                     # Mapa do site para mecanismos de busca
-├── googled9a84729087bb788.html     # Verificação do Google Search Console
-├── README.md                       # Documentação bilíngue do projeto
-└── LICENSE                         # Licença MIT
+├── assets/
+│   ├── css/
+│   │   └── modern.css                       # Estilos exclusivos da versão completa
+│   ├── img/
+│   │   ├── favicon.svg                      # Ícone rastreável do site
+│   │   ├── profile.webp                     # Foto da versão completa e compartilhamento social
+│   │   └── profile-retro.webp               # Miniatura otimizada para o modo leve
+│   └── pdf/
+│       ├── curriculo.pdf                    # Currículo profissional (PT) fallback via LaTeX
+│       └── curriculo-en.pdf                 # Currículo profissional (EN) fallback via LaTeX
+├── index.html                               # Conteúdo, modo leve e comportamento
+├── package.json                             # Gerenciamento de scripts e metadados
+├── scripts/
+│   └── sync-portfolio.mjs                   # Coleta das APIs e geração estática
+├── tests/
+│   ├── retro.cjs                            # Verificação dos modos em navegador
+│   └── sync-portfolio.test.mjs              # Testes da importação e geração
+├── sync.config.json                         # Perfis e exclusões da sincronização
+├── .github/workflows/update-portfolio.yml   # Agendamento e publicação no Pages
+├── robots.txt                               # Regras para rastreadores
+├── sitemap.xml                              # Mapa do site para mecanismos de busca
+├── googled9a84729087bb788.html              # Verificação do Google Search Console
+├── README.md                                # Documentação bilíngue do projeto
+└── LICENSE                                  # Licença MIT
 ```
 
 ### Personalização
 
 Conteúdo, traduções, comportamento e links ficam em `index.html`, junto aos estilos
-do modo retrô. O design completo e suas animações ficam em `modern.css`, com
+do modo retrô. O design completo e suas animações ficam em `assets/css/modern.css`, com
 configurações visuais nas variáveis CSS declaradas em `:root`.
 
-A versão completa usa `profile.webp` (1089 × 1444 px, aproximadamente 153 KB),
+A versão completa usa `assets/img/profile.webp` (1089 × 1444 px, aproximadamente 153 KB),
 gerado do PNG com qualidade 90 e transparência preservada. A compressão tem perdas;
 o mesmo WebP também é usado como imagem de compartilhamento social.
 
@@ -309,30 +318,39 @@ This page can be accessed by the following link: `https://jluckmay.github.io/`
 
 ```text
 .
-├── index.html                       # Content, lightweight styles and behavior
-├── modern.css                       # Full-version styles
-├── tests/retro.cjs                  # Browser checks for both modes
-├── tests/sync-portfolio.test.mjs    # Import and generation checks
-├── scripts/sync-portfolio.mjs       # API fetching and static generation
-├── sync.config.json                # Profiles and sync exclusions
-├── .github/workflows/update-portfolio.yml # Scheduled builds and Pages deployment
-├── favicon.svg                     # Crawlable site icon
-├── profile.webp                    # Profile and social sharing image
-├── profile-retro.webp              # Optimized thumbnail for the lightweight edition
-├── robots.txt                      # Crawler rules
-├── sitemap.xml                     # Search engine sitemap
-├── googled9a84729087bb788.html     # Google Search Console verification
-├── README.md                       # Bilingual project documentation
-└── LICENSE                         # MIT License
+├── assets/
+│   ├── css/
+│   │   └── modern.css                       # Full-version styles
+│   ├── img/
+│   │   ├── favicon.svg                      # Crawlable site icon
+│   │   ├── profile.webp                     # Profile and social sharing image
+│   │   └── profile-retro.webp               # Optimized thumbnail for the lightweight edition
+│   └── pdf/
+│       ├── curriculo.pdf                    # Professional resume (PT) LaTeX fallback
+│       └── curriculo-en.pdf                 # Professional resume (EN) LaTeX fallback
+├── index.html                               # Content, lightweight styles and behavior
+├── package.json                             # Script management and metadata
+├── scripts/
+│   └── sync-portfolio.mjs                   # API fetching and static generation
+├── tests/
+│   ├── retro.cjs                            # Browser checks for both modes
+│   └── sync-portfolio.test.mjs              # Import and generation checks
+├── sync.config.json                         # Profiles and sync exclusions
+├── .github/workflows/update-portfolio.yml   # Scheduled builds and Pages deployment
+├── robots.txt                               # Crawler rules
+├── sitemap.xml                              # Search engine sitemap
+├── googled9a84729087bb788.html              # Google Search Console verification
+├── README.md                                # Bilingual project documentation
+└── LICENSE                                  # MIT License
 ```
 
 ### Customization
 
 Content, translations, behavior and links are contained in `index.html`, alongside
-retro styles. The full design and its animations live in `modern.css`, with main
+retro styles. The full design and its animations live in `assets/css/modern.css`, with main
 visual settings defined by CSS custom properties under `:root`.
 
-The full version uses `profile.webp` (1089 × 1444 px, approximately 153 KB),
+The full version uses `assets/img/profile.webp` (1089 × 1444 px, approximately 153 KB),
 encoded from the PNG at quality 90 with transparency preserved. Compression is
 lossy; the same WebP is also used as the social sharing image.
 

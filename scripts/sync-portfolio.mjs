@@ -5,8 +5,15 @@ import { setTimeout as delay } from 'node:timers/promises';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 export const assets = [
-  'modern.css', 'favicon.svg', 'profile.webp', 'profile-retro.webp',
-  'robots.txt', 'sitemap.xml', 'googled9a84729087bb788.html', 'curriculo.pdf',
+  'assets/css/modern.css',
+  'assets/img/favicon.svg',
+  'assets/img/profile.webp',
+  'assets/img/profile-retro.webp',
+  'assets/pdf/curriculo.pdf',
+  'assets/pdf/curriculo-en.pdf',
+  'robots.txt',
+  'sitemap.xml',
+  'googled9a84729087bb788.html',
 ];
 
 export function escapeHtml(value) {
@@ -282,7 +289,11 @@ export async function buildSite({ outputDir = join(root, 'dist'), fetcher = fetc
   const result = renderPortfolio(template, repositories, works, config);
   // Only a complete, validated response from both APIs can produce a deployment.
   await mkdir(outputDir, { recursive: true });
-  await Promise.all(assets.map(file => copyFile(join(root, file), join(outputDir, file))));
+  await Promise.all(assets.map(async file => {
+    const dest = join(outputDir, file);
+    await mkdir(dirname(dest), { recursive: true });
+    await copyFile(join(root, file), dest);
+  }));
   await writeFile(join(outputDir, '.nojekyll'), '');
   await writeFile(join(outputDir, 'index.html'), result.html);
   console.log(`Built site: ${result.addedProjects} additional GitHub projects, ${result.addedWorks} additional ORCID works.`);

@@ -254,6 +254,9 @@ section {
   letter-spacing: 0.05em;
   text-transform: uppercase;
   transition: 0.2s;
+  font-family: inherit;
+  color: var(--text);
+  cursor: pointer;
 }
 .button.ghost {
   background: #080808aa;
@@ -345,7 +348,7 @@ html[data-theme="light"] .button.ghost:hover {
   float: left;
   width: 55%;
   margin: 0 1rem 0.5rem 0;
-  shape-outside: url("profile.webp");
+  shape-outside: url("../img/profile.webp");
   shape-margin: 1rem;
   position: relative;
   min-height: clamp(22.5rem, 49.5vw, 29.375rem);
