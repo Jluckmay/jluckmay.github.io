@@ -28,7 +28,10 @@ Portfólio pessoal e acadêmico desenvolvido como página estática. Reúne traj
   botões e links específicos;
 - SEO técnico com URL canônica, metadados sociais, dados estruturados,
   sitemap, diretivas de rastreamento e favicon rastreável;
-- links para GitHub Pages, repositórios, DOI, ORCID, Lattes e página acadêmica.
+- links para GitHub Pages, repositórios, DOI, ORCID, Lattes e página acadêmica;
+- currículo profissional bilíngue (PT/EN) em PDF gerado via LaTeX (projeto `latex-resume`)
+  em preto e branco, com entrega estática instantânea (fallback-first) e alternância
+  automática de idioma.
 
 ### Tecnologias
 
@@ -83,7 +86,7 @@ node tests/retro.cjs
 `PLAYWRIGHT_MODULE` pode indicar uma instalação existente do Playwright;
 `BROWSER_CHANNEL` permite selecionar outro canal compatível, como `chrome`.
 
-### Atualização automática: GitHub e ORCID
+### Atualização automática: GitHub, ORCID e Currículo LaTeX
 
 O workflow `.github/workflows/update-portfolio.yml` gera e publica uma página
 atualizada mensalmente, no dia **1 às 09:17 UTC (06:17 em Brasília)**, a cada push em `main`
@@ -96,8 +99,12 @@ ou desativá-las após 60 dias sem atividade no repositório público.
 - `sync.config.json` define os perfis, exclusões e sobreposições de metadados (`projectOverrides`).
   Novos forks são ignorados por padrão; forks já selecionados manualmente permanecem.
   Repositórios arquivados são aceitos; este próprio site é excluído da importação automática.
-- A coleta acontece durante a geração. Nenhuma consulta às APIs ocorre no navegador,
-  e ambas as versões da página recebem o mesmo conteúdo atualizado.
+- A coleta acontece durante a geração estática. Nenhuma consulta às APIs externas ocorre no
+  navegador do visitante, e ambas as versões da página recebem o mesmo conteúdo atualizado.
+- **Sincronização de Currículos (PDF)**:
+  - Entrega *fallback-first*: os botões de download utilizam os PDFs pré-compilados (`assets/pdf/curriculo.pdf` e `assets/pdf/curriculo-en.pdf`), garantindo download imediato sem atrasos de *cold start* de servidores externos.
+  - Na data de atualização automática agendada (evento `schedule` no GitHub Actions) ou quando `SYNC_RESUME=true`, o script `sync-portfolio.mjs` envia os dados canônicos estruturados (definidos em `scripts/resume-data.mjs`) para o backend de compilação LaTeX via transporte criptografado.
+  - Caso o serviço remoto esteja indisponível ou demore a responder, o processo preserva com segurança os PDFs de fallback locais existentes, sem quebrar o fluxo de build ou o deploy da página.
 - Nomes de repositórios importados são formatados em Title Case e projetos com sobreposição
   ou ausência de descrição recebem formatação e descrições apropriadas. Controles continuam
   bilíngues. Conteúdo externo é escapado antes de entrar no HTML.
@@ -116,12 +123,17 @@ leitura pública anônima; se necessário, configure o secret opcional
 `ORCID_READ_PUBLIC_TOKEN` com um token `/read-public`. Nunca coloque tokens no HTML
 ou em `sync.config.json`.
 
-Para gerar e inspecionar a versão sincronizada localmente, use Node.js 24:
+Para testar, gerar e inspecionar a versão sincronizada localmente, use Node.js 24:
 
 ```bash
-node --test tests/sync-portfolio.test.mjs
-node scripts/sync-portfolio.mjs
-python -m http.server 8000 --directory dist
+# Executar suíte de testes unitários (12 testes)
+npm test
+
+# Compilar e sincronizar site estático em dist/
+npm run build
+
+# Iniciar servidor HTTP local para inspeção de dist/
+npm start
 ```
 
 `dist/` é gerado e ignorado pelo Git. Editar `index.html` altera a seleção editorial;
@@ -153,7 +165,8 @@ A página está disponível pelo link: `https://jluckmay.github.io/`
 ├── index.html                               # Conteúdo, modo leve e comportamento
 ├── package.json                             # Gerenciamento de scripts e metadados
 ├── scripts/
-│   └── sync-portfolio.mjs                   # Coleta das APIs e geração estática
+│   ├── resume-data.mjs                      # Dados curriculares canônicos (XML Lattes PT/EN) e payloads
+│   └── sync-portfolio.mjs                   # Coleta das APIs, sincronização de currículos e geração estática
 ├── tests/
 │   ├── retro.cjs                            # Verificação dos modos em navegador
 │   └── sync-portfolio.test.mjs              # Testes da importação e geração
@@ -208,7 +221,10 @@ Personal and academic portfolio built as a static website. It presents academic 
   buttons and links;
 - technical SEO with a canonical URL, social metadata, structured data,
   sitemap, crawler directives and a crawlable favicon;
-- links to GitHub Pages, repositories, DOI records, ORCID, Lattes and the academic homepage.
+- links to GitHub Pages, repositories, DOI records, ORCID, Lattes and the academic homepage;
+- bilingual professional resume (PT/EN) compiled to PDF via LaTeX (`latex-resume` project)
+  in monochrome style, featuring instant static delivery (fallback-first) and dynamic
+  language switching.
 
 ### Technologies
 
@@ -263,7 +279,7 @@ node tests/retro.cjs
 `PLAYWRIGHT_MODULE` can point to an existing Playwright installation;
 `BROWSER_CHANNEL` selects another supported channel, such as `chrome`.
 
-### Automatic updates: GitHub and ORCID
+### Automatic updates: GitHub, ORCID, and LaTeX Resume
 
 The `.github/workflows/update-portfolio.yml` workflow builds and publishes a fresh
 page monthly, on day **1 at 09:17 UTC (06:17 in Brasilia)**, on pushes to `main`, and on manual
@@ -278,6 +294,10 @@ runs from the Actions tab. GitHub can delay scheduled runs or disable them after
   this portfolio repository is excluded from automatic imports.
 - APIs are queried during generation, never in the visitor's browser. Both page
   editions receive the same updated content.
+- **Resume Synchronization (PDF)**:
+  - *Fallback-first* delivery: the download buttons point directly to pre-compiled static PDFs (`assets/pdf/curriculo.pdf` and `assets/pdf/curriculo-en.pdf`), providing instantaneous downloads without external cold-start delays.
+  - During scheduled automatic site updates (GitHub Actions `schedule` event) or when `SYNC_RESUME=true`, `sync-portfolio.mjs` sends canonical structured resume data (defined in `scripts/resume-data.mjs`) to the LaTeX resume backend via encrypted transport.
+  - If the remote backend is unreachable or times out, the build gracefully preserves the existing local fallback PDFs without interrupting the workflow or failing the deployment.
 - Imported titles and descriptions retain their source language. Controls remain
   bilingual. External content is escaped before insertion into HTML.
 - If either API fails, publication stops and the previous deployment remains live.
@@ -294,12 +314,17 @@ GitHub uses the read token automatically provided by Actions. ORCID uses anonymo
 public reads; if needed, configure the optional `ORCID_READ_PUBLIC_TOKEN` secret
 with a `/read-public` token. Never place tokens in HTML or `sync.config.json`.
 
-Generate and inspect the synchronized version locally with Node.js 24:
+Test, build, and inspect the synchronized version locally with Node.js 24:
 
 ```bash
-node --test tests/sync-portfolio.test.mjs
-node scripts/sync-portfolio.mjs
-python -m http.server 8000 --directory dist
+# Run unit test suite (12 tests)
+npm test
+
+# Build and synchronize static site into dist/
+npm run build
+
+# Start local HTTP server to preview dist/
+npm start
 ```
 
 `dist/` is generated and ignored by Git. Edit `index.html` to change the editorial
@@ -331,7 +356,8 @@ This page can be accessed by the following link: `https://jluckmay.github.io/`
 ├── index.html                               # Content, lightweight styles and behavior
 ├── package.json                             # Script management and metadata
 ├── scripts/
-│   └── sync-portfolio.mjs                   # API fetching and static generation
+│   ├── resume-data.mjs                      # Canonical resume data (Lattes XML PT/EN) and payload builders
+│   └── sync-portfolio.mjs                   # API fetching, resume synchronization and static site generation
 ├── tests/
 │   ├── retro.cjs                            # Browser checks for both modes
 │   └── sync-portfolio.test.mjs              # Import and generation checks
