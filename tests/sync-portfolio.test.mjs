@@ -4,7 +4,7 @@ import { mkdtemp, readFile, readdir, stat } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
-  assets, buildSite, fetchJson, fetchRepositories, formatProjectName, normalizeWorks, renderPortfolio, shouldSyncResume, syncResumePdfs,
+  assets, buildSite, fetchJson, fetchRepositories, formatProjectName, normalizeWorks, renderPortfolio, shouldSyncResume, syncResumePdfs, warmupBackend,
 } from '../scripts/sync-portfolio.mjs';
 
 const config = {
@@ -169,18 +169,105 @@ test('an API failure cannot replace the previous generated page', async () => {
   await assert.rejects(stat(outputDir), { code: 'ENOENT' });
 });
 
+test('warmupBackend resolves true when healthz returns ok immediately', async () => {
+  let called = 0;
+  const mockFetcher = async () => {
+    called++;
+    return response({ status: 'ok' });
+  };
+  const ok = await warmupBackend('https://fake-backend.example.com', { fetcher: mockFetcher, wait: async () => {} });
+  assert.equal(ok, true);
+  assert.equal(called, 1);
+});
+
+test('warmupBackend retries on transient errors and succeeds when server wakes up', async () => {
+  let attempts = 0;
+  let waitCalls = 0;
+  const mockFetcher = async () => {
+    attempts++;
+    if (attempts < 3) return new Response('Bad Gateway', { status: 502 });
+    return response({ status: 'ok' });
+  };
+  const ok = await warmupBackend('https://fake-backend.example.com', {
+    fetcher: mockFetcher,
+    maxWaitMs: 30_000,
+    pingIntervalMs: 5_000,
+    wait: async () => { waitCalls++; },
+  });
+  assert.equal(ok, true);
+  assert.equal(attempts, 3);
+  assert.equal(waitCalls, 2);
+});
+
+test('warmupBackend returns false when server does not respond within maxWaitMs', async () => {
+  let attempts = 0;
+  const mockFetcher = async () => {
+    attempts++;
+    return new Response('Gateway Timeout', { status: 504 });
+  };
+  const ok = await warmupBackend('https://fake-backend.example.com', {
+    fetcher: mockFetcher,
+    maxWaitMs: 15,
+    pingIntervalMs: 5,
+    wait: async () => {},
+  });
+  assert.equal(ok, false);
+  assert(attempts >= 2);
+});
+
+test('syncResumePdfs skips generation if warmup fails, safely preserving fallbacks', async () => {
+  const testDir = await mkdtemp(join(tmpdir(), 'portfolio-warmup-fail-'));
+  let generateCalled = false;
+  const mockFetcher = async url => {
+    if (url.includes('/api/generate')) generateCalled = true;
+    return new Response('Unavailable', { status: 503 });
+  };
+  await syncResumePdfs({
+    fetcher: mockFetcher,
+    targetDir: testDir,
+    maxWarmupMs: 15,
+    pingIntervalMs: 5,
+    wait: async () => {},
+  });
+  assert.equal(generateCalled, false);
+});
+
+test('syncResumePdfs retries compilation on transient errors and succeeds', async () => {
+  const testDir = await mkdtemp(join(tmpdir(), 'portfolio-compile-retry-'));
+  const mockPdfBytes = Buffer.from('%PDF-1.4 Retry Success Content');
+  let generateAttempts = 0;
+  let waitCalls = 0;
+  const mockFetcher = async url => {
+    if (url.includes('/healthz')) return response({ status: 'ok' });
+    generateAttempts++;
+    if (generateAttempts === 1) return new Response('Bad Gateway', { status: 502 });
+    return response({ pdf_base64: mockPdfBytes.toString('base64') });
+  };
+  await syncResumePdfs({
+    fetcher: mockFetcher,
+    targetDir: testDir,
+    wait: async () => { waitCalls++; },
+  });
+  assert.equal(await readFile(join(testDir, 'curriculo.pdf'), 'utf8'), '%PDF-1.4 Retry Success Content');
+  assert.equal(await readFile(join(testDir, 'curriculo-en.pdf'), 'utf8'), '%PDF-1.4 Retry Success Content');
+  assert(generateAttempts >= 3);
+  assert(waitCalls >= 1);
+});
+
 test('syncResumePdfs updates PDFs on backend response and safely preserves fallbacks on error', async () => {
   const testDir = await mkdtemp(join(tmpdir(), 'portfolio-resume-test-'));
   const mockPdfBytes = Buffer.from('%PDF-1.4 Mock PDF Content');
-  const mockFetcherSuccess = async () => response({ pdf_base64: mockPdfBytes.toString('base64') });
+  const mockFetcherSuccess = async url => response(
+    url.includes('/healthz') ? { status: 'healthy' } : { pdf_base64: mockPdfBytes.toString('base64') }
+  );
 
-  await syncResumePdfs({ fetcher: mockFetcherSuccess, targetDir: testDir });
+  await syncResumePdfs({ fetcher: mockFetcherSuccess, targetDir: testDir, wait: async () => {} });
   assert.equal(await readFile(join(testDir, 'curriculo.pdf'), 'utf8'), '%PDF-1.4 Mock PDF Content');
   assert.equal(await readFile(join(testDir, 'curriculo-en.pdf'), 'utf8'), '%PDF-1.4 Mock PDF Content');
 
   // Test graceful failure: keeps files intact without throwing
   const mockFetcherFail = async () => new Response('Internal Error', { status: 500 });
-  await syncResumePdfs({ fetcher: mockFetcherFail, targetDir: testDir });
+  await syncResumePdfs({ fetcher: mockFetcherFail, targetDir: testDir, maxWarmupMs: 15, pingIntervalMs: 5, wait: async () => {} });
   assert.equal(await readFile(join(testDir, 'curriculo.pdf'), 'utf8'), '%PDF-1.4 Mock PDF Content');
 });
 

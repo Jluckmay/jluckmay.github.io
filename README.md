@@ -104,7 +104,8 @@ ou desativá-las após 60 dias sem atividade no repositório público.
 - **Sincronização de Currículos (PDF)**:
   - Entrega *fallback-first*: os botões de download utilizam os PDFs pré-compilados (`assets/pdf/curriculo.pdf` e `assets/pdf/curriculo-en.pdf`), garantindo download imediato sem atrasos de *cold start* de servidores externos.
   - Na data de atualização automática agendada (evento `schedule` no GitHub Actions) ou quando `SYNC_RESUME=true`, o script `sync-portfolio.mjs` envia os dados canônicos estruturados (definidos em `scripts/resume-data.mjs`) para o backend de compilação LaTeX via transporte criptografado.
-  - Caso o serviço remoto esteja indisponível ou demore a responder, o processo preserva com segurança os PDFs de fallback locais existentes, sem quebrar o fluxo de build ou o deploy da página.
+  - Inclui mecanismo de *warm-up ping* com retentativas progressivas (para aguardar o tempo de inicialização e *spin-up* do Render gratuito) e retentativas automáticas com *backoff* para erros transitórios.
+  - Caso o serviço remoto permaneça indisponível, o processo preserva com segurança os PDFs de fallback locais existentes, sem quebrar o fluxo de build ou o deploy da página.
 - Nomes de repositórios importados são formatados em Title Case e projetos com sobreposição
   ou ausência de descrição recebem formatação e descrições apropriadas. Controles continuam
   bilíngues. Conteúdo externo é escapado antes de entrar no HTML.
@@ -126,7 +127,7 @@ ou em `sync.config.json`.
 Para testar, gerar e inspecionar a versão sincronizada localmente, use Node.js 24:
 
 ```bash
-# Executar suíte de testes unitários (12 testes)
+# Executar suíte de testes unitários (17 testes)
 npm test
 
 # Compilar e sincronizar site estático em dist/
@@ -297,7 +298,8 @@ runs from the Actions tab. GitHub can delay scheduled runs or disable them after
 - **Resume Synchronization (PDF)**:
   - *Fallback-first* delivery: the download buttons point directly to pre-compiled static PDFs (`assets/pdf/curriculo.pdf` and `assets/pdf/curriculo-en.pdf`), providing instantaneous downloads without external cold-start delays.
   - During scheduled automatic site updates (GitHub Actions `schedule` event) or when `SYNC_RESUME=true`, `sync-portfolio.mjs` sends canonical structured resume data (defined in `scripts/resume-data.mjs`) to the LaTeX resume backend via encrypted transport.
-  - If the remote backend is unreachable or times out, the build gracefully preserves the existing local fallback PDFs without interrupting the workflow or failing the deployment.
+  - Includes a *warm-up ping* mechanism with progressive retries (handling Render's free tier cold-start spin-up) and automatic backoff retries for transient errors.
+  - If the remote backend remains unreachable, the build gracefully preserves the existing local fallback PDFs without interrupting the workflow or failing the deployment.
 - Imported titles and descriptions retain their source language. Controls remain
   bilingual. External content is escaped before insertion into HTML.
 - If either API fails, publication stops and the previous deployment remains live.
@@ -317,7 +319,7 @@ with a `/read-public` token. Never place tokens in HTML or `sync.config.json`.
 Test, build, and inspect the synchronized version locally with Node.js 24:
 
 ```bash
-# Run unit test suite (12 tests)
+# Run unit test suite (17 tests)
 npm test
 
 # Build and synchronize static site into dist/

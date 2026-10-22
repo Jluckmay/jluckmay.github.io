@@ -71,46 +71,129 @@ export function shouldSyncResume() {
   return false;
 }
 
-export async function syncResumePdfs({ fetcher = fetch, timeoutMs = 25000, targetDir = join(root, 'assets', 'pdf') } = {}) {
-  const backendUrl = resolveBackendUrl();
+export async function warmupBackend(backendUrl, {
+  fetcher = fetch,
+  maxWaitMs = 90_000,
+  pingIntervalMs = 5_000,
+  pingTimeoutMs = 15_000,
+  wait = delay,
+} = {}) {
+  const base = backendUrl.replace(/\/+$/, '');
+  const start = Date.now();
+  console.log('[sync-portfolio] Aquecendo servidor backend LaTeX (aguardando cold start do Render)...');
+  let attempt = 0;
+
+  while (Date.now() - start <= maxWaitMs) {
+    attempt++;
+    try {
+      const res = await fetcher(`${base}/healthz`, {
+        method: 'GET',
+        headers: { Accept: 'application/json, text/plain, */*' },
+        signal: AbortSignal.timeout(pingTimeoutMs),
+      });
+      if (res && res.ok) {
+        console.log(`[sync-portfolio] Servidor backend LaTeX ativo e pronto (${attempt} tentativa(s)).`);
+        return true;
+      }
+    } catch {
+      // Ignora erro de rede/timeout durante o spin-up
+    }
+
+    if (Date.now() - start + pingIntervalMs > maxWaitMs) break;
+    await wait(pingIntervalMs);
+  }
+
+  console.warn('[sync-portfolio] Servidor backend LaTeX não respondeu dentro do tempo limite. Mantendo fallbacks locais.');
+  return false;
+}
+
+export async function syncResumePdfs({
+  fetcher = fetch,
+  timeoutMs = 60_000,
+  targetDir = join(root, 'assets', 'pdf'),
+  maxAttempts = 3,
+  maxWarmupMs = 90_000,
+  pingIntervalMs = 5_000,
+  pingTimeoutMs = 15_000,
+  wait = delay,
+  skipWarmup = false,
+} = {}) {
+  const backendUrl = resolveBackendUrl().replace(/\/+$/, '');
+
+  if (!skipWarmup) {
+    const isReady = await warmupBackend(backendUrl, {
+      fetcher,
+      maxWaitMs: maxWarmupMs,
+      pingIntervalMs,
+      pingTimeoutMs,
+      wait,
+    });
+    if (!isReady) {
+      console.warn('[sync-portfolio] Backend indisponível durante o warm-up. Mantendo fallbacks pré-compilados.');
+      return;
+    }
+  }
+
   const targets = [
     { lang: 'pt-br', filename: 'curriculo.pdf' },
     { lang: 'en-us', filename: 'curriculo-en.pdf' },
   ];
 
   for (const { lang, filename } of targets) {
-    try {
-      const payload = createResumePayload(lang);
-      const encrypted = await encryptTransportPayload(payload, 'req');
-      const response = await fetcher(`${backendUrl}/api/generate`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-          Origin: 'https://jluckmay.github.io',
-          Referer: 'https://jluckmay.github.io/',
-          'X-Resume-Client': 'jluckmay-github-pages-v1',
-          'X-Encrypted-Payload': '1',
-        },
-        body: JSON.stringify(encrypted),
-        signal: AbortSignal.timeout(timeoutMs),
-      });
+    let success = false;
+    let lastError = null;
 
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const raw = await response.json();
-      const data = raw?.enc_version === 'ENC_PAYLOAD_V1'
-        ? await decryptTransportPayload(raw, 'resp')
-        : raw;
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        const payload = createResumePayload(lang);
+        const encrypted = await encryptTransportPayload(payload, 'req');
+        const response = await fetcher(`${backendUrl}/api/generate`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Origin: 'https://jluckmay.github.io',
+            Referer: 'https://jluckmay.github.io/',
+            'X-Resume-Client': 'jluckmay-github-pages-v1',
+            'X-Encrypted-Payload': '1',
+          },
+          body: JSON.stringify(encrypted),
+          signal: AbortSignal.timeout(timeoutMs),
+        });
 
-      if (data && data.pdf_base64) {
-        await mkdir(targetDir, { recursive: true });
-        await writeFile(join(targetDir, filename), Buffer.from(data.pdf_base64, 'base64'));
-        console.log(`[sync-portfolio] Atualizado currículo ${filename} via backend LaTeX.`);
-      } else {
-        throw new Error(data?.error || 'No PDF data returned');
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const raw = await response.json();
+        const data = raw?.enc_version === 'ENC_PAYLOAD_V1'
+          ? await decryptTransportPayload(raw, 'resp')
+          : raw;
+
+        if (data && data.pdf_base64) {
+          await mkdir(targetDir, { recursive: true });
+          await writeFile(join(targetDir, filename), Buffer.from(data.pdf_base64, 'base64'));
+          console.log(`[sync-portfolio] Atualizado currículo ${filename} via backend LaTeX.`);
+          success = true;
+          break;
+        } else {
+          throw new Error(data?.error || 'No PDF data returned');
+        }
+      } catch (err) {
+        lastError = err;
+        const isTransient = /HTTP (?:429|500|502|503|504)|timeout|aborted|network/i.test(err.message);
+        if (isTransient && attempt < maxAttempts) {
+          const retryWait = attempt * 2000;
+          console.log(`[sync-portfolio] Tentativa ${attempt} para ${filename} falhou (${err.message}). Nova tentativa em ${retryWait / 1000}s...`);
+          await wait(retryWait);
+          continue;
+        }
+        break;
       }
-    } catch (err) {
-      console.warn(`[sync-portfolio] Backend indisponível para ${filename} (${err.message}). Mantendo fallback pré-compilado.`);
+    }
+
+    if (!success) {
+      console.warn(`[sync-portfolio] Backend indisponível para ${filename} (${lastError?.message || 'erro desconhecido'}). Mantendo fallback pré-compilado.`);
     }
   }
 }
