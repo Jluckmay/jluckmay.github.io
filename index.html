@@ -48,7 +48,8 @@
           "https://github.com/Jluckmay",
           "https://www.linkedin.com/in/jluckmay/",
           "https://orcid.org/0009-0001-0178-4877",
-          "http://lattes.cnpq.br/7395864900833083"
+          "http://lattes.cnpq.br/7395864900833083",
+          "https://scholar.google.com/citations?user=TULpQMUAAAAJ&hl=pt-BR"
         ]
       }
     </script>
@@ -81,7 +82,7 @@
         for (const href of [
           "assets/css/modern.css",
           "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap",
-          "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
         ]) {
           const link = document.createElement("link");
           link.rel = "stylesheet";
@@ -136,7 +137,8 @@
       html[data-mode="retro"] .wedding-rings svg { width: 1.05rem; height: .75rem; overflow: visible; }
       html[data-mode="retro"] .tag,
       html[data-mode="retro"] .chip { display: inline-block; border: 1px solid #888; padding: 0 .4rem; margin: .2rem; }
-      html[data-mode="retro"] .contact-link { display: block; margin: .6rem 0; }
+      html[data-mode="retro"] .contact-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: .5rem 1.5rem; }
+      html[data-mode="retro"] .contact-link { display: block; margin: .4rem 0; }
       html[data-mode="retro"] .contact-link span { display: block; }
       html[data-mode="retro"] .language-label { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: space-between; }
       html[data-mode="retro"] .proficiency { display: none; }
@@ -288,6 +290,12 @@
               rel="noopener"
               aria-label="Currículo Lattes"
               ><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i></a
+            ><a
+              href="https://scholar.google.com/citations?user=TULpQMUAAAAJ&amp;hl=pt-BR"
+              target="_blank"
+              rel="noopener"
+              aria-label="Google Scholar"
+              ><i class="fa-brands fa-google-scholar" aria-hidden="true"></i></a
             ><a href="mailto:lucas.mayrinck@dcc.ufmg.br" aria-label="Email"
               ><i class="fa-solid fa-envelope" aria-hidden="true"></i
             ></a>
@@ -1285,7 +1293,7 @@
             <small>06 / VAMOS CONVERSAR?</small>
           </header>
           <div class="contact-grid">
-            <div>
+            <div class="contact-intro">
               <p class="lead">
                 Aberto a conversas sobre pesquisa, colaboração acadêmica,
                 software e oportunidades de desenvolvimento.
@@ -1320,6 +1328,17 @@
                 <div>
                   <strong>Currículo Lattes</strong
                   ><span>ID 7395864900833083</span>
+                </div></a
+              >
+              <a
+                class="contact-link"
+                href="https://scholar.google.com/citations?user=TULpQMUAAAAJ&amp;hl=pt-BR"
+                target="_blank"
+                rel="noopener"
+                ><i class="fa-brands fa-google-scholar"></i>
+                <div>
+                  <strong>Google Scholar</strong
+                  ><span>Perfil e citações</span>
                 </div></a
               >
               <a
@@ -1625,8 +1644,10 @@
         "Belo Horizonte · Minas Gerais · Brasil":
           "Belo Horizonte · Minas Gerais · Brazil",
         "Email acadêmico": "Academic email",
+        "Perfil e citações": "Profile and citations",
         "Página acadêmica DCC/UFMG": "DCC/UFMG academic page",
         "Currículo Lattes": "Lattes CV",
+          "Google Scholar": "Google Scholar",
         "Aberto a conversas sobre pesquisa, colaboração acadêmica, software e oportunidades de desenvolvimento.":
           "Open to conversations about research, academic collaboration, software and development opportunities.",
         "Formação em desenvolvimento de software e sistemas, UX design, análise de dados e tecnologia aplicada à educação.":

@@ -647,40 +647,61 @@ html[data-theme="light"] .button.ghost:hover {
 }
 /* Contact and footer */
 .contact-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.2rem;
+}
+.contact-intro .lead {
+  max-width: 44rem;
+  margin: 0 0 0.8rem;
+}
+.contact-intro .eyebrow {
+  margin: 0;
 }
 .contact-links {
   display: grid;
-  gap: 0.7rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem 1.2rem;
 }
 .contact-link {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.1rem;
   text-decoration: none;
-  padding: 1rem;
+  padding: 1.1rem 1.25rem;
   border: 1px solid #333;
   background: #0b0b0b;
+  border-radius: 4px;
   transition: 0.2s;
+  min-width: 0;
+}
+.contact-link > div {
+  min-width: 0;
 }
 .contact-link i {
   width: 1.5rem;
+  font-size: 1.25rem;
   color: var(--red2);
   text-align: center;
+  flex-shrink: 0;
 }
 .contact-link span {
   color: #999;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .contact-link strong {
   display: block;
   color: #fff;
+  font-size: 0.95rem;
+  margin-bottom: 0.15rem;
 }
 .contact-link:hover {
   border-color: var(--yellow);
-  translate: 0.4rem;
+  translate: 0.3rem;
 }
 .contact-link:hover i {
   color: var(--yellow);
@@ -758,6 +779,9 @@ footer .wrap {
   .contact-grid {
     grid-template-columns: 1fr;
     gap: 2.5rem;
+  }
+  .contact-links {
+    grid-template-columns: 1fr;
   }
   .portrait {
     float: none;
@@ -1173,6 +1197,9 @@ html[data-theme="light"] #contato .contact-link {
 }
 html[data-theme="light"] #contato .contact-link strong {
   color: #111;
+}
+html[data-theme="light"] #contato .contact-link span {
+  color: #555;
 }
 /* Final responsive adjustments for enhanced components */
 @media (max-width: 53.125rem) {
