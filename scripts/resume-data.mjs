@@ -111,9 +111,11 @@ export function createResumePayload(lang = 'pt-br') {
     secondary_color: '#000000',
     github: 'Jluckmay',
     orcid: '0009-0001-0178-4877',
+    scholar: 'https://scholar.google.com/citations?user=TULpQMUAAAAJ&hl=pt-BR',
     linkedin: 'https://www.linkedin.com/in/jluckmay/',
     lattes: 'http://lattes.cnpq.br/7395864900833083',
     portfolio: 'https://jluckmay.github.io/',
+    email: 'lucas.mayrinck@dcc.ufmg.br',
     lattes_file: {
       filename: isPt ? 'curriculo.xml' : 'curriculo_en.xml',
       name: isPt ? 'curriculo.xml' : 'curriculo_en.xml',
