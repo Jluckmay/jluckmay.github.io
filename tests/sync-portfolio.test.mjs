@@ -4,7 +4,9 @@ import { mkdtemp, readFile, readdir, stat } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
-  assets, buildSite, fetchJson, fetchRepositories, formatProjectName, normalizeWorks, renderPortfolio, shouldSyncResume, syncResumePdfs, warmupBackend,
+  assets, buildSite, enrichRepositoriesWithReadmes, extractDescriptionFromReadme, fetchJson, fetchRepositories,
+  formatProjectCategory, formatProjectName, getStartingProjectNumber, normalizeWorks, renderPortfolio, shouldSyncResume,
+  syncResumePdfs, warmupBackend,
 } from '../scripts/sync-portfolio.mjs';
 
 const config = {
@@ -75,6 +77,56 @@ test('formats repository names and supplies descriptions or custom overrides', (
   assert(result.html.includes('<p>Pipeline automatizado em Python para conversão de mapas, entidades e comandos entre Minecraft Java e Bedrock.</p>'));
   assert(result.html.includes('<h3>Simple Tool</h3>'));
   assert(result.html.includes('<p>Ferramenta utilitária.</p>'));
+});
+
+test('extracts clean descriptions from README markdown and assigns sequential numbering', () => {
+  const readmeSample = `# ⚡ Minifier\n\n> Idioma: [PT](#pt) | [EN](#en)\n\n## 🇺🇸 English\nA simple code minifier tool.\n\n## 🇧🇷 Português\nUma ferramenta web moderna e minimalista para minificação de código direto no navegador.\n\n### Recursos\n* Rápido`;
+  const desc = extractDescriptionFromReadme(readmeSample);
+  assert.equal(desc, 'Uma ferramenta web moderna e minimalista para minificação de código direto no navegador.');
+
+  assert.equal(formatProjectCategory(undefined, 'Python'), 'PYTHON');
+  assert.equal(formatProjectCategory(undefined, 'JavaScript'), 'WEB');
+  assert.equal(formatProjectCategory(undefined, 'HTML'), 'WEB');
+  assert.equal(formatProjectCategory('FERRAMENTA', 'HTML'), 'FERRAMENTA');
+
+  const numberedTemplate = `<section id="projetos">
+<article class="card"><span class="num">01 / DESTAQUE</span><h3>Highlight</h3><a href="https://github.com/Jluckmay/h1">H1</a></article>
+<div id="projects-extra">
+<article class="card extra-item"><span class="num">02 / WEB</span><h3>Extra 1</h3><a href="https://github.com/Jluckmay/e1">E1</a></article>
+<!-- github-projects:start -->
+<!-- github-projects:end -->
+</div></section>
+<section id="publicacoes"><div id="publications-extra"><!-- orcid-publications:start -->
+<!-- orcid-publications:end --></div></section>`;
+
+  assert.equal(getStartingProjectNumber(numberedTemplate), 3);
+
+  const repos = [
+    repo('new-compiler', { language: 'Python', readme: '# Compiler\n\nUm compilador multi-linguagem seguro e isolado.' }),
+    repo('new-web-app', { language: 'HTML', readme: '# Web App\n\nInterface moderna desenvolvida em HTML e CSS.' }),
+  ];
+
+  const result = renderPortfolio(numberedTemplate, repos, record(), config);
+  assert(result.html.includes('<span class="num">03 / PYTHON</span>'));
+  assert(result.html.includes('<h3>New Compiler</h3>'));
+  assert(result.html.includes('<p>Um compilador multi-linguagem seguro e isolado.</p>'));
+  assert(result.html.includes('<span class="num">04 / WEB</span>'));
+  assert(result.html.includes('<h3>New Web App</h3>'));
+  assert(result.html.includes('<p>Interface moderna desenvolvida em HTML e CSS.</p>'));
+});
+
+test('enrichRepositoriesWithReadmes fetches READMEs and handles missing or failing requests', async () => {
+  const repos = [repo('has-readme'), repo('no-readme')];
+  const customFetcher = async url => {
+    if (url.includes('has-readme/readme')) {
+      return new Response('# Readme\n\nDescrição extraída com sucesso.', { status: 200 });
+    }
+    return new Response('Not Found', { status: 404 });
+  };
+
+  await enrichRepositoriesWithReadmes(repos, template, config, { fetcher: customFetcher });
+  assert.equal(repos[0].readme, '# Readme\n\nDescrição extraída com sucesso.');
+  assert.equal(repos[1].readme, undefined);
 });
 
 test('escapes external text and URLs; rejects executable homepage protocols', () => {

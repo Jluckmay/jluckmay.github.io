@@ -243,9 +243,119 @@ function requiredString(value, label) {
 export const DEFAULT_PROJECT_OVERRIDES = {
   'minecraft-map-convertion': {
     name: 'Minecraft Map Converter',
+    tag: 'PYTHON',
     description: 'Pipeline automatizado em Python para conversão de mapas, entidades e comandos entre Minecraft Java e Bedrock.',
   },
 };
+
+export function cleanMarkdown(text) {
+  if (!text || typeof text !== 'string') return '';
+  return text
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/<[^>]+>/g, '')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/[*_`~]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+export function isPortugueseText(text) {
+  if (/[ãõáéíóúâêôç]/i.test(text)) return true;
+  const ptWords = /\b(?:que|de|do|da|dos|das|em|no|na|nos|nas|para|com|por|uma|este|esta|esse|essa|projeto|ferramenta|desenvolvido|desenvolvida|baseado|baseada|gerador|geradora|interativo|interativa|aplicação|sistema|ambiente|compilador|minificador|estudo|pesquisa)\b/i;
+  return ptWords.test(text);
+}
+
+export function extractDescriptionFromReadme(markdown) {
+  if (!markdown || typeof markdown !== 'string') return '';
+
+  const ptSectionMatch = markdown.match(/##+\s*(?:[^\n]*🇧🇷|[^\n]*Portugu[êe]s)[\s\S]*?(?=(?:##+\s+[^#\n]+|$))/i);
+  const candidateTexts = ptSectionMatch
+    ? [ptSectionMatch[0].replace(/^##+[^\n]*\n/, ''), markdown]
+    : [markdown];
+
+  for (const rawText of candidateTexts) {
+    const stripped = rawText.replace(/```[\s\S]*?```/g, '');
+    const lines = stripped.split(/\r?\n/);
+    const paragraphs = [];
+    let current = [];
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#') || /^[-*_]{3,}$/.test(trimmed) || trimmed.startsWith('|')) {
+        if (current.length) {
+          paragraphs.push(current.join(' '));
+          current = [];
+        }
+        continue;
+      }
+      if (/^\[?!\[[^\]]*\]\([^)]+\)/.test(trimmed)) continue;
+      if (trimmed.startsWith('>') && /idioma|language|selector/i.test(trimmed)) continue;
+      if (trimmed.startsWith('*') && /\[.*(?:English|Portugu[êe]s)/i.test(trimmed)) continue;
+      if (/^[-*+]\s+/.test(trimmed)) continue;
+
+      const cleanLine = trimmed.replace(/^>\s*/, '');
+      current.push(cleanLine);
+    }
+    if (current.length) paragraphs.push(current.join(' '));
+
+    const candidateParagraphs = paragraphs
+      .map(cleanMarkdown)
+      .filter(p => p.length >= 25 && !/^(table of contents|sum[aá]rio|features|recursos|license|licen[çc]a|requisitos)/i.test(p));
+
+    if (!candidateParagraphs.length) continue;
+
+    const ptPara = candidateParagraphs.find(isPortugueseText);
+    const chosen = ptPara || candidateParagraphs[0];
+
+    if (chosen) {
+      if (chosen.length > 220) {
+        const sentenceMatch = chosen.match(/^(.+?\.)(?:\s|$)/);
+        if (sentenceMatch && sentenceMatch[1].length >= 40 && sentenceMatch[1].length <= 220) {
+          return sentenceMatch[1];
+        }
+        const sub = chosen.slice(0, 220);
+        const lastPunct = Math.max(sub.lastIndexOf(', '), sub.lastIndexOf(') '), sub.lastIndexOf('. '));
+        if (lastPunct >= 70) {
+          let candidate = sub.slice(0, lastPunct + (sub[lastPunct] === ')' ? 1 : 0)).trim();
+          if (!candidate.endsWith('.')) candidate += '.';
+          return candidate;
+        }
+        return chosen.slice(0, 217).replace(/\s+\S*$/, '') + '...';
+      }
+      return chosen;
+    }
+  }
+
+  return '';
+}
+
+export function formatProjectCategory(tag, language) {
+  if (typeof tag === 'string' && tag.trim()) {
+    return tag.trim().toUpperCase();
+  }
+  if (typeof language === 'string' && language.trim()) {
+    const langUpper = language.trim().toUpperCase();
+    if (['HTML', 'CSS', 'JAVASCRIPT', 'TYPESCRIPT'].includes(langUpper)) {
+      return 'WEB';
+    }
+    return langUpper;
+  }
+  return 'SOFTWARE';
+}
+
+export function getStartingProjectNumber(template) {
+  const marker = '<!-- github-projects:start -->';
+  const htmlBefore = template.includes(marker) ? template.slice(0, template.indexOf(marker)) : template;
+  const numMatches = [...htmlBefore.matchAll(/<span\b[^>]*class="num"[^>]*>\s*(\d+)/gi)];
+  if (numMatches.length > 0) {
+    const nums = numMatches.map(m => parseInt(m[1], 10)).filter(n => !Number.isNaN(n));
+    if (nums.length > 0) {
+      return Math.max(...nums) + 1;
+    }
+  }
+  const cardMatches = [...htmlBefore.matchAll(/<article\b[^>]*class="[^"]*\bcard\b[^"]*"/gi)];
+  return cardMatches.length + 1;
+}
 
 export function formatProjectName(name) {
   if (typeof name !== 'string' || !name.trim()) return '';
@@ -290,6 +400,9 @@ export function validateConfig(config) {
       if (value.description !== undefined && (typeof value.description !== 'string' || !value.description.trim())) {
         throw new Error(`Invalid description override for ${key}`);
       }
+      if (value.tag !== undefined && (typeof value.tag !== 'string' || !value.tag.trim())) {
+        throw new Error(`Invalid tag override for ${key}`);
+      }
     }
   }
   return config;
@@ -331,6 +444,64 @@ export async function fetchRepositories(config, { token, fetcher = fetch, wait =
   throw new Error('GitHub pagination exceeded 2000 repositories; refusing a partial build');
 }
 
+export async function fetchRepositoryReadme(owner, repoName, { token, fetcher = fetch } = {}) {
+  const url = `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repoName)}/readme`;
+  const headers = {
+    Accept: 'application/vnd.github.raw+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+    'User-Agent': 'Jluckmay-portfolio-sync',
+  };
+  if (token) headers.Authorization = `Bearer ${token}`;
+
+  try {
+    const res = await fetcher(url, { headers, signal: AbortSignal.timeout(15_000) });
+    if (!res.ok) return null;
+    let text = await res.text();
+    if (text.startsWith('{') && text.includes('"content":')) {
+      try {
+        const parsed = JSON.parse(text);
+        if (parsed.content && parsed.encoding === 'base64') {
+          text = Buffer.from(parsed.content, 'base64').toString('utf8');
+        }
+      } catch {}
+    }
+    return text;
+  } catch {
+    return null;
+  }
+}
+
+export async function enrichRepositoriesWithReadmes(repositories, template, config, { token, fetcher = fetch } = {}) {
+  if (!Array.isArray(repositories)) return repositories;
+  const projects = section(template, 'projetos');
+  const knownRepos = new Set(links(projects).map(repositoryKey).filter(Boolean));
+  const excluded = new Set(config.excludedRepositories.map(name => name.toLowerCase()));
+  const overrides = { ...DEFAULT_PROJECT_OVERRIDES, ...(config.projectOverrides || {}) };
+
+  const candidates = repositories.filter(repo => {
+    const rawName = repo?.name;
+    const owner = repo?.owner?.login;
+    if (!rawName || !owner) return false;
+    if (owner.toLowerCase() !== config.githubUsername.toLowerCase()) return false;
+    if (repo.private || repo.disabled || (!config.includeForks && repo.fork)) return false;
+    if (excluded.has(rawName.toLowerCase())) return false;
+    const key = `/${owner}/${rawName}`.toLowerCase();
+    if (knownRepos.has(key)) return false;
+    const override = overrides[rawName] || overrides[rawName.toLowerCase()];
+    if (override?.description && !repo.readme) return false;
+    return !repo.readme;
+  });
+
+  await Promise.all(candidates.map(async repo => {
+    const readme = await fetchRepositoryReadme(repo.owner.login, repo.name, { token, fetcher });
+    if (readme) {
+      repo.readme = readme;
+    }
+  }));
+
+  return repositories;
+}
+
 export function normalizeRepositories(repositories, config) {
   if (!Array.isArray(repositories)) throw new Error('Invalid repository list');
   const excluded = new Set(config.excludedRepositories.map(name => name.toLowerCase()));
@@ -344,9 +515,13 @@ export function normalizeRepositories(repositories, config) {
     const override = overrides[rawName] || overrides[rawName.toLowerCase()] || {};
     const name = override.name ? requiredString(override.name, 'project override name') : formatProjectName(rawName);
     const repoDesc = typeof repo.description === 'string' ? repo.description.trim() : '';
+    let readmeDesc = '';
+    if (typeof repo.readme === 'string' && repo.readme.trim()) {
+      readmeDesc = extractDescriptionFromReadme(repo.readme);
+    }
     const description = override.description
       ? requiredString(override.description, 'project override description')
-      : (repoDesc || (repo.language ? `Projeto em ${repo.language} disponível no GitHub.` : 'Projeto disponível no GitHub.'));
+      : (readmeDesc || repoDesc || (repo.language ? `Projeto em ${repo.language} disponível no GitHub.` : 'Projeto disponível no GitHub.'));
     const homepage = safeUrl(override.homepage || repo.homepage);
     const language = typeof repo.language === 'string' ? repo.language : '';
     const tag = typeof override.tag === 'string' ? override.tag : '';
@@ -431,7 +606,10 @@ export function renderPortfolio(template, repositories, record, config) {
     knownTitles.add(title);
     return true;
   });
-  const projectHtml = newProjects.map(repo => {
+  const startNumber = getStartingProjectNumber(html);
+  const projectHtml = newProjects.map((repo, index) => {
+    const projectNum = String(startNumber + index).padStart(2, '0');
+    const category = formatProjectCategory(repo.tag, repo.language);
     const linkItems = [];
     if (repo.homepage) {
       linkItems.push(`<a href="${escapeHtml(repo.homepage)}" target="_blank" rel="noopener noreferrer">Abrir projeto +</a>`);
@@ -439,7 +617,7 @@ export function renderPortfolio(template, repositories, record, config) {
     linkItems.push(`<a href="${escapeHtml(repo.url)}" target="_blank" rel="noopener noreferrer">${repo.homepage ? 'GitHub +' : 'Ver no GitHub +'}</a>`);
     const linksHtml = linkItems.join('\n                ');
     return `            <article class="card extra-item" hidden data-sync-source="github">
-              <span class="num">${escapeHtml(repo.tag || ('GitHub' + (repo.language ? ' / ' + repo.language : '')))}</span>
+              <span class="num">${projectNum} / ${escapeHtml(category)}</span>
               <h3>${escapeHtml(repo.name)}</h3>
               ${repo.description ? `<p>${escapeHtml(repo.description)}</p>` : ''}
               <div class="project-links">
@@ -468,6 +646,7 @@ export async function buildSite({ outputDir = join(root, 'dist'), fetcher = fetc
     fetchRepositories(config, { token: process.env.GITHUB_TOKEN, fetcher }),
     fetchJson(`https://pub.orcid.org/v3.0/${config.orcidId}/works`, orcidHeaders, fetcher),
   ]);
+  await enrichRepositoriesWithReadmes(repositories, template, config, { token: process.env.GITHUB_TOKEN, fetcher });
   const result = renderPortfolio(template, repositories, works, config);
   // Na data de atualização automática da página (schedule ou SYNC_RESUME=true),
   // atualiza os PDFs via backend remoto mantendo os de fallback se offline.
