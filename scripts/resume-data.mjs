@@ -41,8 +41,53 @@ export const lattesXmlPt = `<?xml version="1.0" encoding="UTF-8"?>
     <PRODUCAO-BIBLIOGRAFICA>
         <ARTIGOS-PUBLICADOS>
             <ARTIGO-PUBLICADO>
-                <DADOS-BASICOS-DO-ARTIGO TITULO-DO-ARTIGO="Palavras ao Ar: Um Jogo Digital Educacional para Alfabetização de Crianças" ANO-DO-ARTIGO="2024" DOI="10.5753/sbie.2024.241887" />
+                <DADOS-BASICOS-DO-ARTIGO TITULO-DO-ARTIGO="Math-0-Ween: Um Jogo Digital Educacional para Explorar Operações Matemáticas de Forma Divertida e Assustadora (Resumo Estendido)" ANO-DO-ARTIGO="2026" DOI="10.5753/rbie.2026.6599" />
+                <DETALHAMENTO-DO-ARTIGO TITULO-DO-PERIODICO-OU-REVISTA="Revista Brasileira de Informática na Educação (RBIE)" />
+                <AUTORES NOME-PARA-CITACAO="D’OLIVEIRA, J. L. M." />
+            </ARTIGO-PUBLICADO>
+            <ARTIGO-PUBLICADO>
+                <DADOS-BASICOS-DO-ARTIGO TITULO-DO-ARTIGO="PDI Interativo: Uma Ferramenta para Estudo e Experimentação com Abordagem Espacial e Frequencial" ANO-DO-ARTIGO="2025" DOI="10.5753/wsis.2025.15098" />
+                <DETALHAMENTO-DO-ARTIGO TITULO-DO-PERIODICO-OU-REVISTA="Anais do XVI Workshop de Sistemas de Informação (WSIS 2025)" />
+                <AUTORES NOME-PARA-CITACAO="D’OLIVEIRA, J. L. M." />
+            </ARTIGO-PUBLICADO>
+            <ARTIGO-PUBLICADO>
+                <DADOS-BASICOS-DO-ARTIGO TITULO-DO-ARTIGO="Jogo Digital Educativo como Ferramenta de Apoio no Ensino de Frações" ANO-DO-ARTIGO="2025" DOI="10.5753/wsis.2025.15113" />
+                <DETALHAMENTO-DO-ARTIGO TITULO-DO-PERIODICO-OU-REVISTA="XVI Workshop de Sistemas de Informação – UFV Rio Paranaíba Campus" />
+                <AUTORES NOME-PARA-CITACAO="D’OLIVEIRA, J. L. M." />
+            </ARTIGO-PUBLICADO>
+            <ARTIGO-PUBLICADO>
+                <DADOS-BASICOS-DO-ARTIGO TITULO-DO-ARTIGO="Impacto da Solução Inicial na Otimização por Simulated Annealing: Uma Análise Comparativa entre GRASP e HPG" ANO-DO-ARTIGO="2025" DOI="10.5753/wsis.2025.15099" />
+                <DETALHAMENTO-DO-ARTIGO TITULO-DO-PERIODICO-OU-REVISTA="Anais do XVI Workshop de Sistemas de Informação (WSIS 2025)" />
+                <AUTORES NOME-PARA-CITACAO="D’OLIVEIRA, J. L. M." />
+            </ARTIGO-PUBLICADO>
+            <ARTIGO-PUBLICADO>
+                <DADOS-BASICOS-DO-ARTIGO TITULO-DO-ARTIGO="Gamificação no Ensino de Física: Projeto e Teste de Usabilidade de um Jogo de Física para Ensino Médio" ANO-DO-ARTIGO="2025" DOI="10.5753/wsis.2025.15027" />
+                <DETALHAMENTO-DO-ARTIGO TITULO-DO-PERIODICO-OU-REVISTA="XVI Workshop de Sistemas de Informação – UFV Rio Paranaíba Campus" />
+                <AUTORES NOME-PARA-CITACAO="D’OLIVEIRA, J. L. M." />
+            </ARTIGO-PUBLICADO>
+            <ARTIGO-PUBLICADO>
+                <DADOS-BASICOS-DO-ARTIGO TITULO-DO-ARTIGO="Explorando a Grécia Antiga: Um Jogo Digital Educativo" ANO-DO-ARTIGO="2025" DOI="10.5753/wsis.2025.15623" />
+                <DETALHAMENTO-DO-ARTIGO TITULO-DO-PERIODICO-OU-REVISTA="XVI Workshop de Sistemas de Informação – UFV Rio Paranaíba Campus" />
+                <AUTORES NOME-PARA-CITACAO="D’OLIVEIRA, J. L. M." />
+            </ARTIGO-PUBLICADO>
+            <ARTIGO-PUBLICADO>
+                <DADOS-BASICOS-DO-ARTIGO TITULO-DO-ARTIGO="Atividades de aprendizagem em matemática baseadas no uso interativo de figuras dinâmicas em ambientes virtuais" ANO-DO-ARTIGO="2025" />
+                <DETALHAMENTO-DO-ARTIGO TITULO-DO-PERIODICO-OU-REVISTA="Autoria, tecnologia e direitos humanos na educação: diálogos com Pedro Demo" />
+                <AUTORES NOME-PARA-CITACAO="D’OLIVEIRA, J. L. M." />
+            </ARTIGO-PUBLICADO>
+            <ARTIGO-PUBLICADO>
+                <DADOS-BASICOS-DO-ARTIGO TITULO-DO-ARTIGO="Palavras ao Ar: um jogo digital de descoberta de novas palavras e seus significados para auxiliar na alfabetização" ANO-DO-ARTIGO="2024" DOI="10.5753/sbie.2024.241887" />
                 <DETALHAMENTO-DO-ARTIGO TITULO-DO-PERIODICO-OU-REVISTA="Simpósio Brasileiro de Informática na Educação (SBIE)" />
+                <AUTORES NOME-PARA-CITACAO="D’OLIVEIRA, J. L. M." />
+            </ARTIGO-PUBLICADO>
+            <ARTIGO-PUBLICADO>
+                <DADOS-BASICOS-DO-ARTIGO TITULO-DO-ARTIGO="Palavras ao Ar: um jogo digital de descoberta de novas palavras e seus significados para auxiliar na alfabetização" ANO-DO-ARTIGO="2023" />
+                <DETALHAMENTO-DO-ARTIGO TITULO-DO-PERIODICO-OU-REVISTA="XIV Workshop de Sistemas de Informação – UFV Rio Paranaíba Campus" />
+                <AUTORES NOME-PARA-CITACAO="D’OLIVEIRA, J. L. M." />
+            </ARTIGO-PUBLICADO>
+            <ARTIGO-PUBLICADO>
+                <DADOS-BASICOS-DO-ARTIGO TITULO-DO-ARTIGO="Palavras ao Ar: Desenvolvimento de um jogo de apoio à alfabetização" ANO-DO-ARTIGO="2023" />
+                <DETALHAMENTO-DO-ARTIGO TITULO-DO-PERIODICO-OU-REVISTA="Simpósio de Integração Acadêmica (SIA UFV)" />
                 <AUTORES NOME-PARA-CITACAO="D’OLIVEIRA, J. L. M." />
             </ARTIGO-PUBLICADO>
         </ARTIGOS-PUBLICADOS>
@@ -92,13 +137,270 @@ export const lattesXmlEn = `<?xml version="1.0" encoding="UTF-8"?>
     <PRODUCAO-BIBLIOGRAFICA>
         <ARTIGOS-PUBLICADOS>
             <ARTIGO-PUBLICADO>
-                <DADOS-BASICOS-DO-ARTIGO TITULO-DO-ARTIGO="Palavras ao Ar: An Educational Digital Game for Children's Literacy" ANO-DO-ARTIGO="2024" DOI="10.5753/sbie.2024.241887" />
+                <DADOS-BASICOS-DO-ARTIGO TITULO-DO-ARTIGO="Math-0-Ween: An Educational Digital Game for Exploring Math Operations in a Fun and Spooky Way (Extended Abstract)" ANO-DO-ARTIGO="2026" DOI="10.5753/rbie.2026.6599" />
+                <DETALHAMENTO-DO-ARTIGO TITULO-DO-PERIODICO-OU-REVISTA="Brazilian Journal of Informatics in Education (RBIE)" />
+                <AUTORES NOME-PARA-CITACAO="D’OLIVEIRA, J. L. M." />
+            </ARTIGO-PUBLICADO>
+            <ARTIGO-PUBLICADO>
+                <DADOS-BASICOS-DO-ARTIGO TITULO-DO-ARTIGO="Interactive DIP: A Tool for Study and Experimentation with Spatial and Frequency Approaches" ANO-DO-ARTIGO="2025" DOI="10.5753/wsis.2025.15098" />
+                <DETALHAMENTO-DO-ARTIGO TITULO-DO-PERIODICO-OU-REVISTA="Proceedings of the XVI Workshop on Information Systems (WSIS 2025)" />
+                <AUTORES NOME-PARA-CITACAO="D’OLIVEIRA, J. L. M." />
+            </ARTIGO-PUBLICADO>
+            <ARTIGO-PUBLICADO>
+                <DADOS-BASICOS-DO-ARTIGO TITULO-DO-ARTIGO="Educational Digital Game as a Support Tool in Teaching Fractions" ANO-DO-ARTIGO="2025" DOI="10.5753/wsis.2025.15113" />
+                <DETALHAMENTO-DO-ARTIGO TITULO-DO-PERIODICO-OU-REVISTA="XVI Workshop on Information Systems – UFV Rio Paranaíba Campus" />
+                <AUTORES NOME-PARA-CITACAO="D’OLIVEIRA, J. L. M." />
+            </ARTIGO-PUBLICADO>
+            <ARTIGO-PUBLICADO>
+                <DADOS-BASICOS-DO-ARTIGO TITULO-DO-ARTIGO="Impact of Initial Solution on Simulated Annealing Optimization: A Comparative Analysis between GRASP and HPG" ANO-DO-ARTIGO="2025" DOI="10.5753/wsis.2025.15099" />
+                <DETALHAMENTO-DO-ARTIGO TITULO-DO-PERIODICO-OU-REVISTA="Proceedings of the XVI Workshop on Information Systems (WSIS 2025)" />
+                <AUTORES NOME-PARA-CITACAO="D’OLIVEIRA, J. L. M." />
+            </ARTIGO-PUBLICADO>
+            <ARTIGO-PUBLICADO>
+                <DADOS-BASICOS-DO-ARTIGO TITULO-DO-ARTIGO="Gamification in Physics Education: Design and Usability Testing of a High School Physics Game" ANO-DO-ARTIGO="2025" DOI="10.5753/wsis.2025.15027" />
+                <DETALHAMENTO-DO-ARTIGO TITULO-DO-PERIODICO-OU-REVISTA="XVI Workshop on Information Systems – UFV Rio Paranaíba Campus" />
+                <AUTORES NOME-PARA-CITACAO="D’OLIVEIRA, J. L. M." />
+            </ARTIGO-PUBLICADO>
+            <ARTIGO-PUBLICADO>
+                <DADOS-BASICOS-DO-ARTIGO TITULO-DO-ARTIGO="Exploring Ancient Greece: An Educational Digital Game" ANO-DO-ARTIGO="2025" DOI="10.5753/wsis.2025.15623" />
+                <DETALHAMENTO-DO-ARTIGO TITULO-DO-PERIODICO-OU-REVISTA="XVI Workshop on Information Systems – UFV Rio Paranaíba Campus" />
+                <AUTORES NOME-PARA-CITACAO="D’OLIVEIRA, J. L. M." />
+            </ARTIGO-PUBLICADO>
+            <ARTIGO-PUBLICADO>
+                <DADOS-BASICOS-DO-ARTIGO TITULO-DO-ARTIGO="Mathematics Learning Activities Based on the Interactive Use of Dynamic Figures in Virtual Environments" ANO-DO-ARTIGO="2025" />
+                <DETALHAMENTO-DO-ARTIGO TITULO-DO-PERIODICO-OU-REVISTA="Authorship, Technology and Human Rights in Education: Dialogues with Pedro Demo" />
+                <AUTORES NOME-PARA-CITACAO="D’OLIVEIRA, J. L. M." />
+            </ARTIGO-PUBLICADO>
+            <ARTIGO-PUBLICADO>
+                <DADOS-BASICOS-DO-ARTIGO TITULO-DO-ARTIGO="Palavras ao Ar: An Educational Digital Game for Discovering Words and Meanings to Support Literacy" ANO-DO-ARTIGO="2024" DOI="10.5753/sbie.2024.241887" />
                 <DETALHAMENTO-DO-ARTIGO TITULO-DO-PERIODICO-OU-REVISTA="Brazilian Symposium on Computers in Education (SBIE)" />
+                <AUTORES NOME-PARA-CITACAO="D’OLIVEIRA, J. L. M." />
+            </ARTIGO-PUBLICADO>
+            <ARTIGO-PUBLICADO>
+                <DADOS-BASICOS-DO-ARTIGO TITULO-DO-ARTIGO="Palavras ao Ar: An Educational Digital Game for Discovering Words and Meanings to Support Literacy" ANO-DO-ARTIGO="2023" />
+                <DETALHAMENTO-DO-ARTIGO TITULO-DO-PERIODICO-OU-REVISTA="XIV Workshop on Information Systems – UFV Rio Paranaíba Campus" />
+                <AUTORES NOME-PARA-CITACAO="D’OLIVEIRA, J. L. M." />
+            </ARTIGO-PUBLICADO>
+            <ARTIGO-PUBLICADO>
+                <DADOS-BASICOS-DO-ARTIGO TITULO-DO-ARTIGO="Palavras ao Ar: Designing and Evaluating an Educational Literacy Game" ANO-DO-ARTIGO="2023" />
+                <DETALHAMENTO-DO-ARTIGO TITULO-DO-PERIODICO-OU-REVISTA="Academic Integration Symposium (SIA UFV)" />
                 <AUTORES NOME-PARA-CITACAO="D’OLIVEIRA, J. L. M." />
             </ARTIGO-PUBLICADO>
         </ARTIGOS-PUBLICADOS>
     </PRODUCAO-BIBLIOGRAFICA>
 </CURRICULO-VITAE>`;
+
+export const curatedPublicationsPt = [
+  {
+    title: 'Math-0-Ween: Um Jogo Digital Educacional para Explorar Operações Matemáticas de Forma Divertida e Assustadora (Resumo Estendido)',
+    venue: 'Revista Brasileira de Informática na Educação (RBIE)',
+    year: '2026',
+    authors: 'R Coêlho, F Bastos, JL Mayrinck, PM de Sousa',
+    doi: '10.5753/rbie.2026.6599',
+  },
+  {
+    title: 'PDI Interativo: Uma Ferramenta para Estudo e Experimentação com Abordagem Espacial e Frequencial',
+    venue: 'Anais do XVI Workshop de Sistemas de Informação (WSIS 2025)',
+    year: '2025',
+    authors: 'JL Mayrinck',
+    doi: '10.5753/wsis.2025.15098',
+  },
+  {
+    title: 'Jogo Digital Educativo como Ferramenta de Apoio no Ensino de Frações',
+    venue: 'XVI Workshop de Sistemas de Informação – UFV Rio Paranaíba Campus',
+    year: '2025',
+    authors: 'PL Mariano, F Bastos, JL Mayrinck, PM Sousa',
+    doi: '10.5753/wsis.2025.15113',
+  },
+  {
+    title: 'Impacto da Solução Inicial na Otimização por Simulated Annealing: Uma Análise Comparativa entre GRASP e HPG',
+    venue: 'Anais do XVI Workshop de Sistemas de Informação (WSIS 2025)',
+    year: '2025',
+    authors: 'JL Mayrinck',
+    doi: '10.5753/wsis.2025.15099',
+  },
+  {
+    title: 'Gamificação no Ensino de Física: Projeto e Teste de Usabilidade de um Jogo de Física para Ensino Médio',
+    venue: 'XVI Workshop de Sistemas de Informação – UFV Rio Paranaíba Campus',
+    year: '2025',
+    authors: 'JVN Silva, F Bastos, JL Mayrinck, PM de Sousa',
+    doi: '10.5753/wsis.2025.15027',
+  },
+  {
+    title: 'Explorando a Grécia Antiga: Um Jogo Digital Educativo',
+    venue: 'XVI Workshop de Sistemas de Informação – UFV Rio Paranaíba Campus',
+    year: '2025',
+    authors: 'ME Matos, BT de Miranda, F Bastos, JL Mayrinck, A Oda, PM de Sousa',
+    doi: '10.5753/wsis.2025.15623',
+  },
+  {
+    title: 'Atividades de aprendizagem em matemática baseadas no uso interativo de figuras dinâmicas em ambientes virtuais',
+    venue: 'Autoria, tecnologia e direitos humanos na educação: diálogos com Pedro Demo',
+    year: '2025',
+    authors: 'JL Mayrinck, F Bastos',
+    doi: '',
+  },
+  {
+    title: 'Palavras ao Ar: um jogo digital de descoberta de novas palavras e seus significados para auxiliar na alfabetização',
+    venue: 'Simpósio Brasileiro de Informática na Educação (SBIE)',
+    year: '2024',
+    authors: 'JL Mayrinck, F Bastos, A Oda, AC Inocêncio, MA Névoa, MW Ribeiro',
+    doi: '10.5753/sbie.2024.241887',
+  },
+  {
+    title: 'Palavras ao Ar: um jogo digital de descoberta de novas palavras e seus significados para auxiliar na alfabetização',
+    venue: 'XIV Workshop de Sistemas de Informação – UFV Rio Paranaíba Campus',
+    year: '2023',
+    authors: 'JL Mayrinck, F Bastos, A Oda, AC Inocêncio, MA Névoa, MW Ribeiro',
+    doi: '',
+  },
+  {
+    title: 'Palavras ao Ar: Desenvolvimento de um jogo de apoio à alfabetização',
+    venue: 'Simpósio de Integração Acadêmica (SIA UFV)',
+    year: '2023',
+    authors: 'JL Mayrinck, F Bastos, A Oda',
+    doi: '',
+  },
+];
+
+export const curatedPublicationsEn = [
+  {
+    title: 'Math-0-Ween: An Educational Digital Game for Exploring Math Operations in a Fun and Spooky Way (Extended Abstract)',
+    venue: 'Brazilian Journal of Informatics in Education (RBIE)',
+    year: '2026',
+    authors: 'R Coêlho, F Bastos, JL Mayrinck, PM de Sousa',
+    doi: '10.5753/rbie.2026.6599',
+  },
+  {
+    title: 'Interactive DIP: A Tool for Study and Experimentation with Spatial and Frequency Approaches',
+    venue: 'Proceedings of the XVI Workshop on Information Systems (WSIS 2025)',
+    year: '2025',
+    authors: 'JL Mayrinck',
+    doi: '10.5753/wsis.2025.15098',
+  },
+  {
+    title: 'Educational Digital Game as a Support Tool in Teaching Fractions',
+    venue: 'XVI Workshop on Information Systems – UFV Rio Paranaíba Campus',
+    year: '2025',
+    authors: 'PL Mariano, F Bastos, JL Mayrinck, PM Sousa',
+    doi: '10.5753/wsis.2025.15113',
+  },
+  {
+    title: 'Impact of Initial Solution on Simulated Annealing Optimization: A Comparative Analysis between GRASP and HPG',
+    venue: 'Proceedings of the XVI Workshop on Information Systems (WSIS 2025)',
+    year: '2025',
+    authors: 'JL Mayrinck',
+    doi: '10.5753/wsis.2025.15099',
+  },
+  {
+    title: 'Gamification in Physics Education: Design and Usability Testing of a High School Physics Game',
+    venue: 'XVI Workshop on Information Systems – UFV Rio Paranaíba Campus',
+    year: '2025',
+    authors: 'JVN Silva, F Bastos, JL Mayrinck, PM de Sousa',
+    doi: '10.5753/wsis.2025.15027',
+  },
+  {
+    title: 'Exploring Ancient Greece: An Educational Digital Game',
+    venue: 'XVI Workshop on Information Systems – UFV Rio Paranaíba Campus',
+    year: '2025',
+    authors: 'ME Matos, BT de Miranda, F Bastos, JL Mayrinck, A Oda, PM de Sousa',
+    doi: '10.5753/wsis.2025.15623',
+  },
+  {
+    title: 'Mathematics Learning Activities Based on the Interactive Use of Dynamic Figures in Virtual Environments',
+    venue: 'Authorship, Technology and Human Rights in Education: Dialogues with Pedro Demo',
+    year: '2025',
+    authors: 'JL Mayrinck, F Bastos',
+    doi: '',
+  },
+  {
+    title: 'Palavras ao Ar: An Educational Digital Game for Discovering Words and Meanings to Support Literacy',
+    venue: 'Brazilian Symposium on Computers in Education (SBIE)',
+    year: '2024',
+    authors: 'JL Mayrinck, F Bastos, A Oda, AC Inocêncio, MA Névoa, MW Ribeiro',
+    doi: '10.5753/sbie.2024.241887',
+  },
+  {
+    title: 'Palavras ao Ar: An Educational Digital Game for Discovering Words and Meanings to Support Literacy',
+    venue: 'XIV Workshop on Information Systems – UFV Rio Paranaíba Campus',
+    year: '2023',
+    authors: 'JL Mayrinck, F Bastos, A Oda, AC Inocêncio, MA Névoa, MW Ribeiro',
+    doi: '',
+  },
+  {
+    title: 'Palavras ao Ar: Designing and Evaluating an Educational Literacy Game',
+    venue: 'Academic Integration Symposium (SIA UFV)',
+    year: '2023',
+    authors: 'JL Mayrinck, F Bastos, A Oda',
+    doi: '',
+  },
+];
+
+export const curatedProjectsPt = [
+  {
+    name: 'Palavras ao Ar',
+    tech: 'TypeScript, React, Vite, Node.js',
+    url: 'https://github.com/Jluckmay/Palavras-ao-Ar',
+    description: 'Jogo digital educativo focado no suporte à alfabetização infantil por meio de desafios interativos.',
+  },
+  {
+    name: 'Gale-Shapley Visualizer',
+    tech: 'Python, Streamlit, NetworkX',
+    url: 'https://github.com/Jluckmay/gale-shapley-app',
+    description: 'Ambiente interativo de simulação e visualização pedagógica do algoritmo de emparelhamento estável de Gale-Shapley.',
+  },
+  {
+    name: 'Collatz Lab',
+    tech: 'TypeScript, Next.js, Tailwind CSS, Recharts',
+    url: 'https://github.com/Jluckmay/collatz-lab',
+    description: 'Laboratório web para exploração interativa de órbitas e padrões da Conjectura de Collatz com renderização em tempo real.',
+  },
+  {
+    name: 'PDI Interativo',
+    tech: 'Python, OpenCV, NumPy, Matplotlib',
+    url: 'https://github.com/Jluckmay/PDI-Interativo',
+    description: 'Ferramenta interativa de processamento digital de imagens com filtros nos domínios espacial e frequencial.',
+  },
+  {
+    name: 'Análise de Cancelamentos',
+    tech: 'Python, Pandas, Plotly, Scikit-Learn',
+    url: 'https://github.com/Jluckmay/Analise_Cancelamentos',
+    description: 'Pipeline completo de ciência de dados para identificação de gargalos e redução da evasão de clientes.',
+  },
+];
+
+export const curatedProjectsEn = [
+  {
+    name: 'Palavras ao Ar',
+    tech: 'TypeScript, React, Vite, Node.js',
+    url: 'https://github.com/Jluckmay/Palavras-ao-Ar',
+    description: 'Educational digital game designed to support children literacy through interactive vocabulary challenges.',
+  },
+  {
+    name: 'Gale-Shapley Visualizer',
+    tech: 'Python, Streamlit, NetworkX',
+    url: 'https://github.com/Jluckmay/gale-shapley-app',
+    description: 'Interactive pedagogical simulation and visualization tool for the Gale-Shapley stable matching algorithm.',
+  },
+  {
+    name: 'Collatz Lab',
+    tech: 'TypeScript, Next.js, Tailwind CSS, Recharts',
+    url: 'https://github.com/Jluckmay/collatz-lab',
+    description: 'Interactive web laboratory for experimenting with Collatz Conjecture orbits, sequence lengths, and real-time charts.',
+  },
+  {
+    name: 'Interactive DIP',
+    tech: 'Python, OpenCV, NumPy, Matplotlib',
+    url: 'https://github.com/Jluckmay/PDI-Interativo',
+    description: 'Interactive digital image processing application supporting spatial and frequency domain transformations and filters.',
+  },
+  {
+    name: 'Churn Analysis Pipeline',
+    tech: 'Python, Pandas, Plotly, Scikit-Learn',
+    url: 'https://github.com/Jluckmay/Analise_Cancelamentos',
+    description: 'Data science analysis pipeline designed to diagnose churn drivers and simulate retention initiatives.',
+  },
+];
 
 export function createResumePayload(lang = 'pt-br') {
   const isPt = lang === 'pt-br';
@@ -116,6 +418,10 @@ export function createResumePayload(lang = 'pt-br') {
     lattes: 'http://lattes.cnpq.br/7395864900833083',
     portfolio: 'https://jluckmay.github.io/',
     email: 'lucas.mayrinck@dcc.ufmg.br',
+    manual_data: {
+      projects: isPt ? curatedProjectsPt : curatedProjectsEn,
+      publications: isPt ? curatedPublicationsPt : curatedPublicationsEn,
+    },
     lattes_file: {
       filename: isPt ? 'curriculo.xml' : 'curriculo_en.xml',
       name: isPt ? 'curriculo.xml' : 'curriculo_en.xml',
@@ -125,4 +431,3 @@ export function createResumePayload(lang = 'pt-br') {
     client_timestamp: Date.now(),
   };
 }
-
